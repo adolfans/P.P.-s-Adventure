@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<GUILayout >
+    <Window Type="DefaultWindow" Name="Root" >
+        <Property Name="UnifiedAreaRect" Value="{{0.00449776,0},{0.00161034,0},{1.0045,0},{1.00161,0}}" />
+        <Window Type="TaharezLook/FrameWindow" Name="Root/blendMode" >
+            <Property Name="Text" Value="Choose Blending mode" />
+            <Property Name="TitlebarFont" Value="DejaVuSans-10" />
+            <Property Name="TitlebarEnabled" Value="True" />
+            <Property Name="UnifiedAreaRect" Value="{{0.00605257,0},{0.0130493,0},{0.199312,0},{0.316268,0}}" />
+            <Window Type="TaharezLook/Button" Name="Root/blendMode/btn1" >
+                <Property Name="UnifiedAreaRect" Value="{{0.306909,0},{0.0330512,0},{0.583091,0},{0.152928,0}}" />
+            </Window>
+            <Window Type="TaharezLook/Button" Name="Root/blendMode/btn2" >
+                <Property Name="UnifiedAreaRect" Value="{{0.306909,0},{0.198113,0},{0.583091,0},{0.317989,0}}" />
+            </Window>
+            <Window Type="TaharezLook/Button" Name="Root/blendMode/btn3" >
+                <Property Name="UnifiedAreaRect" Value="{{0.306909,0},{0.376968,0},{0.583091,0},{0.496845,0}}" />
+            </Window>
+            <Window Type="TaharezLook/Button" Name="Root/blendMode/btn4" >
+                <Property Name="UnifiedAreaRect" Value="{{0.306909,0},{0.568055,0},{0.583091,0},{0.687931,0}}" />
+            </Window>
+            <Window Type="TaharezLook/Button" Name="Root/blendMode/btn5" >
+                <Property Name="UnifiedAreaRect" Value="{{0.306909,0},{0.738321,0},{0.583091,0},{0.858198,0}}" />
+            </Window>
+        </Window>
+        <Window Type="TaharezLook/FrameWindow" Name="Root/main" >
+            <Property Name="TitlebarFont" Value="DejaVuSans-10" />
+            <Property Name="TitlebarEnabled" Value="True" />
+            <Property Name="UnifiedAreaRect" Value="{{0.21392,0},{0.0471713,0},{0.729286,0},{0.564483,0}}" />
+            <Window Type="TaharezLook/Button" Name="Root/main/startBtn" >
+                <Property Name="Text" Value="START" />
+                <Property Name="UnifiedAreaRect" Value="{{0.867272,0},{0.200778,0},{1.11727,0},{0.332489,0}}" />
+            </Window>
+            <Window Type="TaharezLook/Button" Name="Root/main/loadBtn" >
+                <Property Name="Text" Value="LOAD" />
+                <Property Name="UnifiedAreaRect" Value="{{0.867272,0},{0.412841,0},{1.11727,0},{0.544552,0}}" />
+            </Window>
+            <Window Type="TaharezLook/Button" Name="Root/main/configBtn" >
+                <Property Name="Text" Value="CONFIG" />
+                <Property Name="UnifiedAreaRect" Value="{{0.867272,0},{0.604669,0},{1.11727,0},{0.736381,0}}" />
+            </Window>
+            <Window Type="TaharezLook/Button" Name="Root/main/exitBtn" >
+                <Property Name="Text" Value="EXIT" />
+                <Property Name="UnifiedAreaRect" Value="{{0.867272,0},{0.798055,0},{1.11727,0},{0.929766,0}}" />
+            </Window>
+        </Window>
+        <Window Type="TaharezLook/FrameWindow" Name="Root/new" >
+            <Property Name="TitlebarFont" Value="DejaVuSans-10" />
+            <Property Name="TitlebarEnabled" Value="True" />
+            <Property Name="UnifiedAreaRect" Value="{{0.00468591,0},{0.458085,0},{0.364495,0},{0.985949,0}}" />
+            <Window Type="test/main/newstoryButton" Name="Root/new/new" >
+                <Property Name="UnifiedAreaRect" Value="{{0.619946,0},{0.0669143,0},{1.60141,0},{0.212825,0}}" />
+            </Window>
+            <Window Type="test/main/loadgameButton" Name="Root/new/load" >
+                <Property Name="UnifiedAreaRect" Value="{{0.619946,0},{0.22342,0},{1.60141,0},{0.369331,0}}" />
+            </Window>
+            <Window Type="test/main/systemButton" Name="Root/new/sys" >
+                <Property Name="UnifiedAreaRect" Value="{{0.619946,0},{0.375465,0},{1.6014,0},{0.521376,0}}" />
+            </Window>
+            <Window Type="test/main/informationButton" Name="Root/new/info" >
+                <Property Name="UnifiedAreaRect" Value="{{0.619946,0},{0.537918,0},{1.6014,0},{0.683829,0}}" />
+            </Window>
+            <Window Type="test/main/exitButton" Name="Root/new/exit" >
+                <Property Name="UnifiedAreaRect" Value="{{0.619946,0},{0.69145,0},{1.6014,0},{0.83736,0}}" />
+            </Window>
+        </Window>
+    </Window>
+</GUILayout>

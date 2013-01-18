@@ -1,0 +1,242 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+    <None Include="small.ico">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="testGame1.ico">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="define.fx">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="effect.fx">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="newMesh.fx">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="scene.fx">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="shadowmapping.fx">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="transform.fx">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="mesh.fx">
+      <Filter>资源文件</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="testGame1.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="main.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MyGame3DDevice.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MyGame3DEffect.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MyGameClock.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MyGameFunctions.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MyGameGrid.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MyGameIndexBuffer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MyGameInstance.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MyGameLevel.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MyGameLua.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MyGameMessage.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MyGameSettings.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MyGameTextBase.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MyGameTexture.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MyGameVertexBuffer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MyGameWindow.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="testLoadObjFile.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MyGameLevelMainMenu.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MyGameLevel1.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene1.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="SkinnedMesh.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="SkinnedMesh1.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MyGameScene.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MyGameNode.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MyGameSceneNode.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MyGameSceneManager.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MyGameBoneNode.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MyGameSceneBillboard.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MyGameMesh.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MyGameSceneEntity.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MyGame3DDevice.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MyGame3DEffect.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MyGameClock.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MyGameIndexBuffer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MyGameInstance.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MyGameLevel.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MyGameLua.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MyGameMessage.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MyGameSettings.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MyGameTextBase.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MyGameTexture.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MyGameVertexBuffer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MyGameWindow.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MyGameLevelMainMenu.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MyGameLevel1.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene1.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SkinnedMesh.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SkinnedMesh1.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MyGameScene.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MyGameNode.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MyGameSceneNode.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MyGameSceneManager.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MyGameBoneNode.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MyGameSceneBillboard.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MyGameMesh.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MyGameSceneEntity.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="testGame1.rc">
+      <Filter>资源文件</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

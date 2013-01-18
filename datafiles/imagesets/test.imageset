@@ -1,0 +1,7 @@
+<Imageset AutoScaled="false" Imagefile="main_menu_item.png" Name="Test" NativeHorzRes="800" NativeVertRes="600">
+    <Image Height="53" Name="Button/NewStory" Width="471" XPos="0" YPos="0" />
+    <Image Height="53" Name="Button/LoadGame" Width="472" XPos="0" YPos="62" />
+    <Image Height="52" Name="Button/System" Width="469" XPos="0" YPos="122" />
+    <Image Height="51" Name="Button/Information" Width="470" XPos="0" YPos="182" />
+    <Image Height="53" Name="Button/Exit" Width="469" XPos="0" YPos="242" />
+</Imageset>

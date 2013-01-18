@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<GUILayout >
+    <Window Type="DefaultWindow" Name="Root" >
+        <Property Name="UnifiedAreaRect" Value="{{0,0},{0,0},{1,0},{1,0}}" />
+        <Window Type="TaharezLook/FrameWindow" Name="Root/" >
+            <Property Name="TitlebarFont" Value="DejaVuSans-10" />
+            <Property Name="TitlebarEnabled" Value="True" />
+            <Property Name="UnifiedAreaRect" Value="{{0.177062,0},{0.124477,0},{0.55,0},{0.55,0}}" />
+            <Window Type="TaharezLook/Button" Name="aa" >
+                <Property Name="Text" Value="aaaaaaaaa" />
+                <Property Name="UnifiedAreaRect" Value="{{0.307538,0},{0.101041,0},{0.963568,0},{0.351041,0}}" />
+            </Window>
+        </Window>
+    </Window>
+</GUILayout>

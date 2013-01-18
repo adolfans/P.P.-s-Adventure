@@ -1,0 +1,35 @@
+<?xml version="1.0" ?>
+<Animations>
+
+    <AnimationDefinition name="Example1A" duration="0.3" replayMode="once">
+        <Affector property="Alpha" interpolator="float">
+            <KeyFrame position="0" value="1" />
+            <KeyFrame position="0.3" value="0.66" progression="quadratic decelerating" />
+        </Affector>
+        <Subscription event="MouseLeavesArea" action="Start" />
+    </AnimationDefinition>
+
+    <AnimationDefinition name="Example1B" duration="0.3" replayMode="once">
+        <Affector property="Alpha" interpolator="float">
+            <KeyFrame position="0" value="0.66" />
+            <KeyFrame position="0.3" value="1" progression="quadratic accelerating" />
+        </Affector>
+        <Subscription event="MouseEntersArea" action="Start" />
+    </AnimationDefinition>
+	
+	<AnimationDefinition name="MyMainMenuItem" duration="0.3" replayMode="once">
+        <Affector property="UnifiedXPosition" interpolator="UDim">
+            <KeyFrame position="0" value="{0.619946, 0}" />
+            <KeyFrame position="0.3" value="{0.3, 0}" />
+        </Affector>
+        <Subscription event="MouseEntersArea" action="Start" />
+    </AnimationDefinition>
+	<AnimationDefinition name="MyMainMenuItem2" duration="0.3" replayMode="once">	
+		<Affector property="UnifiedXPosition" interpolator="UDim">
+            <KeyFrame position="0" value="{0.3, 0}" />
+            <KeyFrame position="0.3" value="{0.619946, 0}" />
+        </Affector>
+        <Subscription event="MouseLeavesArea" action="Start" />
+	</AnimationDefinition>	
+</Animations>
+

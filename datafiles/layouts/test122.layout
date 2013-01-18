@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<GUILayout version="4" >
+    <Window type="DefaultWindow" name="Root" >
+        <Property name="Area" value="{{0.00219624,-6},{0.00156988,-2},{0.00219624,1914},{0.00156988,1078}}" />
+        <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        <Window type="TaharezLook/FrameWindow" name="main" >
+            <Property name="Area" value="{{0.0520407,0},{0.0518006,0},{0.384499,0},{0.590654,0}}" />
+            <Property name="Text" value="Choose Blend mode" />
+            <Property name="TitlebarFont" value="DejaVuSans-10" />
+            <AutoWindow namePath="__auto_titlebar__" >
+                <Property name="Font" value="DejaVuSans-10" />
+            </AutoWindow>
+            <Window type="TaharezLook/Button" name="btn1" >
+                <Property name="Area" value="{{0.31101,0},{0.047369,0},{0.679917,0},{0.175009,0}}" />
+                <Property name="Text" value="Addition" />
+            </Window>
+            <Window type="TaharezLook/Button" name="btn2" >
+                <Property name="Area" value="{{0.31101,0},{0.22134,0},{0.679917,0},{0.34898,0}}" />
+                <Property name="Text" value="Dodge" />
+            </Window>
+            <Window type="TaharezLook/Button" name="btn11" >
+                <Property name="Area" value="{{0.31101,0},{0.385789,0},{0.679917,0},{0.513429,0}}" />
+                <Property name="Text" value="Soft Light" />
+            </Window>
+            <Window type="TaharezLook/Button" name="mainbtn3" >
+                <Property name="Area" value="{{0.31101,0},{0.573853,0},{0.679917,0},{0.701493,0}}" />
+                <Property name="Text" value="Grain Merge" />
+            </Window>
+            <Window type="TaharezLook/Button" name="btn5" >
+                <Property name="Area" value="{{0.31101,0},{0.758474,0},{0.679917,0},{0.886114,0}}" />
+                <Property name="Text" value="Screen" />
+            </Window>
+        </Window>
+        <Window type="TaharezLook/FrameWindow" name="testWindow" >
+            <Property name="Area" value="{{0,966},{0,314},{0,1556},{0,844}}" />
+            <Window type="TaharezLook/Button" name="startBtn" >
+                <Property name="Area" value="{{0,494},{0,22},{0,754},{0,88}}" />
+                <Property name="Text" value="START" />
+            </Window>
+            <Window type="TaharezLook/Button" name="loadBtn" >
+                <Property name="Area" value="{{0,492},{0,106},{0,752},{0,172}}" />
+                <Property name="Text" value="LOAD" />
+            </Window>
+            <Window type="TaharezLook/Button" name="cofigBtn" >
+                <Property name="Area" value="{{0,490},{0,194},{0,750},{0,260}}" />
+                <Property name="Text" value="CONFIG" />
+            </Window>
+            <Window type="TaharezLook/Button" name="exitBtn" >
+                <Property name="Area" value="{{0,490},{0,280},{0,750},{0,346}}" />
+                <Property name="Text" value="EXIT" />
+            </Window>
+        </Window>
+    </Window>
+</GUILayout>
