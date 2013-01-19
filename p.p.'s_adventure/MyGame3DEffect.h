@@ -6,12 +6,13 @@ using std::map;
 #include "MyGameTexture.h"
 #include "MyGameScene.h"
 using namespace MyGameScene;
-
+/*
 #define WVPMATRIX "WorldViewProj"
 #define FINMATARRAY "FinalTransforms"
 #define TEXTURE "Tex"
 #define VERTBLEND "VertBlend"
 #define TECH		"main"
+*/
 class MyGame3DEffect
 {
 public:
@@ -24,6 +25,13 @@ private:
 	
 
 public:
+	static const char* WVPMATRIX;// = "WorldViewProj";
+	static const char* FINMATARRAY;
+	static const char* TEXTURE;
+	static const char* VERTBLEND;
+	static const char* TECH;
+	static const char* LVPMATIX;
+	static const char* SHADOWMAP;
 	MyGame3DEffect(void);
 	MyGame3DEffect( int _resourceID );
 	MyGame3DEffect( const char* fileName );

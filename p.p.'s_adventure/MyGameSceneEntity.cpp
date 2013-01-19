@@ -22,9 +22,11 @@ namespace MyGameScene{
 	}
 	void MyGameSceneEntity::render( MyGame3DEffect* _pEffect )
 	{
-		_pEffect->SetMatrixByName( 
-		pNode->getCombinedMatrix()* MyGameSceneManager::getViewProjCombinedMat(),
-		WVPMATRIX );
+		_pEffect->SetMatrixByName( pNode->getCombinedMatrix()* MyGameSceneManager::getViewProjCombinedMat(),
+									MyGame3DEffect::WVPMATRIX );
+
+		_pEffect->SetMatrixByName( pNode->getCombinedMatrix()* MyGameSceneManager::getLightViewProjMat(),
+									MyGame3DEffect::LVPMATIX );
 
 		_pEffect->CommitChanges();
 		

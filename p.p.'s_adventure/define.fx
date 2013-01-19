@@ -6,6 +6,9 @@ extern int NumVertInfluences =4;
 
 extern bool VertBlend = false;
 
+extern float4x4 LightViewProj;
+
+extern texture ShadowMap;
 
 technique aaaaa
 {

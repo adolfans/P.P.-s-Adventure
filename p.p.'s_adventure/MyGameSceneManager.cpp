@@ -5,6 +5,8 @@
 namespace MyGameScene{
 	D3DXMATRIX MyGameSceneManager::vMat;
 	D3DXMATRIX MyGameSceneManager::pMat;
+	D3DXMATRIX MyGameSceneManager::lightViewProjMat;
+	IDirect3DTexture9* MyGameSceneManager::shadowMap = 0;
 MyGameSceneManager::MyGameSceneManager(void)
 {
 }
@@ -24,4 +26,15 @@ D3DXMATRIX MyGameSceneManager::getViewProjCombinedMat()
 	return vMat* pMat;
 
 }
+
+void MyGameSceneManager::SetShadowMap( IDirect3DTexture9* _tex )
+{
+	shadowMap = _tex;
+}
+
+IDirect3DTexture9* MyGameSceneManager::GetShadowMap()
+{
+	return shadowMap;
+}
+
 }

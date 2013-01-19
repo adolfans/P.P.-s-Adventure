@@ -36,7 +36,7 @@ SkinnedMesh::SkinnedMesh(void)
 
 	effect = new MyGame3DEffect( "newMesh.fx" );
 	
-	effect->SetBOOLByName( TRUE, VERTBLEND );
+	effect->SetBOOLByName( TRUE, MyGame3DEffect::VERTBLEND );
 
 	if( pHierarchyRoot )
 	{
@@ -252,7 +252,7 @@ void SkinnedMesh::render()
 	
 	//meshEffect->SetTechnique(hTech);
 
-	effect->SetTechniqueByName( TECH );
+	effect->SetTechniqueByName( MyGame3DEffect::TECH );
 
 	unsigned int numPasses = 0;
 	
@@ -282,40 +282,34 @@ void SkinnedMesh::render( MyGame3DEffect* _pEffect )
 
 	D3DXMATRIX worldViewProj = MyGameSceneManager::getViewProjCombinedMat();
 
-	//meshEffect->SetMatrix( hWVPMat, &worldViewProj );
+	_pEffect->SetMatrixByName( worldViewProj, MyGame3DEffect::WVPMATRIX );
 
-	//effect->SetMatrixByName( worldViewProj, WVPMATRIX );
-	_pEffect->SetMatrixByName( worldViewProj, WVPMATRIX );
+	_pEffect->SetMatrixByName( MyGameSceneManager::getLightViewProjMat(), MyGame3DEffect::LVPMATIX );
 
-	//meshEffect->SetMatrixArray( hFinalMat, &finalTransforms[0], numBones );
-
-	//effect->SetMatrixArrayByName( finalTransforms, numBones, FINMATARRAY );
-	_pEffect->SetMatrixArrayByName( finalTransforms, numBones, FINMATARRAY );
+	_pEffect->SetMatrixArrayByName( finalTransforms, numBones, MyGame3DEffect::FINMATARRAY );
 
 	IDirect3DDevice9* pDevice = MyGame3DDevice::GetSingleton()->GetDevice();
 	
 	pDevice->SetVertexDeclaration(this->vDecl);
 
-	effect->SetBOOLByName( TRUE, VERTBLEND );
-
-	effect->CommitChanges();
+	_pEffect->SetBOOLByName( TRUE, MyGame3DEffect::VERTBLEND );
 
 	unsigned int j = 0;
 	for( vector<IDirect3DTexture9*>::iterator _itr = texList.begin();
 			_itr != texList.end();
 			 ++ _itr )
 	{
-			//meshEffect->SetTexture( this->hTexture, *_itr );
-			_pEffect->SetTextureByName( *_itr, TEXTURE );
+			_pEffect->SetTextureByName( *_itr, MyGame3DEffect::TEXTURE );
 			for( int k = 0; k < NumAttributeGroups; ++ k )
 			{
+				_pEffect->CommitChanges();
 				int mtrlIndex = attributeTable[k].AttribId;
 				
 				pSkinnedMesh->DrawSubset( mtrlIndex );
 			}
 			++j;
 	}
-	effect->SetBOOLByName( FALSE, VERTBLEND );
+	_pEffect->SetBOOLByName( FALSE, MyGame3DEffect::VERTBLEND );
 }
 
 void SkinnedMesh::frameMove( /*float deltaTime*/ /*,
@@ -325,12 +319,10 @@ void SkinnedMesh::frameMove( /*float deltaTime*/ /*,
 	lastTime = clock();
 
 	this->pAnimCtrller->AdvanceTime( timeDelta, 0 );
-	//buildCombinedTransforms();
 
 	for( unsigned int i = 0; i < numBones; ++ i )
 	{
 		const char* boneName = pSkinInfo->GetBoneName( i );
-		D3DXMATRIX& combinedTemp = combinedTransforms[i];
 		finalTransforms[i] =MyGameSceneNode::getNodeByName(boneName)->getCombinedMatrix();
 	}
 

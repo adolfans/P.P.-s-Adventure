@@ -7,7 +7,7 @@ using std::runtime_error;
 using namespace MyGameScene;
 namespace MyGameScene{
 MyGameMesh::MyGameMesh()
-	:pDXMesh(0), adjBuffer(0),pVerBuffer(0),pVerDecl(0)
+	:pDXMesh(0), adjBuffer(0),pVerBuffer(0),pVerDecl(0), tex(0)
 {
 	//nodes.push_back( MyGameSceneManager::CreateSceneNode( name ));
 }
@@ -17,9 +17,21 @@ MyGameMesh::~MyGameMesh(void)
 {
 	IRelease(adjBuffer);
 	IRelease(pDXMesh);
-	
+	/*		for( int i = 0; i < Mtrls.size(); i++ )
+		{
+			//pDevice->SetMaterial( &Mtrls[i] );
+			//pDevice->SetTexture( 0, Textures[i] );
+			Textures[i]->Release();
+		}
+		*/
+	for( vector< IDirect3DTexture9* >::iterator _itr = Textures.begin();
+		_itr != Textures.end();
+		++ _itr )
+		IRelease((*_itr));
+
 	IRelease(pVerBuffer);
 	IRelease(pVerDecl);
+	IRelease( tex );
 }
 
 void MyGameMesh::loadMeshFromXFile( const char* fileName )
@@ -65,9 +77,9 @@ void MyGameMesh::loadMeshFromXFile( const char* fileName )
 				Textures.push_back( 0 );
 			}
 		}
-	}
 
 	mtrlBuffer->Release();
+	}
 }
 //getNode可以被MyGameSceneNode里的GetNodeByName替换掉
 /*
@@ -154,6 +166,7 @@ void MyGameMesh::render( MyGame3DEffect* pEffect )
 	if( pVerBuffer )
 	{
 		pDevice->SetVertexDeclaration(this->pVerDecl);
+		pEffect->SetTextureByName( tex, MyGame3DEffect::TEXTURE );
 		HR(pDevice->SetStreamSource( 0, this->pVerBuffer, 0, sizeof(float)*8 ) );
 		HR(pDevice->DrawPrimitive( D3DPT_TRIANGLELIST, 0, 2 ));	
 	}else if( this->pDXMesh )
@@ -162,9 +175,15 @@ void MyGameMesh::render( MyGame3DEffect* pEffect )
 		{
 			//pDevice->SetMaterial( &Mtrls[i] );
 			//pDevice->SetTexture( 0, Textures[i] );
-			pEffect->SetTextureByName( Textures[i], TEXTURE );
+			pEffect->SetTextureByName( Textures[i], MyGame3DEffect::TEXTURE );
 			this->pDXMesh->DrawSubset( i );
 		}
 	}
+}
+
+void MyGameMesh::createTexture( const char* fileName )
+{
+	IDirect3DDevice9* pDevice = MyGame3DDevice::GetSingleton()->GetDevice();
+	HR( D3DXCreateTextureFromFile( pDevice, L"colorful-1556.jpg", &tex) );
 }
 }

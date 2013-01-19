@@ -21,12 +21,15 @@ private:
 	IDirect3DVertexBuffer9* pVerBuffer;
 	IDirect3DVertexDeclaration9* pVerDecl;
 
+	IDirect3DTexture9* tex;
+
 public:
 	MyGameMesh();
 	~MyGameMesh(void);
 
 	virtual void loadMeshFromXFile( const char* fileName );
 	virtual void createPlaneXZ(float width, float height  );
+	virtual void createTexture( const char* fileName );
 	MyGameSceneNode* getNode();
 	//virtual void Draw();
 

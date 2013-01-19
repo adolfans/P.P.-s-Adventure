@@ -82,6 +82,9 @@ VS_OUTPUT VertexBlend( float4 pos :POSITION0,
 	p.w = 1.0f;
 	
 	output.pos = mul( p, WorldViewProj );
+	
+	//计算
+	
 	output.texCoord = texCoord;
 	output.diffuse = float4( 1.0f, 1.0f, 1.0f, 1.0f );
 	return output;

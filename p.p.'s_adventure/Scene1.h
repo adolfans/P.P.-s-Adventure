@@ -12,12 +12,15 @@ private:
 	//IDirect3DDevice9* pDevice;
 	D3DXMATRIX viewMat;
 	D3DXMATRIX perspectiveMat;
+	D3DXMATRIX lightViewPersMat;
 	D3DXMATRIX idMat;
 	IDirect3DTexture9* _tex;
 	//ID3DXEffect* pTransformEffect;
-	MyGame3DEffect* pEffect;
+	MyGame3DEffect* pGenShadowMapEffect;
 	MyGameSceneBillboard* testBoard;
 	SkinnedMesh* loli;
+	MyGameSceneEntity* loliEnt;
+	MyGame3DEffect* pLoliEffect;
 	//ID3DXMesh*
 	MyGameSceneNode* loliParentNode;
 	MyGameSceneNode* sceneRoot;
@@ -25,7 +28,10 @@ private:
 	MyGameSceneEntity* swordEnt;
 	MyGameMesh* plane;
 	MyGameSceneEntity* planeEnt;
+	MyGame3DEffect* pPlatformEffect;
 	
+
+
 	IDirect3DSurface9* pScreenRenderSurface;
 	IDirect3DTexture9* pPass1RenderTarget;
 	IDirect3DSurface9* pPass1RenderTargetSurface;

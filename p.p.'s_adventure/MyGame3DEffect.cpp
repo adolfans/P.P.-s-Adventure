@@ -4,11 +4,19 @@
 #include "MyGame3DDevice.h"
 #include "MyGameSceneEntity.h"
 #include "MyGameSceneNode.h"
+#include "MyGameSceneManager.h"
 
 #include <exception>
 using std::runtime_error;
 
 IDirect3DDevice9*	MyGame3DEffect::pD9Device = 0;
+const char* MyGame3DEffect::WVPMATRIX = "WorldViewProj";
+const char* MyGame3DEffect::FINMATARRAY = "FinalTransforms";
+const char* MyGame3DEffect::TEXTURE = "Tex";
+const char* MyGame3DEffect::VERTBLEND = "VertBlend";
+const char* MyGame3DEffect::TECH = "main";
+const char* MyGame3DEffect::LVPMATIX = "LightViewProj";
+const char* MyGame3DEffect::SHADOWMAP = "ShadowMap";
 
 MyGame3DEffect::MyGame3DEffect(void)
 {
@@ -195,7 +203,8 @@ void MyGame3DEffect::AddEntity( MyGameSceneEntity* _ent )
 void MyGame3DEffect::RenderAllEntities()
 {
 	unsigned int num;
-	this->SetTechniqueByName( TECH );
+	this->SetTechniqueByName( MyGame3DEffect::TECH );
+	this->SetTextureByName( MyGameSceneManager::GetShadowMap(), MyGame3DEffect::SHADOWMAP );
 	this->Begin(num);
 	for( unsigned int i = 0; i < num; ++ i )
 	{
