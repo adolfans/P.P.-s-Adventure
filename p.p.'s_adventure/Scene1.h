@@ -35,6 +35,7 @@ private:
 	IDirect3DSurface9* pScreenRenderSurface;
 	IDirect3DTexture9* pPass1RenderTarget;
 	IDirect3DSurface9* pPass1RenderTargetSurface;
+
 public:
 	Scene1(void);
 	virtual ~Scene1(void);

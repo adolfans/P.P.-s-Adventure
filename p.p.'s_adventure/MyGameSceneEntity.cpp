@@ -26,9 +26,9 @@ namespace MyGameScene{
 									MyGame3DEffect::WVPMATRIX );
 
 		_pEffect->SetMatrixByName( pNode->getCombinedMatrix()* MyGameSceneManager::getLightViewProjMat(),
-									MyGame3DEffect::LVPMATIX );
+									MyGame3DEffect::LVPMATRIX );
 
-		_pEffect->CommitChanges();
+		//_pEffect->CommitChanges();
 		
 		pMesh->render( _pEffect );
 	}

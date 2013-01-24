@@ -167,6 +167,7 @@ void MyGameMesh::render( MyGame3DEffect* pEffect )
 	{
 		pDevice->SetVertexDeclaration(this->pVerDecl);
 		pEffect->SetTextureByName( tex, MyGame3DEffect::TEXTURE );
+		pEffect->CommitChanges();
 		HR(pDevice->SetStreamSource( 0, this->pVerBuffer, 0, sizeof(float)*8 ) );
 		HR(pDevice->DrawPrimitive( D3DPT_TRIANGLELIST, 0, 2 ));	
 	}else if( this->pDXMesh )
@@ -176,6 +177,7 @@ void MyGameMesh::render( MyGame3DEffect* pEffect )
 			//pDevice->SetMaterial( &Mtrls[i] );
 			//pDevice->SetTexture( 0, Textures[i] );
 			pEffect->SetTextureByName( Textures[i], MyGame3DEffect::TEXTURE );
+			pEffect->CommitChanges();
 			this->pDXMesh->DrawSubset( i );
 		}
 	}
@@ -185,5 +187,32 @@ void MyGameMesh::createTexture( const char* fileName )
 {
 	IDirect3DDevice9* pDevice = MyGame3DDevice::GetSingleton()->GetDevice();
 	HR( D3DXCreateTextureFromFile( pDevice, L"colorful-1556.jpg", &tex) );
+}
+struct bmpHeader{
+	unsigned int	bfSize;		//4 bytes
+	unsigned int	bfReserved12;	//4 bytes
+	unsigned int	bfOffBits;	//4 bytes
+	unsigned int	biSize;		//4 bytes
+	unsigned int	Width;		//4 bytes
+	int	Height;		//4 bytes
+	char biPlanes[4];
+	unsigned int	biCompression;	//4 bytes
+	unsigned int	biSizeImage;	//4 bytes
+	unsigned int	biXPelsPerMeter;
+	unsigned int	biYPelsPerMeter;
+	unsigned int	biClrUsed;
+	unsigned int	biClrImportant;
+};
+void MyGameMesh::createGridFromBmp( const char* fileName )
+{
+	//TODO: 这货是完成还是废弃，这是一个问题
+	FILE* pFile = fopen( fileName, "rb" );
+	char bm[] = "  \n";	//3个
+	fread( bm, 1, 2, pFile );
+	struct bmpHeader header;
+
+	fread( &header, sizeof( bmpHeader), 1, pFile );
+
+
 }
 }

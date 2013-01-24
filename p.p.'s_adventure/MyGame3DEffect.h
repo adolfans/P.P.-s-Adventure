@@ -20,9 +20,18 @@ private:
 	ID3DXEffect*	pD9Effect;
 	map<string,MyGameSceneEntity* > entList;
 
+	D3DXHANDLE hWVPMatrix;
+	D3DXHANDLE hFinalMatArray;
+	D3DXHANDLE hTexture;
+	D3DXHANDLE hVertBlend;
+	D3DXHANDLE hMainTech;
+	D3DXHANDLE hLVPMatrix;
+	D3DXHANDLE hShadowMap;
+
 
 	static IDirect3DDevice9* pD9Device;
 	
+
 
 public:
 	static const char* WVPMATRIX;// = "WorldViewProj";
@@ -30,7 +39,7 @@ public:
 	static const char* TEXTURE;
 	static const char* VERTBLEND;
 	static const char* TECH;
-	static const char* LVPMATIX;
+	static const char* LVPMATRIX;
 	static const char* SHADOWMAP;
 	MyGame3DEffect(void);
 	MyGame3DEffect( int _resourceID );
@@ -38,13 +47,34 @@ public:
 	~MyGame3DEffect(void);
 
 	static void SetEffectDevice( IDirect3DDevice9* _pDevice );
+	
+	void SetMatrixByHandle( D3DXMATRIX& _matrix, const char* _matrixHandle );
+	void SetTechniqueByHandle( const char* _techHandle );
+	void SetBOOLByHandle( BOOL _ifEnable, const char* _boolVarHandle );
+	void SetMatrixArrayByHandle( D3DXMATRIX*& _pMat, unsigned int count, const char* _matArrayHandle );
+	void SetTextureByHandle( IDirect3DTexture9* _pTex, const char* _texHandle );
 
+	
 	void SetMatrixByName( D3DXMATRIX& _matrix, const char* _matrixName );
 	void SetTechniqueByName( const char* _techName );
 	void SetBOOLByName( BOOL _ifEnable, const char* _boolVarName );
 	void SetMatrixArrayByName( D3DXMATRIX*& _pMat, unsigned int count, const char* _matArrayName );
 	void SetTexture( MyGameTexture* _pTexture, const char* _texName );
 	void SetTextureByName( IDirect3DTexture9* _pTex, const char* _texName );
+
+	//D3DXHANDLE GetHandleByName(const char* name)
+	//{
+	//	if( name == WVPMATRIX )
+	//		return hWVPMatrix;
+	//	if( name == FINMATARRAY )
+	//		return hFinalMatArray;
+	//	if( name == TEXTURE )
+	//		return hTexture;
+	//	if( name == VERTBLEND )
+	//		return hVertBlend;
+	//	if( name == TECH )
+	//		return hMainTech;
+	//}
 
 	//void BeginEffect();
 	//void EndEffect();

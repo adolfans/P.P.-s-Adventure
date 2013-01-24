@@ -284,7 +284,7 @@ void SkinnedMesh::render( MyGame3DEffect* _pEffect )
 
 	_pEffect->SetMatrixByName( worldViewProj, MyGame3DEffect::WVPMATRIX );
 
-	_pEffect->SetMatrixByName( MyGameSceneManager::getLightViewProjMat(), MyGame3DEffect::LVPMATIX );
+	_pEffect->SetMatrixByName( MyGameSceneManager::getLightViewProjMat(), MyGame3DEffect::LVPMATRIX );
 
 	_pEffect->SetMatrixArrayByName( finalTransforms, numBones, MyGame3DEffect::FINMATARRAY );
 

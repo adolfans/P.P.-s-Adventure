@@ -16,17 +16,6 @@ sampler Texture0 = sampler_state
     AddressV  = WRAP;
 };
 
-sampler ShadowTex = sampler_state
-{
-	Texture = <ShadowMap>;
-	MinFilter = Anisotropic;
-	MagFilter = LINEAR;
-	MipFilter = LINEAR;
-	MaxAnisotropy = 8;
-	AddressU  = WRAP;
-    AddressV  = WRAP;
-};
-
 
 struct VS_INPUT 
 {
@@ -42,6 +31,7 @@ struct VS_OUTPUT
    float2 Tex      : TEXCOORD0;
    float4 lightVec : TEXCOORD1;
    float4 shadowMapCoord : TEXCOORD2;
+   float4 lightViewPos : TEXCOORD3;
 };
 
 VS_OUTPUT vs_main( VS_INPUT Input )
@@ -68,16 +58,28 @@ VS_OUTPUT vs_main( VS_INPUT Input )
    
    Output.shadowMapCoord.w = lightViewPos.w;
    
+   Output.lightViewPos = lightViewPos;
+   
    //Output.Tex = Input.Tex;
    return( Output );
 }
 
-float4 ps_main(float2 tex: TEXCOORD0, float3 lightVec: TEXCOORD1,float2 shadowMapCoord: TEXCOORD2) : COLOR0
+float4 ps_main(float2 tex: TEXCOORD0, float3 lightVec: TEXCOORD1,float2 shadowMapCoord: TEXCOORD2, float3 lightViewPos: TEXCOORD3) : COLOR0
 {
-	float4 shadowMapPix = tex2D( ShadowTex, shadowMapCoord );
-	if(  lightVec.r - shadowMapPix.r  > 0.01)
+	//float4 shadowMapPix = tex2D( ShadowTex, shadowMapCoord );
+	//浮点的精度导致某些本该相等的shadowMapPix和lightVec大小有差距
+	//所以单纯的lightVec.r > shadowMapPix.r比较会有误差
+	//此处改为lightVec.r - shadowMapPix.r  > 0.01来解决此问题
+	//但是恐导致shadow平移
+	float2 smcoord;
+	smcoord.x	= 0.5*(1+lightViewPos.x);
+	smcoord.y 	= 0.5*( 1-lightViewPos.y );
+	float pix = tex2D( ShadowTex, smcoord );
+/*	if( lightVec.r - pix.r > 0.01 )
+	//if(  lightVec.r - shadowMapPix.r  > 0.001)
+	//if( lightVec.r > shadowMapPix.r )
 		return float4( 0.0f, 0.0f, 0.0f, 1.0f );
-	else
+	else*/
 		return tex2D( Texture0, tex );
 
 	//return shadowMapPix;

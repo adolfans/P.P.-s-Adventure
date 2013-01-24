@@ -90,7 +90,8 @@ Scene1::Scene1(void)
 	swordEnt = new MyGameSceneEntity( sword, "testSword" );
 	pGenShadowMapEffect->AddEntity( swordEnt );
 	MyGameSceneNode::getNodeByName("Bip001_R_Hand")->attachEntity( swordEnt );
-
+	
+	pPlatformEffect->AddEntity( swordEnt );
 
 	//
 	//加载plane
@@ -117,10 +118,11 @@ Scene1::Scene1(void)
 	MyGameSceneManager::SetShadowMap( pPass1RenderTarget );
 
 		
-	HR( pDevice->GetRenderTarget( 0, &pScreenRenderSurface ) );//获取到当前的显示表面
+	HR( pDevice->GetRenderTarget( 0, &pScreenRenderSurface ) );//获取当前的显示表面
 
 	pPass1RenderTargetSurface = 0;
 	HR( pPass1RenderTarget->GetSurfaceLevel( 0, &pPass1RenderTargetSurface ) );
+
 
 }
 
@@ -130,9 +132,9 @@ Scene1::~Scene1(void)
 //	IRelease(vDecl);
 	HR( D3DXSaveSurfaceToFileW( L"test.tga", D3DXIFF_TGA  , pPass1RenderTargetSurface, 0, 0 ) );
 		
-		this->pPass1RenderTarget->Release();
-	this->pPass1RenderTargetSurface->Release();
-	pScreenRenderSurface->Release();
+	IRelease(pPass1RenderTarget);
+	IRelease(pPass1RenderTargetSurface);
+	IRelease(pScreenRenderSurface);//GetRenderTarget会增加它的引用计数
 	IRelease(_tex);
 	delete pGenShadowMapEffect;
 	delete testBoard;
@@ -200,65 +202,31 @@ void Scene1::Render()
 			D3DXMatrixIdentity( &idMat );
 			loliParentNode->move( 0.002, 0, 0.002 );
 			sceneRoot->ComputeCombinedMatrix( idMat);//TODO:这里更新的矩阵是到下一帧才应用到画面上
-		
-			//this->loli->render();
-
-			//this->loli->render( pGenShadowMapEffect );
-
 			pDevice->SetTexture( 0, _tex );
-			//MyGameSceneBillboard::DrawAllBillboards();
 			pDevice->SetRenderState( D3DRS_ZENABLE, true );
 			pDevice->SetRenderState( D3DRS_ZWRITEENABLE, true );
 		}
 		pDevice->EndScene();
 	
-		HR( pDevice->SetRenderTarget(0, pScreenRenderSurface) );
 
-		pDevice->BeginScene();
 	}
+
+	HR( pDevice->SetRenderTarget(0, pScreenRenderSurface) );	
+	pDevice->BeginScene();
 	
-
-
 	pDevice->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0x00FFFFFF, 1.0f, 0);
 	
-	{	
-
-		//pGenShadowMapEffect->SetTechniqueByName( MyGame3DEffect::TECH );
-
+	{
 		pGenShadowMapEffect->SetTextureByName( _tex, MyGame3DEffect::TEXTURE );
-		//pGenShadowMapEffect->SetMatrixByName( viewMat* perspectiveMat, MyGame3DEffect::WVPMATRIX );
 
-		//unsigned int num = 0;
-
-
-		//pGenShadowMapEffect->Begin( num );
-
-		//for( unsigned int i = 0; i < num; ++i )
-		//{
-		//	pGenShadowMapEffect->BeginPass( i );
-		//		plane->render(pGenShadowMapEffect);
-		//	pGenShadowMapEffect->EndPass();
-		//}
-		//pGenShadowMapEffect->End();
 		pLoliEffect->RenderAllEntities();
 		pPlatformEffect->RenderAllEntities();
 	}
 
-	//D3DXMATRIX rotateMat;
-
-	//D3DXMatrixRotationX( &rotateMat,  3.1415927/2 );
-
-	//D3DXMATRIX fMat = rotateMat * jiong;
-
-	
 	D3DXMatrixIdentity( &idMat );
 	loliParentNode->move( 0.002, 0, 0.002 );
 	sceneRoot->ComputeCombinedMatrix( idMat);//TODO:这里更新的矩阵是到下一帧才应用到画面上
 	
-	//this->loli->render();
-
-	//this->sword->Draw();
-
 	pDevice->SetTexture( 0, _tex );
 	MyGameSceneBillboard::DrawAllBillboards();
 

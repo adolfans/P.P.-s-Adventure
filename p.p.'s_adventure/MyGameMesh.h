@@ -30,6 +30,7 @@ public:
 	virtual void loadMeshFromXFile( const char* fileName );
 	virtual void createPlaneXZ(float width, float height  );
 	virtual void createTexture( const char* fileName );
+	virtual void createGridFromBmp( const char* fileName );
 	MyGameSceneNode* getNode();
 	//virtual void Draw();
 

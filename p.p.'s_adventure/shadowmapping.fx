@@ -60,6 +60,7 @@ technique main
 	{
 		ALPHABLENDENABLE   = false;
 		Lighting = false;
+		//cullmode = 2;//D3DCULL_CW;(鉴于模型问题，= =我还是不要用这种方式了)
 		vertexShader = compile vs_3_0 vertex_shader();
 		pixelShader  = compile ps_3_0 ps_main();
 	}

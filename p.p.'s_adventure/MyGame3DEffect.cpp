@@ -15,7 +15,7 @@ const char* MyGame3DEffect::FINMATARRAY = "FinalTransforms";
 const char* MyGame3DEffect::TEXTURE = "Tex";
 const char* MyGame3DEffect::VERTBLEND = "VertBlend";
 const char* MyGame3DEffect::TECH = "main";
-const char* MyGame3DEffect::LVPMATIX = "LightViewProj";
+const char* MyGame3DEffect::LVPMATRIX = "LightViewProj";
 const char* MyGame3DEffect::SHADOWMAP = "ShadowMap";
 
 MyGame3DEffect::MyGame3DEffect(void)
@@ -91,19 +91,51 @@ MyGame3DEffect::MyGame3DEffect( const char* fileName )
 {
 	ID3DXBuffer* errorBuffer = 0;
 	IDirect3DDevice9* pDevice = MyGame3DDevice::GetSingleton()->GetDevice();
-	HR( D3DXCreateEffectFromFileA( pDevice, fileName, 0, 0, D3DXSHADER_DEBUG|D3DXSHADER_SKIPOPTIMIZATION|D3DXSHADER_IEEE_STRICTNESS|D3DXSHADER_NO_PRESHADER|D3DXSHADER_SKIPVALIDATION , 0, &pD9Effect, &errorBuffer ) );
+	HR( D3DXCreateEffectFromFileA( pDevice, 
+									fileName, 
+									0, 
+									0, 
+									D3DXSHADER_DEBUG|
+									D3DXSHADER_SKIPOPTIMIZATION|
+									D3DXSHADER_IEEE_STRICTNESS|
+									D3DXSHADER_NO_PRESHADER|
+									D3DXSHADER_SKIPVALIDATION, 
+									0, 
+									&pD9Effect,
+									&errorBuffer ) );
 
 	if( errorBuffer )
 	{
 		//MyGameMessage( (char*)errorBuffer->GetBufferPointer() );
-		throw runtime_error( (char*)errorBuffer->GetBufferPointer() );
 		errorBuffer->Release();
+		throw runtime_error( (char*)errorBuffer->GetBufferPointer() );
 		return;
 	}
+
+	hWVPMatrix = pD9Effect->GetParameterByName( 0, WVPMATRIX );
+	hFinalMatArray = pD9Effect->GetParameterByName( 0, FINMATARRAY );
+	hTexture = pD9Effect->GetParameterByName( 0, TEXTURE );
+	hVertBlend = pD9Effect->GetParameterByName( 0, VERTBLEND );
+	hMainTech = pD9Effect->GetTechniqueByName(TECH );
+	hLVPMatrix = pD9Effect->GetParameterByName( 0, LVPMATRIX );
+	hShadowMap = pD9Effect->GetParameterByName( 0, SHADOWMAP );
+
+	//if( !mhMatrix )
+	//{
+	//	string err = "当前Effect中找不到";
+	//	err	+=_matrixName;
+	//	err +="这个Matrix";
+	//	throw runtime_error(err);
+	//}
+
 }
 
 void MyGame3DEffect::SetMatrixByName( D3DXMATRIX& _matrix, const char* _matrixName )
 {
+	if( _matrixName == WVPMATRIX )
+	{	pD9Effect->SetMatrix( hWVPMatrix, &_matrix ); return; }
+	if( _matrixName == LVPMATRIX )
+	{	pD9Effect->SetMatrix( hLVPMatrix, &_matrix ); return; }
 	D3DXHANDLE mhMatrix = pD9Effect->GetParameterByName( 0, _matrixName );
 	if( !mhMatrix )
 	{
@@ -117,6 +149,8 @@ void MyGame3DEffect::SetMatrixByName( D3DXMATRIX& _matrix, const char* _matrixNa
 
 void MyGame3DEffect::SetTechniqueByName( const char* _techName )
 {
+	if( _techName == TECH )
+	{	pD9Effect->SetTechnique( hMainTech); return ; }
 	D3DXHANDLE mhTech = pD9Effect->GetTechniqueByName( _techName );
 	if( !mhTech )
 	{
@@ -130,6 +164,8 @@ void MyGame3DEffect::SetTechniqueByName( const char* _techName )
 
 void MyGame3DEffect::SetBOOLByName( BOOL _ifEnable, const char* _boolVarName )
 {
+	if( _boolVarName== VERTBLEND)
+	{  pD9Effect->SetBool( hVertBlend, _ifEnable ); return; }
 	D3DXHANDLE mhBOOL = pD9Effect->GetParameterByName( 0, _boolVarName );
 	if( !mhBOOL )
 	{
@@ -177,6 +213,8 @@ void MyGame3DEffect::SetTexture( MyGameTexture* _pTexture, const char* _texName 
 
 void MyGame3DEffect::SetTextureByName( IDirect3DTexture9* _pTex, const char* _texName )
 {
+	if( _texName == TEXTURE )
+	{	pD9Effect->SetTexture( hTexture, _pTex ); return; }
 	D3DXHANDLE mhTexture = pD9Effect->GetParameterByName( 0, _texName );
 	if( !mhTexture )
 		throw runtime_error( string("当前Effect中没有找到")+_texName+"这个变量");
@@ -185,6 +223,8 @@ void MyGame3DEffect::SetTextureByName( IDirect3DTexture9* _pTex, const char* _te
 
 void MyGame3DEffect::SetMatrixArrayByName( D3DXMATRIX*& _pMat, unsigned int count, const char* _matArrayName )
 {
+	if( _matArrayName == FINMATARRAY )
+	{	pD9Effect->SetMatrixArray( hFinalMatArray, _pMat, count ); return; }
 	D3DXHANDLE mhMatArray = pD9Effect->GetParameterByName( 0, _matArrayName );
 	if( !mhMatArray )
 	{
