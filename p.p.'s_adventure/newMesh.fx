@@ -18,9 +18,12 @@ sampler2D S0 = sampler_state
 struct VS_OUTPUT
 {
 	float4 pos :POSITION0;
-	float4 pos1: POSITION1;
+	//float4 pos1: POSITION1;
 	float2 texCoord: TEXCOORD0;
 	float4 diffuse: COLOR0;
+	float4 lightVec : TEXCOORD1;
+	float4 shadowMapCoord : TEXCOORD2;
+	float4 lightViewPos : TEXCOORD3;
 };
 
 VS_OUTPUT VertexBlend( float4 pos :POSITION0,
@@ -28,45 +31,6 @@ VS_OUTPUT VertexBlend( float4 pos :POSITION0,
 						float2 weights	: BLENDWEIGHT0,
 						int4 boneIndices : BLENDINDICES0 )
 {
-/*	VS_OUTPUT output = (VS_OUTPUT)0;
-	
-	//float4 p = float4( 0.0f, 0.0f. 0.0f, 1.0f );
-	float4 p = { 0.0f, 0.0f, 0.0f, 1.0f };
-	float lastWeight = 0.0f;
-	int n = NumVertInfluences - 1;
-	float4 p_t = { 0.0, 0.0, 0.0, 1.f };
-	for( int i = 0; i < n + 1; ++ i )
-	{
-		if( i == n )
-		{
-			//计算最后一个权重的变换
-			//lastWeight += weights[i];
-			p_t = p + sign(weights[i])*mul(pos, FinalTransforms[boneIndices[i]]);
-		}else
-		{
-			if( lastWeight <= 0.9 )
-			{
-			lastWeight += sign(weights[i]);
-			p += sign(weights[i])*mul(pos, FinalTransforms[boneIndices[i]]);
-			}
-		}
-	}
-	//计算最后一个权重的变换
-	lastWeight = sign(1.0f - lastWeight);
-	p += lastWeight * mul(pos, FinalTransforms[boneIndices[n]]);
-
-	//p = p_t;
-	
-	p.w = 1.0f;
-	p_t.w = 1.0f;
-	output.pos = mul(p, WorldViewProj );
-	output.texCoord = texCoord;
-	output.diffuse = float4( 1.0f, 1.0f, 1.0f, 1.0f );
-	
-	output.pos1 = p_t;
-	
-	return output;  */
-	
 	VS_OUTPUT output =(VS_OUTPUT)0;
 	float4 p = float4(0.0f, 0.0f, 0.0f, 1.0f );
 	float lastWeight = 0.0f;
@@ -87,12 +51,45 @@ VS_OUTPUT VertexBlend( float4 pos :POSITION0,
 	
 	output.texCoord = texCoord;
 	output.diffuse = float4( 1.0f, 1.0f, 1.0f, 1.0f );
+	
+	   
+   float4 lightViewPos = mul( p, LightViewProj );
+   
+   //如果这货大于在Shadow map上采样到的那货的话，它就是影子
+   output.lightVec = lightViewPos.z;
+   output.lightVec.w = lightViewPos.w;
+   
+   output.shadowMapCoord.x = 0.5 *( lightViewPos.x + lightViewPos.w );
+   
+   output.shadowMapCoord.y = 0.5 * ( lightViewPos.w - lightViewPos.y );
+   
+   output.shadowMapCoord.z = 0;
+   
+   output.shadowMapCoord.w = lightViewPos.w;
+   
+   output.lightViewPos = lightViewPos;
+   
+	
 	return output;
 }
 
-float4 ps_main(float2 tex: TEXCOORD0) : COLOR0
-{   
-   return tex2D( S0, tex );
+float4 ps_main(float2 tex: TEXCOORD0, float2 shadowMapCoord: TEXCOORD2, float3 lightVec: TEXCOORD1) : COLOR0
+{  
+	float4 shadowMapPix = tex2D( ShadowTex, shadowMapCoord );
+	//float pix = tex2D( ShadowTex, smcoord );
+/*	if( lightVec.r - shadowMapPix.r > 0.01 )
+		return float4( 0.0f, 0.0f, 0.0f, 1.0f );
+	else
+		return tex2D( S0, tex );
+*/
+   //return tex2D( S0, tex );
+   
+	float4 color = tex2D( S0, tex );
+	if( lightVec.r - shadowMapPix.r > 0.01 )
+		return color - float4( 0.5, 0.5, 0.5, 0 );
+	else
+		return color;
+		
 }
 
 technique main

@@ -107,8 +107,9 @@ MyGame3DEffect::MyGame3DEffect( const char* fileName )
 	if( errorBuffer )
 	{
 		//MyGameMessage( (char*)errorBuffer->GetBufferPointer() );
-		errorBuffer->Release();
+		//errorBuffer->Release();
 		throw runtime_error( (char*)errorBuffer->GetBufferPointer() );
+		errorBuffer->Release();//·ÏÁË= =||
 		return;
 	}
 
@@ -130,7 +131,7 @@ MyGame3DEffect::MyGame3DEffect( const char* fileName )
 
 }
 
-void MyGame3DEffect::SetMatrixByName( D3DXMATRIX& _matrix, const char* _matrixName )
+void MyGame3DEffect::setMatrixByName( D3DXMATRIX& _matrix, const char* _matrixName )
 {
 	if( _matrixName == WVPMATRIX )
 	{	pD9Effect->SetMatrix( hWVPMatrix, &_matrix ); return; }
@@ -147,7 +148,7 @@ void MyGame3DEffect::SetMatrixByName( D3DXMATRIX& _matrix, const char* _matrixNa
 	pD9Effect->SetMatrix( mhMatrix, &_matrix );
 }
 
-void MyGame3DEffect::SetTechniqueByName( const char* _techName )
+void MyGame3DEffect::setTechniqueByName( const char* _techName )
 {
 	if( _techName == TECH )
 	{	pD9Effect->SetTechnique( hMainTech); return ; }
@@ -162,7 +163,7 @@ void MyGame3DEffect::SetTechniqueByName( const char* _techName )
 	pD9Effect->SetTechnique( mhTech );
 }
 
-void MyGame3DEffect::SetBOOLByName( BOOL _ifEnable, const char* _boolVarName )
+void MyGame3DEffect::setBOOLByName( BOOL _ifEnable, const char* _boolVarName )
 {
 	if( _boolVarName== VERTBLEND)
 	{  pD9Effect->SetBool( hVertBlend, _ifEnable ); return; }
@@ -179,7 +180,7 @@ MyGame3DEffect::~MyGame3DEffect(void)
 	pD9Effect->Release();
 }
 
-void MyGame3DEffect::SetEffectDevice( IDirect3DDevice9* _pDevice )
+void MyGame3DEffect::setEffectDevice( IDirect3DDevice9* _pDevice )
 {
 	pD9Device = _pDevice;
 }
@@ -200,7 +201,7 @@ void MyGame3DEffect::SetEffectDevice( IDirect3DDevice9* _pDevice )
 //	HR( pD9Effect->End() );
 //}
 
-void MyGame3DEffect::SetTexture( MyGameTexture* _pTexture, const char* _texName )
+void MyGame3DEffect::setTexture( MyGameTexture* _pTexture, const char* _texName )
 {
 	D3DXHANDLE mhTexture = pD9Effect->GetParameterByName( 0, _texName );
 	if( _pTexture == 0 )
@@ -211,7 +212,7 @@ void MyGame3DEffect::SetTexture( MyGameTexture* _pTexture, const char* _texName 
 	pD9Effect->CommitChanges();
 }
 
-void MyGame3DEffect::SetTextureByName( IDirect3DTexture9* _pTex, const char* _texName )
+void MyGame3DEffect::setTextureByName( IDirect3DTexture9* _pTex, const char* _texName )
 {
 	if( _texName == TEXTURE )
 	{	pD9Effect->SetTexture( hTexture, _pTex ); return; }
@@ -221,7 +222,7 @@ void MyGame3DEffect::SetTextureByName( IDirect3DTexture9* _pTex, const char* _te
 	HR( pD9Effect->SetTexture( mhTexture, _pTex ) );
 }
 
-void MyGame3DEffect::SetMatrixArrayByName( D3DXMATRIX*& _pMat, unsigned int count, const char* _matArrayName )
+void MyGame3DEffect::setMatrixArrayByName( D3DXMATRIX*& _pMat, unsigned int count, const char* _matArrayName )
 {
 	if( _matArrayName == FINMATARRAY )
 	{	pD9Effect->SetMatrixArray( hFinalMatArray, _pMat, count ); return; }
@@ -240,11 +241,12 @@ void MyGame3DEffect::AddEntity( MyGameSceneEntity* _ent )
 	//this->entList[ 
 }
 
-void MyGame3DEffect::RenderAllEntities()
+void MyGame3DEffect::RenderAllEntities( MyGameSceneManager* sceneMgr )
 {
 	unsigned int num;
-	this->SetTechniqueByName( MyGame3DEffect::TECH );
-	this->SetTextureByName( MyGameSceneManager::GetShadowMap(), MyGame3DEffect::SHADOWMAP );
+	this->setTechniqueByName( MyGame3DEffect::TECH );
+	this->setTextureByName( sceneMgr->getShadowMap(), MyGame3DEffect::SHADOWMAP );
+	this->setTextureByName( sceneMgr->getShadowMap(), MyGame3DEffect::SHADOWMAP );
 	this->Begin(num);
 	for( unsigned int i = 0; i < num; ++ i )
 	{

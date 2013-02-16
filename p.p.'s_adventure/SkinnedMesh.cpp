@@ -7,64 +7,175 @@
 using std::stack;
 #include <exception>
 using std::runtime_error;
+//using std::e;
 #include "MyGame3DEffect.h"
+#include "MyGameSceneManager.h"
+class AllocMeshHierarchy : public ID3DXAllocateHierarchy
+	{
+	private:
+		MyGameScene::MyGameSceneManager* sceneManager;
+	public:
+		AllocMeshHierarchy( MyGameSceneManager* sMgr ): sceneManager(sMgr){}
+		HRESULT STDMETHODCALLTYPE CreateFrame( THIS_ PCSTR Name, D3DXFRAME** ppNewFrame )
+		{
+			//*ppNewFrame = new D3DXFRAME;
+			//memset( *ppNewFrame, 0, sizeof( D3DXFRAME ) );
+			//if(Name)
+			//{
+			//	unsigned int len = strlen(Name);
+			//	(*ppNewFrame)->Name = new char[len+1];
+			//	strcpy( (*ppNewFrame)->Name, Name );
+			//}
+			//const char* myName = 0;
+			//if( strlen( Name ) <1 )
+			//	myName = 0;
+			//else
+			//	myName = Name;
+			//MyGameBoneNode* myNode = new MyGameBoneNode( Name, true );
+			MyGameBoneNode* myNode = this->sceneManager->CreateBoneNode( Name, true );
+			//if(Name)
+			//{
+			//	unsigned int len = strlen(Name);
+			//	myNode->Name = new char[len+1];
+			//	strcpy( myNode->Name, Name );
+			//}else
+			//{
+			//	myNode->Name = 0;
+			//}
+			*ppNewFrame = myNode;
 
+			return S_OK;
+		}
+		HRESULT STDMETHODCALLTYPE CreateMeshContainer( PCSTR Name,
+									const D3DXMESHDATA* pMeshData,
+									const D3DXMATERIAL* pMaterials,
+									const D3DXEFFECTINSTANCE* pEffectInstances,
+									DWORD NumMaterials,
+									const DWORD *pAjacency,
+									ID3DXSkinInfo* pSkinInfo,
+									D3DXMESHCONTAINER** ppNewMeshContainer )
+		{
+			//*ppNewMeshContainer = new D3DXMESHCONTAINER_EX;
+			//memset( *ppNewMeshContainer, 0, sizeof(D3DXMESHCONTAINER_EX) );
+			
+			D3DXMESHCONTAINER_EX* ctn = new D3DXMESHCONTAINER_EX;
+			memset( ctn, 0, sizeof(D3DXMESHCONTAINER_EX) );
+			ctn->NumMaterials = NumMaterials;
+			if(pMeshData)
+			{
+				ctn->MeshData = *pMeshData;
+				pMeshData->pMesh->AddRef();
+			}
+			if(Name)
+			{
+				unsigned int len = strlen( Name );
+				char* name = new char[len+1];
+				strcpy( name, Name );
+				ctn->Name = name;
+			}
+			if(pMaterials)
+			{
+				ctn->pMaterials = new D3DXMATERIAL[NumMaterials];
+				for( unsigned int i = 0; i != NumMaterials; ++ i )
+				{
+					ctn->pMaterials[i] = pMaterials[i];
+					unsigned int len = strlen( pMaterials[i].pTextureFilename );
+					ctn->pMaterials[i].pTextureFilename = new char[len+1];
+					strcpy( ctn->pMaterials[i].pTextureFilename, pMaterials[i].pTextureFilename ); 
+				}
+			}
+			if( pEffectInstances )
+			{
+				ctn->pEffects = new D3DXEFFECTINSTANCE;
+				*(ctn->pEffects) = *pEffectInstances;
+			}
+			if( pAjacency )
+			{
+				ctn->pAdjacency = new DWORD[3];
+				for( unsigned int i = 0; i != 3; ++ i )
+					ctn->pAdjacency[i] = pAjacency[i];
+			}
+			if( pSkinInfo )
+			{
+				ctn->pSkinInfo = pSkinInfo;
+				ctn->pSkinInfo->AddRef();
+				//ID3DXBuffer* boneComboTable = 0;
+				//UINT MaxMatrices = 26;
+				////ctn->NumPaletteEntries = min( MaxMatrices, pSkinInfo->GetNumBones() );
+				//
+				//HR( pSkinInfo->ConvertToIndexedBlendedMesh(
+				//	pMeshData->pMesh,
+				//	D3DXMESH_MANAGED | D3DXMESH_WRITEONLY,
+				//	ctn->NumPaletteEntries,
+				//	//MAX_NUM_BONES_SUPPORTED,
+				//	//pMeshContainer->pAdjacency,
+				//	NULL,
+				//	NULL, NULL, NULL,
+				//	&ctn->NumInfl,
+				//	&ctn->NumAttributeGroups,
+				//	&boneComboTable,
+				//	&ctn->MeshData.pMesh ));
+				//IRelease(boneComboTable);
+				/*
+				//Get Attribute Table
+				DWORD NumAttributeGroups;
+				ctn->MeshData.pMesh->GetAttributeTable(NULL, &NumAttributeGroups);
+				rand();
+				*/
+			}
+
+			*ppNewMeshContainer = ctn;
+			return S_OK;
+		}
+		HRESULT STDMETHODCALLTYPE DestroyFrame(
+								THIS_ D3DXFRAME* pFrameToFree)
+		{
+			//此处不作释放操作，改为由MyGameSceneNode作释放操作
+			//MyGameBoneNode* pFrame= static_cast<MyGameBoneNode*>(pFrameToFree);
+			//delete pFrame;
+			//由于MyGameSceneNode所存储的node不包括name为0，或者为空字符串的，所以
+			//此处仅释放那些节点
+			if( !pFrameToFree->Name ||  strlen(pFrameToFree->Name) < 1 )
+			{	MyGameBoneNode* pFrame= static_cast<MyGameBoneNode*>(pFrameToFree);
+				//delete pFrame;
+				this->sceneManager->destroy( pFrame );
+			}
+			return S_OK;
+		}
+		HRESULT STDMETHODCALLTYPE DestroyMeshContainer(
+								THIS_ D3DXMESHCONTAINER* pMeshContainerBase )
+		{
+			if(pMeshContainerBase->Name)
+				delete[] pMeshContainerBase->Name;
+			if(pMeshContainerBase->pMaterials)
+			{
+				for( int i = 0; i != pMeshContainerBase->NumMaterials; ++ i )
+				{
+					delete[] pMeshContainerBase->pMaterials[i].pTextureFilename;
+				}
+				delete[] pMeshContainerBase->pMaterials;
+			}
+			if( pMeshContainerBase->pEffects )
+				delete pMeshContainerBase->pEffects;
+			if( pMeshContainerBase->pAdjacency )
+				delete[] pMeshContainerBase->pAdjacency;
+			if( pMeshContainerBase->pSkinInfo )
+				IRelease(pMeshContainerBase->pSkinInfo);
+			if( pMeshContainerBase->MeshData.pMesh )
+				IRelease( pMeshContainerBase->MeshData.pMesh );
+			delete pMeshContainerBase;
+			return S_OK;
+		}
+	};
 SkinnedMesh::SkinnedMesh(void)
 {
-	IDirect3DDevice9* pDevice = MyGame3DDevice::GetSingleton()->GetDevice();
-	
-	AllocMeshHierarchy allocMeshHierarchy;
-
-	HR( D3DXLoadMeshHierarchyFromX( L"testLoliske.X", 
-								D3DXMESH_MANAGED,
-								pDevice,
-								&allocMeshHierarchy,
-								0,
-								&pHierarchyRoot,
-								&pAnimCtrller ) );
-
-/*
-	HR( D3DXCreateEffectFromFile( pDevice, L"newMesh.fx", 0, 0, D3DXSHADER_DEBUG|D3DXSHADER_SKIPOPTIMIZATION|D3DXSHADER_IEEE_STRICTNESS|D3DXSHADER_NO_PRESHADER|D3DXSHADER_SKIPVALIDATION , 0, &meshEffect, 0 ) );
-	hTech = meshEffect->GetTechniqueByName( "main" );
-	hTexture = meshEffect->GetParameterByName( 0, "Tex" );					
-	hWVPMat = meshEffect->GetParameterByName( 0, "WorldViewProj" );
-	hFinalMat = meshEffect->GetParameterByName( 0, "FinalTransforms" );
-*/
-
-	//gMtrl = meshEffect->GetParameterByName( 0, "gMtrl" );
-	//gLight = meshEffect->GetParameterByName( 0, "gLight" );
-
-	effect = new MyGame3DEffect( "newMesh.fx" );
-	
-	effect->SetBOOLByName( TRUE, MyGame3DEffect::VERTBLEND );
-
-	if( pHierarchyRoot )
-	{
-		//遍历树。目前已经毫无意义了	
-		//stack< D3DXFRAME* > hiStack;
-		//while( true )
-		//{
-		//	for( ; node; node = node->pFrameFirstChild )
-		//	{
-		//		//::MessageBoxA( 0, node->Name, 0, 0 );
-		//		hiStack.push( node );
-		//	}
-		//	if( !hiStack.size() )
-		//		break;
-		//	node = hiStack.top();
-		//	hiStack.pop();
-		//	node = node->pFrameSibling;
-		//}
-	}
-
-	this->rootSceneNode = static_cast<MyGameBoneNode*>(pHierarchyRoot);
 }
 
 SkinnedMesh::~SkinnedMesh(void)
 {
 	if( pHierarchyRoot )
 	{
-		AllocMeshHierarchy allocMeshHierarchy;
+		AllocMeshHierarchy allocMeshHierarchy( this->sceneMgr );
 		HR( D3DXFrameDestroy( pHierarchyRoot, &allocMeshHierarchy) );
 		pHierarchyRoot = 0;
 	}
@@ -107,10 +218,45 @@ D3DXFRAME* SkinnedMesh::findNodeWithMesh( D3DXFRAME	* frame )
 	return 0;
 }
  
-void SkinnedMesh::prepare()
+void SkinnedMesh::loadFromX(MyGameSceneManager* sMgr)
 {
+		IDirect3DDevice9* pDevice = MyGame3DDevice::GetSingleton()->GetDevice();
 	
-	IDirect3DDevice9* pDevice = MyGame3DDevice::GetSingleton()->GetDevice();
+	AllocMeshHierarchy allocMeshHierarchy( sMgr );
+
+	this->sceneMgr = sMgr;
+
+	HR( D3DXLoadMeshHierarchyFromXW( L"testLoliske.X", 
+								D3DXMESH_MANAGED,
+								pDevice,
+								&allocMeshHierarchy,
+								0,
+								&pHierarchyRoot,
+								&pAnimCtrller ) );
+
+	effect = new MyGame3DEffect( "newMesh.fx" );
+	
+	effect->setBOOLByName( TRUE, MyGame3DEffect::VERTBLEND );
+
+		//遍历树。目前已经毫无意义了	
+		//stack< D3DXFRAME* > hiStack;
+		//while( true )
+		//{
+		//	for( ; node; node = node->pFrameFirstChild )
+		//	{
+		//		//::MessageBoxA( 0, node->Name, 0, 0 );
+		//		hiStack.push( node );
+		//	}
+		//	if( !hiStack.size() )
+		//		break;
+		//	node = hiStack.top();
+		//	hiStack.pop();
+		//	node = node->pFrameSibling;
+		//}
+
+	this->rootSceneNode = static_cast<MyGameBoneNode*>(pHierarchyRoot);
+
+	//IDirect3DDevice9* pDevice = MyGame3DDevice::GetSingleton()->GetDevice();
 
 	D3DXFRAME* f = findNodeWithMesh( this->pHierarchyRoot );
 	if( f==0 ) HR(E_FAIL);
@@ -133,7 +279,7 @@ void SkinnedMesh::prepare()
 			if( !bone )
 				throw runtime_error( "不能转化为MyGameBoneNode*类型~" );
 
-			bone->SetOffsetMatrix( *pSkinInfo->GetBoneOffsetMatrix(i) );
+			bone->setOffsetMatrix( *pSkinInfo->GetBoneOffsetMatrix(i) );
 		}
 	}
 
@@ -156,19 +302,20 @@ void SkinnedMesh::prepare()
 	
 
 	finalTransforms = new D3DXMATRIX[numBones];
-	this->buildCombinedTransforms();
+//	this->buildCombinedTransforms();
 
-	this->GetAnimation( this->animList );
-	
+	this->getAnimation( this->animList );
+
+	setAnimation( string("attack1") );
 	lastTime = clock();
 
 }
 
-void SkinnedMesh::GetAnimation( vector<string> &animations )
+void SkinnedMesh::getAnimation( vector<string> &animations )
 {
 	ID3DXAnimationSet *anim = 0;
 	
-	for( int i = 0; i < this->pAnimCtrller->GetMaxNumAnimationSets(); ++ i )
+	for( unsigned int i = 0; i < this->pAnimCtrller->GetMaxNumAnimationSets(); ++ i )
 	{
 		anim = 0;
 		pAnimCtrller->GetAnimationSet( i, &anim );
@@ -184,6 +331,15 @@ void SkinnedMesh::GetAnimation( vector<string> &animations )
 			
 }
 
+void SkinnedMesh::setAnimation( string &name )
+{
+	ID3DXAnimationSet *anim = 0;
+	pAnimCtrller->GetAnimationSetByName( name.c_str(), &anim );
+		pAnimCtrller->SetTrackAnimationSet(0, anim);
+		currentAnimDurationTime = anim->GetPeriod();
+	anim->Release();
+
+}
 
 
 void SkinnedMesh::buildSkinnedMesh( ID3DXMesh* mesh )
@@ -223,7 +379,7 @@ void SkinnedMesh::buildSkinnedMesh( ID3DXMesh* mesh )
 
 
 }
-
+/*
 void SkinnedMesh::buildCombinedTransforms()//已废弃，以后不需要此方法了
 {
 	D3DXMATRIX idMat;
@@ -245,14 +401,14 @@ void SkinnedMesh::buildCombinedTransforms()//已废弃，以后不需要此方法了
 			this->combinedTransforms.push_back( MyGameSceneNode::getNodeByName(boneName)->getCombinedMatrix() );
 	}
 }
-
+*/
 void SkinnedMesh::render()
 {
 	IDirect3DDevice9* pDevice = MyGame3DDevice::GetSingleton()->GetDevice();
 	
 	//meshEffect->SetTechnique(hTech);
 
-	effect->SetTechniqueByName( MyGame3DEffect::TECH );
+	effect->setTechniqueByName( MyGame3DEffect::TECH );
 
 	unsigned int numPasses = 0;
 	
@@ -280,26 +436,26 @@ void SkinnedMesh::render( MyGame3DEffect* _pEffect )
 {
 	this->frameMove();
 
-	D3DXMATRIX worldViewProj = MyGameSceneManager::getViewProjCombinedMat();
+	D3DXMATRIX worldViewProj = sceneMgr->getViewProjCombinedMat();
 
-	_pEffect->SetMatrixByName( worldViewProj, MyGame3DEffect::WVPMATRIX );
+	_pEffect->setMatrixByName( worldViewProj, MyGame3DEffect::WVPMATRIX );
 
-	_pEffect->SetMatrixByName( MyGameSceneManager::getLightViewProjMat(), MyGame3DEffect::LVPMATRIX );
+	_pEffect->setMatrixByName( sceneMgr->getLightViewProjMat(), MyGame3DEffect::LVPMATRIX );
 
-	_pEffect->SetMatrixArrayByName( finalTransforms, numBones, MyGame3DEffect::FINMATARRAY );
+	_pEffect->setMatrixArrayByName( finalTransforms, numBones, MyGame3DEffect::FINMATARRAY );
 
 	IDirect3DDevice9* pDevice = MyGame3DDevice::GetSingleton()->GetDevice();
 	
 	pDevice->SetVertexDeclaration(this->vDecl);
 
-	_pEffect->SetBOOLByName( TRUE, MyGame3DEffect::VERTBLEND );
+	_pEffect->setBOOLByName( TRUE, MyGame3DEffect::VERTBLEND );
 
 	unsigned int j = 0;
 	for( vector<IDirect3DTexture9*>::iterator _itr = texList.begin();
 			_itr != texList.end();
 			 ++ _itr )
 	{
-			_pEffect->SetTextureByName( *_itr, MyGame3DEffect::TEXTURE );
+			_pEffect->setTextureByName( *_itr, MyGame3DEffect::TEXTURE );
 			for( int k = 0; k < NumAttributeGroups; ++ k )
 			{
 				_pEffect->CommitChanges();
@@ -309,7 +465,7 @@ void SkinnedMesh::render( MyGame3DEffect* _pEffect )
 			}
 			++j;
 	}
-	_pEffect->SetBOOLByName( FALSE, MyGame3DEffect::VERTBLEND );
+	_pEffect->setBOOLByName( FALSE, MyGame3DEffect::VERTBLEND );
 }
 
 void SkinnedMesh::frameMove( /*float deltaTime*/ /*,
@@ -318,7 +474,12 @@ void SkinnedMesh::frameMove( /*float deltaTime*/ /*,
 	float timeDelta = (clock() - lastTime)/1000.0f;
 	lastTime = clock();
 
-	this->pAnimCtrller->AdvanceTime( timeDelta, 0 );
+	//if( currentAnimDurationTime > pAnimCtrller->GetTime() )
+		this->pAnimCtrller->AdvanceTime( timeDelta, 0 );
+	//if( ifAnimEnded() )
+	//{
+	//	this->setAnimation( string("stop")); 
+	//}
 
 	for( unsigned int i = 0; i < numBones; ++ i )
 	{
@@ -326,4 +487,12 @@ void SkinnedMesh::frameMove( /*float deltaTime*/ /*,
 		finalTransforms[i] =MyGameSceneNode::getNodeByName(boneName)->getCombinedMatrix();
 	}
 
+}
+
+bool SkinnedMesh::ifAnimEnded()
+{
+	 if( currentAnimDurationTime <= pAnimCtrller->GetTime() )
+		 return true;
+	 else
+		 return false;
 }

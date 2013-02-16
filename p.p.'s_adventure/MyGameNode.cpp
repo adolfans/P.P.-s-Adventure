@@ -27,9 +27,13 @@ void MyGameNode::AddChild( MyGameNode* child )
 	else
 	{
 		MyGameNode* currentChild = pFirstChildNode;
+		if( currentChild == child )
+			throw runtime_error( "树中已有该节点，不能重复插入！！" );
 		while( currentChild->pSiblingNode )//如果后面有兄弟
 		{
 			currentChild = currentChild->pSiblingNode;
+			if( currentChild == child )
+				throw runtime_error( "树中已有该节点，不能重复插入！！" );
 		}//当后面没兄弟的时候
 		currentChild->pSiblingNode = child;
 	}

@@ -95,7 +95,7 @@ void MyGameSceneNode::rotateZ( float degree )
 }
 
 
-void MyGameSceneNode::DestroyAllNodes( )
+void MyGameSceneNode::destroyAllNodes( )
 {
 	for( map<string, MyGameSceneNode*>::iterator _itr = nodeMap.begin();
 		_itr != nodeMap.end();
@@ -120,3 +120,9 @@ void MyGameSceneNode::DestroyAllNodes( )
 }
 
 
+void MyGameSceneNode::setPosition( float x, float y, float z )
+{
+	D3DXMatrixTranslation( &posMat, x, y, z );
+	
+	localMatrix = rotateMat*scaleMat*posMat;
+}

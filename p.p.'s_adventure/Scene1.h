@@ -4,6 +4,7 @@
 #include "MyGameSceneBillboard.h"
 #include "SkinnedMesh.h"
 #include "MyGame3DEffect.h"
+
 class Scene1
 {
 private:
@@ -22,23 +23,31 @@ private:
 	MyGameSceneEntity* loliEnt;
 	MyGame3DEffect* pLoliEffect;
 	//ID3DXMesh*
-	MyGameSceneNode* loliParentNode;
+	//MyGameSceneNode* loliParentNode;
 	MyGameSceneNode* sceneRoot;
 	MyGameMesh* sword;
 	MyGameSceneEntity* swordEnt;
 	MyGameMesh* plane;
+
+	MyGameMesh* boxMesh;
+	MyGameSceneEntity* boxEnt;
+
 	MyGameSceneEntity* planeEnt;
 	MyGame3DEffect* pPlatformEffect;
-	
-
+	MyGameSceneNode* boxParentNode;
 
 	IDirect3DSurface9* pScreenRenderSurface;
 	IDirect3DTexture9* pPass1RenderTarget;
 	IDirect3DSurface9* pPass1RenderTargetSurface;
 
+	MyGameSceneManager* sceneMgr;
+
+	float stepLength;
 public:
 	Scene1(void);
 	virtual ~Scene1(void);
 	void Render();
+
+	void UpdatePhysx();
 };
 

@@ -71,15 +71,16 @@ float4 ps_main(float2 tex: TEXCOORD0, float3 lightVec: TEXCOORD1,float2 shadowMa
 	//所以单纯的lightVec.r > shadowMapPix.r比较会有误差
 	//此处改为lightVec.r - shadowMapPix.r  > 0.01来解决此问题
 	//但是恐导致shadow平移
-	float2 smcoord;
-	smcoord.x	= 0.5*(1+lightViewPos.x);
-	smcoord.y 	= 0.5*( 1-lightViewPos.y );
-	float pix = tex2D( ShadowTex, smcoord );
-/*	if( lightVec.r - pix.r > 0.01 )
+	//float2 smcoord;
+	//smcoord.x	= 0.5*(1+lightViewPos.x);
+	//smcoord.y 	= 0.5*( 1-lightViewPos.y );
+	//float pix = tex2D( ShadowTex, smcoord );
+	float4 shadowMapPix = tex2D( ShadowTex, shadowMapCoord );
+	if( lightVec.r - shadowMapPix.r > 0.01 )
 	//if(  lightVec.r - shadowMapPix.r  > 0.001)
 	//if( lightVec.r > shadowMapPix.r )
-		return float4( 0.0f, 0.0f, 0.0f, 1.0f );
-	else*/
+		return tex2D( Texture0, tex )-float4( 0.5f, 0.5f, 0.5f, 0.0f );
+	else
 		return tex2D( Texture0, tex );
 
 	//return shadowMapPix;

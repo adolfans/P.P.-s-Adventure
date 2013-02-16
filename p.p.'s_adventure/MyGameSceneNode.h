@@ -8,7 +8,7 @@ namespace MyGameScene{
 class MyGameSceneNode :
 	public MyGameNode
 {
-
+	friend class MyGameSceneManager;
 private:
 	// MyGameEffect* effect; //如果子节点设置了effect，那么以子节点的effect为优先，父节点的effect完全失效
 	bool ifRenderShadow;			//是否绘制影子。如果不绘制的话，在生成shadow map的阶段就不绘制这个节点
@@ -20,9 +20,10 @@ private:
 	D3DXMATRIX  posMat;
 
 	static map< string, MyGameSceneNode* > nodeMap; 
-public:
+protected:
 	MyGameSceneNode( const char* name );
 	virtual ~MyGameSceneNode(void);
+public:
 
 	virtual void SetLocalMatrix( D3DXMATRIX& mat ){ localMatrix = mat; }
 
@@ -38,11 +39,13 @@ public:
 	virtual void rotateY( float degree );
 	virtual void rotateZ( float degree );
 
+	virtual void setPosition( float x, float y, float z );
+
 	void attachEntity( MyGameSceneEntity* _ent );
 
 	static MyGameSceneNode* getNodeByName( const char* name );
 
-	static void	DestroyAllNodes( );
+	static void	destroyAllNodes( );
 protected:
 	virtual void SetCombinedMatrix( D3DXMATRIX& comMat ){ combinedMatrix = comMat;}
 };

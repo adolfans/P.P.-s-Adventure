@@ -16,7 +16,7 @@ MyGameSceneManager::~MyGameSceneManager(void)
 {
 }
 
-void MyGameSceneManager::SetViewProjMat( D3DXMATRIX& _vMat, D3DXMATRIX& _pMat )
+void MyGameSceneManager::setViewProjMat( D3DXMATRIX& _vMat, D3DXMATRIX& _pMat )
 {
 	vMat = _vMat; pMat = _pMat;
 }
@@ -27,12 +27,12 @@ D3DXMATRIX MyGameSceneManager::getViewProjCombinedMat()
 
 }
 
-void MyGameSceneManager::SetShadowMap( IDirect3DTexture9* _tex )
+void MyGameSceneManager::setShadowMap( IDirect3DTexture9* _tex )
 {
 	shadowMap = _tex;
 }
 
-IDirect3DTexture9* MyGameSceneManager::GetShadowMap()
+IDirect3DTexture9* MyGameSceneManager::getShadowMap()
 {
 	return shadowMap;
 }

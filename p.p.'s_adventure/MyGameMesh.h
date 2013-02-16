@@ -8,9 +8,10 @@
 #include <vector>
 #include "MyGame3DEffect.h"
 using std::vector;
-namespace MyGameScene{
+class MyGameMeshManager;
 class MyGameMesh
 {
+	friend class MyGameMeshManager;
 private:
 	ID3DXMesh* pDXMesh;
 	ID3DXBuffer* adjBuffer;
@@ -22,10 +23,10 @@ private:
 	IDirect3DVertexDeclaration9* pVerDecl;
 
 	IDirect3DTexture9* tex;
-
-public:
+protected:
 	MyGameMesh();
-	~MyGameMesh(void);
+	virtual ~MyGameMesh(void);
+public:
 
 	virtual void loadMeshFromXFile( const char* fileName );
 	virtual void createPlaneXZ(float width, float height  );
@@ -38,5 +39,19 @@ public:
 
 	//!!!should be called between BeginPass and EndPass!!!!!!!!!!
 	virtual void render( MyGame3DEffect* pEffect );
+
+	//static MyGameMesh* createMyGameMesh( meshType type );
+
 };
-}
+
+class MyGameMeshManager
+{
+	static vector<MyGameMesh*> meshVec;
+public:
+	enum meshType{
+		MESH,
+		SKINNED
+	};
+	static MyGameMesh* createMyGameMesh( meshType type );
+	static void destroyAllMeshes();
+};

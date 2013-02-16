@@ -14,17 +14,19 @@ class MyGameBoneNode :
 	public MyGameScene::MyGameSceneNode,
 	public D3DXFRAME
 {
+	friend class MyGameScene::MyGameSceneManager; 
 private:
 	D3DXMATRIX& localMatrix;
 	D3DXFRAME*& pSiblingBoneNode;//总觉得其实不必要是引用，因为一般情况下，这里的骨骼层次关系是不会被改变的
 	D3DXFRAME*& pFirstChildBoneNode;
 	D3DXMATRIX  offsetMat;
 	bool mangdByDXAllocHrc;
-public:
+protected:
 	MyGameBoneNode( const char* nodeName, bool _mangdByDXAllocHrc );
 	virtual ~MyGameBoneNode(void);
+public:
 
-	virtual void SetOffsetMatrix( D3DXMATRIX& offMat )
+	virtual void setOffsetMatrix( D3DXMATRIX& offMat )
 	{ offsetMat = offMat; }
 
 	virtual void ComputeCombinedMatrix(D3DXMATRIX& parentMat);

@@ -2,13 +2,25 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup>
+    <LibraryPath>$(PHYSX_PATH)\Lib\win32;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(PHYSX_PATH)\Include\foundation;$(PHYSX_PATH)\Include;$(PHYSX_PATH)\Include\extensions;$(IncludePath)</IncludePath>
+  </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>F:\TDDOWNLOAD\PhysX-3.2.0_PC_SDK_Core(1)\PhysX-3.2_PC_SDK_Core\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>PHYSX_PROFILE_SDK;_SECURE_SCL=0;_ITERATOR_DEBUG_LEVEL=0;WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;PX_CHECKED;PX_SUPPORT_VISUAL_DEBUGGER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <WarningLevel>Level1</WarningLevel>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <ExceptionHandling>false</ExceptionHandling>
+      <Optimization>MaxSpeed</Optimization>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>F:\TDDOWNLOAD\PhysX-3.2.0_PC_SDK_Core(1)\PhysX-3.2_PC_SDK_Core\Lib\win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(PHYSX_PATH)\Lib\win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>Winmm.lib PhysX3CommonCHECKED_x86.lib PhysX3CHECKED_x86.lib PhysX3CookingCHECKED_x86.lib PhysX3CharacterKinematicCHECKED_x86.lib PhysX3ExtensionsCHECKED.lib PhysX3VehicleCHECKED.lib RepX3CHECKED.lib RepXUpgrader3CHECKED.lib PhysXProfileSDKCHECKED.lib PhysXVisualDebuggerSDKCHECKED.lib PxTaskCHECKED.lib %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup />

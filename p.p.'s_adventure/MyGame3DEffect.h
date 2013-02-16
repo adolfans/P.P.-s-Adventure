@@ -46,21 +46,21 @@ public:
 	MyGame3DEffect( const char* fileName );
 	~MyGame3DEffect(void);
 
-	static void SetEffectDevice( IDirect3DDevice9* _pDevice );
+	static void setEffectDevice( IDirect3DDevice9* _pDevice );
 	
-	void SetMatrixByHandle( D3DXMATRIX& _matrix, const char* _matrixHandle );
+/*	void SetMatrixByHandle( D3DXMATRIX& _matrix, const char* _matrixHandle );
 	void SetTechniqueByHandle( const char* _techHandle );
 	void SetBOOLByHandle( BOOL _ifEnable, const char* _boolVarHandle );
 	void SetMatrixArrayByHandle( D3DXMATRIX*& _pMat, unsigned int count, const char* _matArrayHandle );
 	void SetTextureByHandle( IDirect3DTexture9* _pTex, const char* _texHandle );
-
+	*/
 	
-	void SetMatrixByName( D3DXMATRIX& _matrix, const char* _matrixName );
-	void SetTechniqueByName( const char* _techName );
-	void SetBOOLByName( BOOL _ifEnable, const char* _boolVarName );
-	void SetMatrixArrayByName( D3DXMATRIX*& _pMat, unsigned int count, const char* _matArrayName );
-	void SetTexture( MyGameTexture* _pTexture, const char* _texName );
-	void SetTextureByName( IDirect3DTexture9* _pTex, const char* _texName );
+	void setMatrixByName( D3DXMATRIX& _matrix, const char* _matrixName );
+	void setTechniqueByName( const char* _techName );
+	void setBOOLByName( BOOL _ifEnable, const char* _boolVarName );
+	void setMatrixArrayByName( D3DXMATRIX*& _pMat, unsigned int count, const char* _matArrayName );
+	void setTexture( MyGameTexture* _pTexture, const char* _texName );
+	void setTextureByName( IDirect3DTexture9* _pTex, const char* _texName );
 
 	//D3DXHANDLE GetHandleByName(const char* name)
 	//{
@@ -88,5 +88,5 @@ public:
 
 	void AddEntity( MyGameSceneEntity* _ent );
 
-	void RenderAllEntities();
+	void RenderAllEntities( MyGameSceneManager* sceneMgr );
 };

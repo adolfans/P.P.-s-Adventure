@@ -147,6 +147,9 @@
     <ClInclude Include="MyGameSceneEntity.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="..\p.p.%27s_adventure\MyCharacterController.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -231,6 +234,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="MyGameSceneEntity.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\p.p.%27s_adventure\MyCharacterController.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,11 +1,11 @@
 #include "StdAfx.h"
+#include "SkinnedMesh.h"
 #include "MyGameMesh.h"
 #include "MyGameSceneManager.h"
 #include "MyGame3DDevice.h"
 #include <exception>
 using std::runtime_error;
-using namespace MyGameScene;
-namespace MyGameScene{
+
 MyGameMesh::MyGameMesh()
 	:pDXMesh(0), adjBuffer(0),pVerBuffer(0),pVerDecl(0), tex(0)
 {
@@ -166,7 +166,7 @@ void MyGameMesh::render( MyGame3DEffect* pEffect )
 	if( pVerBuffer )
 	{
 		pDevice->SetVertexDeclaration(this->pVerDecl);
-		pEffect->SetTextureByName( tex, MyGame3DEffect::TEXTURE );
+		pEffect->setTextureByName( tex, MyGame3DEffect::TEXTURE );
 		pEffect->CommitChanges();
 		HR(pDevice->SetStreamSource( 0, this->pVerBuffer, 0, sizeof(float)*8 ) );
 		HR(pDevice->DrawPrimitive( D3DPT_TRIANGLELIST, 0, 2 ));	
@@ -176,7 +176,7 @@ void MyGameMesh::render( MyGame3DEffect* pEffect )
 		{
 			//pDevice->SetMaterial( &Mtrls[i] );
 			//pDevice->SetTexture( 0, Textures[i] );
-			pEffect->SetTextureByName( Textures[i], MyGame3DEffect::TEXTURE );
+			pEffect->setTextureByName( Textures[i], MyGame3DEffect::TEXTURE );
 			pEffect->CommitChanges();
 			this->pDXMesh->DrawSubset( i );
 		}
@@ -215,4 +215,35 @@ void MyGameMesh::createGridFromBmp( const char* fileName )
 
 
 }
+
+vector<MyGameMesh*> MyGameMeshManager::meshVec;
+
+MyGameMesh* MyGameMeshManager::createMyGameMesh( meshType type )
+{
+	MyGameMesh* pNewMesh;
+	switch( type )
+	{
+	case MESH:
+		pNewMesh = new MyGameMesh;
+		break;
+	case SKINNED:
+		pNewMesh = new SkinnedMesh;
+		break;
+	default:
+		pNewMesh = new MyGameMesh;
+	}
+	if( !pNewMesh )
+		throw runtime_error("¥¥Ω®mesh ß∞‹" );
+	meshVec.push_back( pNewMesh );
+	return pNewMesh;
+}
+
+void MyGameMeshManager::destroyAllMeshes()
+{
+	for( vector<MyGameMesh*>::iterator _itr = meshVec.begin();
+		_itr != meshVec.end();
+		++ _itr )
+		delete (*_itr);
+
+	meshVec.clear();
 }

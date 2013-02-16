@@ -8,7 +8,7 @@ SkinnedMesh1::SkinnedMesh1(void)
 
 	IDirect3DDevice9* pDevice = MyGame3DDevice::GetSingleton()->GetDevice();
 
-	D3DXLoadMeshHierarchyFromX( L"testx4.X", D3DXMESH_MANAGED,
+	D3DXLoadMeshHierarchyFromXW( L"testx4.X", D3DXMESH_MANAGED,
 								pDevice, &boneHierarchy, NULL,
 								&pRootBone,
 								&pAnimCtrl );

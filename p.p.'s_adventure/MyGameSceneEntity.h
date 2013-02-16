@@ -12,18 +12,21 @@
 #pragma once
 #include "MyGameScene.h"
 #include "MyGame3DEffect.h"
+#include "MyGameMesh.h"
 #include "SkinnedMesh.h"
 namespace MyGameScene{
 	class MyGameSceneEntity
 	{
+		friend class MyGameSceneManager;
 	private:
+		MyGameSceneManager* sceneMgr;
 		MyGameSceneNode* pNode;
 		MyGameMesh* pMesh;
-	public:
-		MyGameSceneEntity( MyGameMesh* _pMesh, const char* entName );
-		MyGameSceneEntity( SkinnedMesh* _pSkinnedMesh, const char* entName );
-		~MyGameSceneEntity(void);
+		MyGameSceneEntity( MyGameMesh* _pMesh, const char* entName, MyGameSceneNode* node, MyGameSceneManager* sMgr );
+		//MyGameSceneEntity( SkinnedMesh* _pSkinnedMesh, const char* entName, MyGameSceneNode* node, MyGameSceneManager* sMgr );
+		virtual ~MyGameSceneEntity(void);
 
+	public:
 		void render( MyGame3DEffect* _pEffect );
 		MyGameSceneNode* getNode();
 	};
