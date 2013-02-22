@@ -24,6 +24,17 @@
 #include <map>
 using std::map;
 
+
+#ifdef free
+#undef free
+#endif
+#ifdef realloc
+#undef realloc
+#endif
+#include <PxPhysicsAPI.h>
+using namespace physx;
+
+
 enum VertexType{
 	uiVertex
 };
@@ -72,6 +83,14 @@ private:
 	
 #endif
 	
+	//PhysX
+	PxFoundation*					phxFoundation;
+	PxProfileZoneManager*			phxProfileZoneManager;
+	PxPhysics*						phxSDK;
+	PxDefaultErrorCallback			phxDefaultErrorCallback;
+	PxDefaultAllocator				phxDefaultAllocatorCallback;
+	PxControllerManager*			phxControllerManager;
+
 	//D3D11
 #ifdef DX11
 	typedef struct D3D11Variables
@@ -108,6 +127,10 @@ public:
 	//
 	void StartRender();
 	void EndRender();
+
+	PxPhysics*				getPhysX();
+	PxFoundation*			getPhysXFoundation();
+	PxControllerManager*	getPhysXControllerManager();
 /*
 	static void StartRenderToTexture( MyGameTexture* _targetTexture );
 

@@ -14,7 +14,7 @@ sampler2D S0 = sampler_state
 struct VS_OUTPUT 
 {
    float4 Position : POSITION0;
-   float3 lightVec: TEXCOORD0;
+   float4 lightVec: TEXCOORD0;
 };
 
 VS_OUTPUT vertex_shader( float4 pos :POSITION0,
@@ -41,9 +41,10 @@ VS_OUTPUT vertex_shader( float4 pos :POSITION0,
 	}else{
 		output.Position = mul( pos, LightViewProj );
 	}
-		//output.lightVec = /*0.00148 * pos*/ output.Position.z * 0.01;
-		output.lightVec = /*0.00148 * pos*/ output.Position.z / output.Position.w;
-		return output;
+	//output.lightVec = /*0.00148 * pos*/ output.Position.z * 0.01;
+	output.lightVec = /*0.00148 * pos*/ output.Position.z;
+	output.lightVec.w = output.Position.w;
+	return output;
 }
 
 float4 ps_main(float3 lightVec: TEXCOORD0) : COLOR0
@@ -60,7 +61,7 @@ technique main
 	{
 		ALPHABLENDENABLE   = false;
 		Lighting = false;
-		//cullmode = 2;//D3DCULL_CW;(鉴于模型问题，= =我还是不要用这种方式了)
+		cullmode = 0;//D3DCULL_CW;(鉴于模型问题，= =我还是不要用这种方式了)
 		vertexShader = compile vs_3_0 vertex_shader();
 		pixelShader  = compile ps_3_0 ps_main();
 	}

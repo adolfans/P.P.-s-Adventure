@@ -16,18 +16,21 @@ class MyCharacterController
 {
 private:
 	//角色的Entity
-	MyGameSceneEntity* pCharEntity;
+	MyGameSceneEntity*	pCharEntity;
 	SkinnedMesh*		pCharMesh;
 
 
 	//角色对应的PxController
-	PxController* pCharacterCtl;//由controller来管理对象的生命周期
-
+	PxController*		pCharacterCtl;
+	
+	string currentAni;
 	string moveAni;
 
-	string currentAni;
+
+	static const PxF32		minDist;
+
 public:
-	MyCharacterController(PxPhysics& sdk,
+	MyCharacterController(//PxPhysics& sdk,
 											PxScene* pScene,
 											PxControllerManager* pManager,
 											float height,
@@ -36,11 +39,11 @@ public:
 	~MyCharacterController(void);
 
 	//void setPosition( float x, float y, float z );
-	void move( float x, float y, float z );
-	void rotateX( float degree );
-	void scale( float x, float y, float z );
+	void move( float x, float y, float z, PxF32 elapsedTime ) const;
+	void rotateX( float degree ) const;
+	void scale( float x, float y, float z ) const;
 	void bindAnimToMove( const char* aniName );
-	void playAnim( const char* aniName );
-	bool ifCurrentAnimEnd();
+	void playAnim( const char* aniName ) const;
+	bool ifCurrentAnimEnd() const;
 };
 

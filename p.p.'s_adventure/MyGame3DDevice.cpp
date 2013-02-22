@@ -4,6 +4,8 @@
 
 #include "MyGameTexture.h"
 #include "MyGame3DEffect.h"
+#include <exception>
+using std::runtime_error;
 MyGame3DDevice*	MyGame3DDevice::pMyGameDevice = 0;
 MyGameWindow*	MyGame3DDevice::pGameWindow		= 0;
 
@@ -73,6 +75,25 @@ bool MyGame3DDevice::InitVertexDecl( D3DVERTEXELEMENT9* _decl )
 }
 bool MyGame3DDevice::InitDevice()
 {
+	phxFoundation = PxCreateFoundation(PX_PHYSICS_VERSION, phxDefaultAllocatorCallback, phxDefaultErrorCallback);
+	if(!phxFoundation)
+	    throw runtime_error("PxCreateFoundation failed!");
+	bool recordMemoryAllocations = true;
+	phxProfileZoneManager = &PxProfileZoneManager::createProfileZoneManager(phxFoundation);
+	phxSDK = PxCreatePhysics(PX_PHYSICS_VERSION, *phxFoundation,
+            PxTolerancesScale(), recordMemoryAllocations, phxProfileZoneManager );
+
+	if(phxSDK == NULL) {
+		throw runtime_error("Error creating PhysX device.");
+	}
+	 
+    if(!PxInitExtensions(*phxSDK))
+	{
+		throw runtime_error("PxInitExtensions failed!");
+	}
+
+	phxControllerManager = PxCreateControllerManager( *phxFoundation );
+
 		////////////////////////////////
 		//if choosed D3DX9
 		////////////////////////////////
@@ -80,7 +101,6 @@ bool MyGame3DDevice::InitDevice()
 		MyGameMessage("using d3d9");
 		return InitD3DDevice9();
 #endif
-
 		////////////////////////////////
 		//if choosed D3DX11
 		////////////////////////////////
@@ -147,7 +167,11 @@ MyGame3DDevice::~MyGame3DDevice(void)
 	//}
 		//IRelease(pUIIndexBuffer);
 		//IRelease(pUIIndexBuffer);
-
+	phxControllerManager->release();
+	PxCloseExtensions();
+	phxSDK->release();
+	phxProfileZoneManager->release();
+	phxFoundation->release();
 		IRelease( pMyGameUIVertexDecl );
 		//pD3D9InstanceDevice->Release();
 		//pD3D9InstanceDevice->Release();
@@ -523,4 +547,19 @@ MyGame3DEffect*	MyGame3DDevice::CreateEffectFromResourceID( int _rsID )
 {
 	MyGame3DEffect* _pBloomEffect = new MyGame3DEffect( _rsID );
 	return _pBloomEffect;
+}
+
+PxPhysics*		MyGame3DDevice::getPhysX()
+{
+	return	phxSDK;
+}
+
+PxFoundation*	MyGame3DDevice::getPhysXFoundation()
+{
+	return this->phxFoundation;
+}
+
+PxControllerManager* MyGame3DDevice::getPhysXControllerManager()
+{
+	return this->phxControllerManager;
 }

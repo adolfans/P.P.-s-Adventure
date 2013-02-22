@@ -53,21 +53,21 @@ VS_OUTPUT VertexBlend( float4 pos :POSITION0,
 	output.diffuse = float4( 1.0f, 1.0f, 1.0f, 1.0f );
 	
 	   
-   float4 lightViewPos = mul( p, LightViewProj );
+	float4 lightViewPos = mul( p, LightViewProj );
    
-   //如果这货大于在Shadow map上采样到的那货的话，它就是影子
-   output.lightVec = lightViewPos.z;
-   output.lightVec.w = lightViewPos.w;
+	//如果这货大于在Shadow map上采样到的那货的话，它就是影子
+	output.lightVec = lightViewPos.z;
+	output.lightVec.w = lightViewPos.w;
    
-   output.shadowMapCoord.x = 0.5 *( lightViewPos.x + lightViewPos.w );
+	output.shadowMapCoord.x = 0.5 *( lightViewPos.x + lightViewPos.w );
    
-   output.shadowMapCoord.y = 0.5 * ( lightViewPos.w - lightViewPos.y );
+	output.shadowMapCoord.y = 0.5 * ( lightViewPos.w - lightViewPos.y );
    
-   output.shadowMapCoord.z = 0;
+	output.shadowMapCoord.z = 0;
+	
+	output.shadowMapCoord.w = lightViewPos.w;
    
-   output.shadowMapCoord.w = lightViewPos.w;
-   
-   output.lightViewPos = lightViewPos;
+	output.lightViewPos = lightViewPos;
    
 	
 	return output;
@@ -85,6 +85,7 @@ float4 ps_main(float2 tex: TEXCOORD0, float2 shadowMapCoord: TEXCOORD2, float3 l
    //return tex2D( S0, tex );
    
 	float4 color = tex2D( S0, tex );
+	//return float4( shadowMapPix.r, shadowMapPix.r, shadowMapPix.r, 1 );
 	if( lightVec.r - shadowMapPix.r > 0.01 )
 		return color - float4( 0.5, 0.5, 0.5, 0 );
 	else
@@ -96,6 +97,7 @@ technique main
 {
 	pass P0
 	{
+		cullmode = 0;
 		vertexShader = compile vs_3_0 VertexBlend();
 		pixelShader  = compile ps_3_0 ps_main();
 		//Sampler[0] = <S0>;

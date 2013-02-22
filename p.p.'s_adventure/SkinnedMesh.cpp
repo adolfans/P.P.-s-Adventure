@@ -79,9 +79,14 @@ class AllocMeshHierarchy : public ID3DXAllocateHierarchy
 				for( unsigned int i = 0; i != NumMaterials; ++ i )
 				{
 					ctn->pMaterials[i] = pMaterials[i];
-					unsigned int len = strlen( pMaterials[i].pTextureFilename );
-					ctn->pMaterials[i].pTextureFilename = new char[len+1];
-					strcpy( ctn->pMaterials[i].pTextureFilename, pMaterials[i].pTextureFilename ); 
+					if( !pMaterials[i].pTextureFilename )
+						ctn->pMaterials[i].pTextureFilename = 0;
+					else
+					{
+						unsigned int len = strlen( pMaterials[i].pTextureFilename );
+						ctn->pMaterials[i].pTextureFilename = new char[len+1];
+						strcpy( ctn->pMaterials[i].pTextureFilename, pMaterials[i].pTextureFilename ); 
+					}
 				}
 			}
 			if( pEffectInstances )
@@ -226,7 +231,7 @@ void SkinnedMesh::loadFromX(MyGameSceneManager* sMgr)
 
 	this->sceneMgr = sMgr;
 
-	HR( D3DXLoadMeshHierarchyFromXW( L"testLoliske.X", 
+	HR( D3DXLoadMeshHierarchyFromXW(L"aaaaaaa.X",// L"testLoliske.X", 
 								D3DXMESH_MANAGED,
 								pDevice,
 								&allocMeshHierarchy,
@@ -296,6 +301,22 @@ void SkinnedMesh::loadFromX(MyGameSceneManager* sMgr)
 	}
 
 	ID3DXMesh* pMesh = meshContainer->MeshData.pMesh;
+
+	BYTE* v = 0;
+
+	pMesh->LockVertexBuffer( 0, (void**)&v );
+
+	D3DXVECTOR3 minPoint, maxPoint;
+
+	HR( D3DXComputeBoundingBox( 
+					(D3DXVECTOR3*)v,
+					pMesh->GetNumVertices(),
+					D3DXGetFVFVertexSize( pMesh->GetFVF() ),
+					&minPoint,
+					&maxPoint) );
+
+
+	pMesh->UnlockVertexBuffer();
 
 	this->buildSkinnedMesh( pMesh );
 	

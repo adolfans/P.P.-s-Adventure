@@ -11,6 +11,9 @@
 #include <exception>
 using std::runtime_error;
 using std::bad_cast;
+
+#include "MyGameMusic.h"
+
 void GenerateGrid( int _width, int _height, float _stride, /*in & out*/Vertex** _pVertices, /*in & out*/WORD** _pIndices );
 
 void CalculateNormal( D3DXVECTOR3* _vector0, D3DXVECTOR3* _vector1, D3DXVECTOR3* _vector2, D3DXVECTOR3* _outVector ); 
@@ -236,8 +239,9 @@ MyGameInstance::~MyGameInstance(void)
 	//MyGameLevel::DestroyDialog();
 	
 	//MyGameUISprite::DestroyAllSprites();
+	MyGameMusic::ExitMusicSystem();
 	CEGUI::Direct3D9Renderer::destroySystem(		);
-	//		HR( D3DXSaveTextureToFile( L"‡å.png",D3DXIFF_PNG,pPass1RenderTarget, NULL ) );
+	//HR( D3DXSaveTextureToFile( L"‡å.png",D3DXIFF_PNG,pPass1RenderTarget, NULL ) );
 	//this->pBgTexture->Release();
 	//this->pPass1RenderTarget->Release();
 	//this->pPass1RenderTargetSurface->Release();
@@ -296,6 +300,7 @@ void MyGameInstance::InitGame()
 
 	pMyDevice = MyGame3DDevice::GetSingleton();
 
+	MyGameMusic::InitMusicSystem();
 }
 
 //HRESULT MyGameInstance::UpdateScene_tmp2()

@@ -36,6 +36,7 @@
     <Import Project="Lua.props" />
     <Import Project="DirectX9.props" />
     <Import Project="physxsdk1.props" />
+    <Import Project="SDL.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -43,6 +44,7 @@
     <Import Project="Lua.props" />
     <Import Project="DirectX9.props" />
     <Import Project="physxsdk1.props" />
+    <Import Project="SDL.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -113,6 +115,9 @@ copy mesh.fx ..\Debug</Command>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\p.p.%27s_adventure\MyCharacterController.h" />
+    <ClInclude Include="..\p.p.%27s_adventure\MyGameCamera.h" />
+    <ClInclude Include="..\p.p.%27s_adventure\MyGameMusic.h" />
+    <ClInclude Include="..\p.p.%27s_adventure\OggPlayer.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="MyGame3DDevice.h" />
     <ClInclude Include="MyGame3DEffect.h" />
@@ -150,6 +155,9 @@ copy mesh.fx ..\Debug</Command>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\p.p.%27s_adventure\MyCharacterController.cpp" />
+    <ClCompile Include="..\p.p.%27s_adventure\MyGameCamera.cpp" />
+    <ClCompile Include="..\p.p.%27s_adventure\MyGameMusic.cpp" />
+    <ClCompile Include="..\p.p.%27s_adventure\OggPlayer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MyGame3DDevice.cpp" />
     <ClCompile Include="MyGame3DEffect.cpp" />

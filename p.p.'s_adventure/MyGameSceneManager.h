@@ -6,15 +6,29 @@
 #include "MyGameSceneEntity.h"
 #include "SkinnedMesh.h"
 #include "d3dx9.h"
+#include "MyGame3DDevice.h"
+
+class MyGameCamera;
 namespace MyGameScene{
 class MyGameSceneManager
 {
+public:
+	enum UnitOfLength
+	{
+		Millimeter = 1000,
+		Meter = 1
+	};
 private:
-	static D3DXMATRIX vMat;
-	static D3DXMATRIX pMat;
-	static D3DXMATRIX lightViewProjMat;
-	static IDirect3DTexture9* shadowMap;
+	//D3DXMATRIX vMat;
+	D3DXMATRIX pMat;
+	D3DXMATRIX lightViewProjMat;
+	IDirect3DTexture9* shadowMap;
 	vector< MyGameSceneEntity * > entityList;
+	vector< MyGameCamera* >		cameraList; 
+	UnitOfLength unit;
+	PxDefaultCpuDispatcher*		mCpuDispatcher;
+	PxScene*					phxScene;
+	MyGameCamera*				currentCamera;
 public:
 	MyGameSceneManager(void);
 	~MyGameSceneManager(void);
@@ -32,17 +46,31 @@ public:
 		entityList.push_back( newEnt );
 		return newEnt;
 	}
-	/*static*/ void setViewProjMat( D3DXMATRIX& _vMat, D3DXMATRIX& _pMat );
-	/*static*/ void setLightViewProjMat( D3DXMATRIX& lightMat )
+
+	MyGameCamera* CreateCamera( float eyeX, float eyeY, float eyeZ, 
+				float targetX, float targetY, float targetZ);
+
+	void destroyAllCameras();
+
+	/*static*/// void setViewProjMat( const D3DXMATRIX& _vMat,const D3DXMATRIX& _pMat );
+	//void setViewMat( const D3DXMATRIX& _vMat ){ vMat = _vMat; }
+	/*static*/ void setLightViewProjMat( const D3DXMATRIX& lightMat )
 	{ lightViewProjMat = lightMat; }
 	/*static*/ void setShadowMap( IDirect3DTexture9* _tex );
-	/*static*/ IDirect3DTexture9* getShadowMap();
 
-	/*static*/ D3DXMATRIX& getViewMat(){ return vMat; }
+	void setCamera( MyGameCamera* cam );
+
+	/*static*/ IDirect3DTexture9* getShadowMap();
+	/*static*/ const D3DXMATRIX& getViewMat();//{ return vMat; }
 	/*static*/ D3DXMATRIX& getProjMat(){ return pMat;}
 	/*static*/ D3DXMATRIX  getViewProjCombinedMat();
 
 	/*static*/ D3DXMATRIX&  getLightViewProjMat(){ return lightViewProjMat;}
+
+	PxScene*		getPhysXScene() { return phxScene; }
+
+	UnitOfLength getUnitOfLength()
+	{	return this->unit; }
 
 	template< typename N >
 	void destroy( N& name ){ delete name; };
