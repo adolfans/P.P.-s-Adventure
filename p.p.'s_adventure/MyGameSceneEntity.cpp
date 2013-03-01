@@ -33,6 +33,7 @@ namespace MyGameScene{
 		_pEffect->setMatrixByName( pNode->getCombinedMatrix()* sceneMgr->getLightViewProjMat(),
 									MyGame3DEffect::LVPMATRIX );
 
+		_pEffect->setWorldMatrix( pNode->getCombinedMatrix() );
 		//_pEffect->CommitChanges();
 		
 		pMesh->render( _pEffect );

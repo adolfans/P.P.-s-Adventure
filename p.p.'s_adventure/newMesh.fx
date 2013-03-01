@@ -5,6 +5,11 @@
 //uniform extern texture gTex;
 #include "define.fx"
 
+float3 ambient : Ambient;
+float3 diffuse : Diffuse;
+float3 specular: Specular;
+float3 camera  : CameraPosition;
+
 sampler2D S0 = sampler_state
 {
 	Texture = <Tex>;
@@ -86,10 +91,12 @@ float4 ps_main(float2 tex: TEXCOORD0, float2 shadowMapCoord: TEXCOORD2, float3 l
    
 	float4 color = tex2D( S0, tex );
 	//return float4( shadowMapPix.r, shadowMapPix.r, shadowMapPix.r, 1 );
-	if( lightVec.r - shadowMapPix.r > 0.01 )
-		return color - float4( 0.5, 0.5, 0.5, 0 );
-	else
-		return color;
+	// if( lightVec.r - shadowMapPix.r > 0 )
+		// return color - float4( 0.5, 0.5, 0.5, 0 );
+	// else
+		// return color;
+	
+	return lightVec.r-shadowMapPix.r > 0.01 ? color - float4( 0.5, 0.5, 0.5, 0 ) : color;
 		
 }
 
@@ -97,7 +104,7 @@ technique main
 {
 	pass P0
 	{
-		cullmode = 0;
+		cullmode = 1;
 		vertexShader = compile vs_3_0 VertexBlend();
 		pixelShader  = compile ps_3_0 ps_main();
 		//Sampler[0] = <S0>;

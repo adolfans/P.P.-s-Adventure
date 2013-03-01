@@ -1,9 +1,10 @@
 #include "StdAfx.h"
 #include "MyGameSceneBillboard.h"
+#include "MyGameSceneManager.h"
 namespace MyGameScene{
 vector<MyGameSceneBillboard*> MyGameSceneBillboard::list;
 IDirect3DVertexBuffer9*	MyGameSceneBillboard::vb = 0;
-D3DXMATRIX MyGameSceneBillboard::viewMatrix;
+//D3DXMATRIX MyGameSceneBillboard::viewMatrix;
 MyGameSceneBillboard::MyGameSceneBillboard(void)
 	:pTexture(0)
 {
@@ -35,7 +36,7 @@ MyGameSceneBillboard::~MyGameSceneBillboard(void)
 	}
 }
 
-MyGameSceneBillboard* MyGameSceneBillboard::CreateBillboard()
+MyGameSceneBillboard* MyGameSceneBillboard::CreateBillboard( MyGameSceneManager* sMgr )
 {
 	if( vb == 0 )
 	{
@@ -62,7 +63,16 @@ MyGameSceneBillboard* MyGameSceneBillboard::CreateBillboard()
 
 	}
 	MyGameSceneBillboard* _b = new MyGameSceneBillboard();
+	_b->sceneManager = sMgr;
+	static int billboardnum = 1;
+	string name = "billboard" + billboardnum;
+	_b->node = sMgr->CreateSceneNode( name.c_str() );
 	return _b;
+}
+
+MyGameSceneNode* MyGameSceneBillboard::getNode()
+{
+	return node;
 }
 
 void MyGameSceneBillboard::AttachBillboardToScene( MyGameSceneBillboard* _b )
@@ -108,6 +118,7 @@ void MyGameSceneBillboard::SetPosition( float _x, float _y, float _z )
 {
 	D3DXMatrixTranslation( &moveMat, _x, _y, _z );
 	D3DXMATRIX _transpose;
+	D3DXMATRIX viewMatrix = sceneManager->getViewMat();
 	::D3DXMatrixTranspose( &_transpose, &viewMatrix );
 	_transpose._14 = 0;
 	_transpose._24 = 0;
@@ -122,25 +133,27 @@ void MyGameSceneBillboard::SetPosition( float _x, float _y, float _z )
 
 void MyGameSceneBillboard::SetSize( float _width, float _height )
 {
-	D3DXMatrixScaling( &scaleMat, _width, _height,  1.0f );
-	D3DXMATRIX _transpose;
-	::D3DXMatrixTranspose( &_transpose, &viewMatrix );
-	_transpose._14 = 0;
-	_transpose._24 = 0;
-	_transpose._34 = 0;
-	_transpose._41 = 0;
-	_transpose._42 = 0;
-	_transpose._43 = 0;
-	_transpose._44 = 1;
-	D3DXMatrixMultiply( &worldMat, &scaleMat, &_transpose );
-	D3DXMatrixMultiply( &worldMat, &worldMat, &moveMat ); 
+	//D3DXMatrixScaling( &scaleMat, _width, _height,  1.0f );
+	//D3DXMATRIX _transpose;
+	//D3DXMATRIX viewMatrix = sceneManager->getViewMat();
+	//::D3DXMatrixTranspose( &_transpose, &viewMatrix );
+	//_transpose._14 = 0;
+	//_transpose._24 = 0;
+	//_transpose._34 = 0;
+	//_transpose._41 = 0;
+	//_transpose._42 = 0;
+	//_transpose._43 = 0;
+	//_transpose._44 = 1;
+	//D3DXMatrixMultiply( &worldMat, &scaleMat, &_transpose );
+	//D3DXMatrixMultiply( &worldMat, &worldMat, &moveMat ); 
+	this->node->scale( _width, _height, 0.0f );
 }
-
+/*
 void MyGameSceneBillboard::SetViewMatrix( const D3DXMATRIX* pMat )
 {
 	viewMatrix = *pMat;
 }
-
+*/
 void MyGameSceneBillboard::DrawAllBillboards()
 {
 	IDirect3DDevice9* pDevice = MyGame3DDevice::GetSingleton()->GetDevice();
@@ -169,7 +182,26 @@ void MyGameSceneBillboard::DrawAllBillboards()
 	pDevice->SetStreamSource( 0, vb, 0, sizeof(float)*5 );
 	for( vector<MyGameSceneBillboard*>::iterator _itr = list.begin(); _itr != list.end(); ++ _itr )
 	{
-		D3DXMATRIX wvp = (*_itr)->worldMat*viewMatrix*perspectiveMat;
+		//D3DXMATRIX wvp = (*_itr)->worldMat*(*_itr)->sceneManager->getViewMat()*(*_itr)->sceneManager->getProjMat();//perspectiveMat;
+		D3DXMATRIX viewMatrix = (*_itr)->sceneManager->getViewMat();
+		D3DXMATRIX _transpose;
+		::D3DXMatrixTranspose( &_transpose, &viewMatrix );
+		_transpose._14 = 0;
+		_transpose._24 = 0;
+		_transpose._34 = 0;
+		_transpose._41 = 0;
+		_transpose._42 = 0;
+		_transpose._43 = 0;
+		_transpose._44 = 1;
+		//D3DXMatrixMultiply( &worldMat, &scaleMat, &_transpose );
+		(*_itr)->getNode()->setRotateMatrix( _transpose );
+		//上面的工作直到下一帧才会应用
+		//下面的工作是获得上一帧的worldmat;
+		D3DXMATRIX worldmat = (*_itr)->getNode()->getCombinedMatrix();
+		D3DXMATRIX wvp = worldmat
+			*(*_itr)->sceneManager->getViewMat()
+			*(*_itr)->sceneManager->getProjMat();//perspectiveMat;
+		
 		pDevice->SetTexture( 0, (*_itr)->pTexture );
 		//pDevice->SetTransform( D3DTS_WORLD, &( (*_itr)->worldMat) );
 		pDevice->SetTransform( D3DTS_WORLD, &wvp );//合并了world、viewMatrix、proj之后应用到world上

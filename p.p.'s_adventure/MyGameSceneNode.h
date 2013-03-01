@@ -35,11 +35,13 @@ public:
 	
 	virtual void move( float x, float y, float z );
 	virtual void scale( float x, float y, float z );
-	virtual void rotateX( float degree );
-	virtual void rotateY( float degree );
-	virtual void rotateZ( float degree );
+	virtual void rotateX( float angle );
+	virtual void rotateY( float angle );
+	virtual void rotateZ( float angle );
 
 	virtual void setPosition( float x, float y, float z );
+
+	virtual void setRotateMatrix( const D3DXMATRIX& rotatemat );
 
 	void attachEntity( MyGameSceneEntity* _ent );
 

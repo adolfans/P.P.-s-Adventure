@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Label="PropertySheets">
-    <Import Project="PxToolkit.props" />
+    <Import Project="PxToolkit_d.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
@@ -9,11 +9,11 @@
   </PropertyGroup>
   <PropertyGroup>
     <LibraryPath>$(PHYSX_PATH)\Lib\win32;$(LibraryPath)</LibraryPath>
-    <_PropertySheetDisplayName>physxsdk1</_PropertySheetDisplayName>
+    <_PropertySheetDisplayName>physxsdk_d</_PropertySheetDisplayName>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <Link>
-      <AdditionalDependencies>PhysX3Common_x86.lib;PhysX3_x86.lib;PhysX3Cooking_x86.lib;PhysX3CharacterKinematic_x86.lib;PhysX3Extensions.lib;PhysX3Vehicle.lib;RepX3.lib;RepXUpgrader3.lib;PhysXProfileSDK.lib;PhysXVisualDebuggerSDK.lib;PxTask.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>PhysX3CommonCHECKED_x86.lib;PhysX3CHECKED_x86.lib;PhysX3CookingCHECKED_x86.lib;PhysX3CharacterKinematicCHECKED_x86.lib;PhysX3ExtensionsCHECKED.lib;PhysX3VehicleCHECKED.lib;RepX3CHECKED.lib;RepXUpgrader3CHECKED.lib;PhysXProfileSDKCHECKED.lib;PhysXVisualDebuggerSDKCHECKED.lib;PxTaskCHECKED.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup />

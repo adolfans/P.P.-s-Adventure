@@ -87,6 +87,11 @@ bool MyGame3DDevice::InitDevice()
 		throw runtime_error("Error creating PhysX device.");
 	}
 	 
+	phxCooking = PxCreateCooking(PX_PHYSICS_VERSION, *phxFoundation, PxCookingParams());
+
+	if( !phxCooking )
+		throw runtime_error( "PxCreateCooking failed" );
+
     if(!PxInitExtensions(*phxSDK))
 	{
 		throw runtime_error("PxInitExtensions failed!");
@@ -169,6 +174,7 @@ MyGame3DDevice::~MyGame3DDevice(void)
 		//IRelease(pUIIndexBuffer);
 	phxControllerManager->release();
 	PxCloseExtensions();
+	phxCooking->release();
 	phxSDK->release();
 	phxProfileZoneManager->release();
 	phxFoundation->release();
@@ -562,4 +568,9 @@ PxFoundation*	MyGame3DDevice::getPhysXFoundation()
 PxControllerManager* MyGame3DDevice::getPhysXControllerManager()
 {
 	return this->phxControllerManager;
+}
+
+PxCooking*		MyGame3DDevice::getPhysXCooking()
+{
+	return phxCooking;
 }

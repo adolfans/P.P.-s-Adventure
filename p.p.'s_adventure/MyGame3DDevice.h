@@ -90,6 +90,8 @@ private:
 	PxDefaultErrorCallback			phxDefaultErrorCallback;
 	PxDefaultAllocator				phxDefaultAllocatorCallback;
 	PxControllerManager*			phxControllerManager;
+	PxCooking*						phxCooking;
+
 
 	//D3D11
 #ifdef DX11
@@ -131,6 +133,7 @@ public:
 	PxPhysics*				getPhysX();
 	PxFoundation*			getPhysXFoundation();
 	PxControllerManager*	getPhysXControllerManager();
+	PxCooking*				getPhysXCooking();
 /*
 	static void StartRenderToTexture( MyGameTexture* _targetTexture );
 

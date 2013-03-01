@@ -90,8 +90,8 @@ MyGame3DEffect::MyGame3DEffect( int _resourceID )
 MyGame3DEffect::MyGame3DEffect( const char* fileName )
 {
 	ID3DXBuffer* errorBuffer = 0;
-	IDirect3DDevice9* pDevice = MyGame3DDevice::GetSingleton()->GetDevice();
-	HR( D3DXCreateEffectFromFileA( pDevice, 
+	this->pD9Device = MyGame3DDevice::GetSingleton()->GetDevice();
+	HR( D3DXCreateEffectFromFileA( pD9Device, 
 									fileName, 
 									0, 
 									0, 
@@ -117,11 +117,29 @@ MyGame3DEffect::MyGame3DEffect( const char* fileName )
 
 	hWVPMatrix = pD9Effect->GetParameterByName( 0, WVPMATRIX );
 	hFinalMatArray = pD9Effect->GetParameterByName( 0, FINMATARRAY );
-	hTexture = pD9Effect->GetParameterByName( 0, TEXTURE );
+	hTexture_o = pD9Effect->GetParameterByName( 0, TEXTURE );
 	hVertBlend = pD9Effect->GetParameterByName( 0, VERTBLEND );
 	hMainTech = pD9Effect->GetTechniqueByName(TECH );
 	hLVPMatrix = pD9Effect->GetParameterByName( 0, LVPMATRIX );
 	hShadowMap = pD9Effect->GetParameterByName( 0, SHADOWMAP );
+
+	hCameraPosition = pD9Effect->GetParameterBySemantic( 0, "CameraPosition" );
+	hDiffuse		= pD9Effect->GetParameterBySemantic( 0, "Diffuse" );
+	hAmbient		= pD9Effect->GetParameterBySemantic( 0, "Ambient" );
+	hSpecular		= pD9Effect->GetParameterBySemantic( 0, "Specular" );
+	hParallelLightPos = pD9Effect->GetParameterBySemantic( 0, "ParallelLightVector" );
+	hViewMatrix		= pD9Effect->GetParameterBySemantic( 0, "ViewMatrix" );
+	hWorldMatrix	= pD9Effect->GetParameterBySemantic( 0, "WorldMatrix" );
+	//hTexture1		= pD9Effect->GetParameterBySemantic( "Texture", 1 );
+	
+	for( int i = 0; i != 6; ++ i )
+	{
+		char buff[4];//其实一个字节就够了- -
+		_itoa_s(i, buff, 4);
+		string textureName( string("Texture") + buff );
+		hTexture[i] = pD9Effect->GetParameterBySemantic( 0, textureName.c_str() );
+	}
+	hCameraVector = pD9Effect->GetParameterBySemantic( 0, "ViewMatrix" );
 
 	//if( !mhMatrix )
 	//{
@@ -214,10 +232,15 @@ void MyGame3DEffect::setTexture( MyGameTexture* _pTexture, const char* _texName 
 	pD9Effect->CommitChanges();
 }
 
+void MyGame3DEffect::setTexture( unsigned int index, IDirect3DTexture9* _tex )
+{
+	this->pD9Effect->SetTexture( this->hTexture[index], _tex );
+}
+
 void MyGame3DEffect::setTextureByName( IDirect3DTexture9* _pTex, const char* _texName )
 {
 	if( _texName == TEXTURE )
-	{	pD9Effect->SetTexture( hTexture, _pTex ); return; }
+	{	pD9Effect->SetTexture( hTexture_o, _pTex ); return; }
 	D3DXHANDLE mhTexture = pD9Effect->GetParameterByName( 0, _texName );
 	if( !mhTexture )
 		throw runtime_error( string("当前Effect中没有找到")+_texName+"这个变量");
@@ -249,6 +272,10 @@ void MyGame3DEffect::RenderAllEntities( MyGameSceneManager* sceneMgr )
 	this->setTechniqueByName( MyGame3DEffect::TECH );
 	this->setTextureByName( sceneMgr->getShadowMap(), MyGame3DEffect::SHADOWMAP );
 	this->setTextureByName( sceneMgr->getShadowMap(), MyGame3DEffect::SHADOWMAP );
+	this->pD9Effect->SetValue( this->hCameraPosition, &sceneMgr->getCameraPosition(), sizeof( D3DVECTOR ) );
+	this->pD9Effect->SetValue( this->hCameraVector, &sceneMgr->getCameraVector(), sizeof( D3DXVECTOR3 ) );
+	this->pD9Effect->SetValue( this->hParallelLightPos, &sceneMgr->getMainLightVector(), sizeof( D3DVECTOR ) );
+	this->pD9Effect->SetMatrix( this->hViewMatrix, &sceneMgr->getViewMat() );
 	this->Begin(num);
 	for( unsigned int i = 0; i < num; ++ i )
 	{

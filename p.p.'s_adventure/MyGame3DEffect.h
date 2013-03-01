@@ -22,7 +22,7 @@ private:
 
 	D3DXHANDLE hWVPMatrix;
 	D3DXHANDLE hFinalMatArray;
-	D3DXHANDLE hTexture;
+	D3DXHANDLE hTexture_o;
 	D3DXHANDLE hVertBlend;
 	D3DXHANDLE hMainTech;
 	D3DXHANDLE hLVPMatrix;
@@ -31,7 +31,15 @@ private:
 
 	static IDirect3DDevice9* pD9Device;
 	
-
+	D3DXHANDLE hCameraPosition;
+	D3DXHANDLE hCameraVector;
+	D3DXHANDLE hDiffuse;
+	D3DXHANDLE hAmbient;
+	D3DXHANDLE hSpecular;
+	D3DXHANDLE hParallelLightPos;
+	D3DXHANDLE hViewMatrix;
+	D3DXHANDLE hWorldMatrix;
+	D3DXHANDLE hTexture[6];		//代表六重纹理
 
 public:
 	static const char* WVPMATRIX;// = "WorldViewProj";
@@ -61,7 +69,7 @@ public:
 	void setMatrixArrayByName( D3DXMATRIX*& _pMat, unsigned int count, const char* _matArrayName );
 	void setTexture( MyGameTexture* _pTexture, const char* _texName );
 	void setTextureByName( IDirect3DTexture9* _pTex, const char* _texName );
-
+	void setTexture( unsigned int index, IDirect3DTexture9* );
 	//D3DXHANDLE GetHandleByName(const char* name)
 	//{
 	//	if( name == WVPMATRIX )
@@ -78,6 +86,15 @@ public:
 
 	//void BeginEffect();
 	//void EndEffect();
+
+	//
+
+	void setDiffuse( D3DVECTOR& vec ){ pD9Effect->SetValue( hDiffuse, &vec, sizeof(D3DVECTOR) );}
+	void setAmbient( D3DVECTOR& vec ){ pD9Effect->SetValue( hAmbient, &vec, sizeof(D3DVECTOR) ); }
+	void setSpecular( D3DVECTOR& vec ){ pD9Effect->SetValue( hSpecular, &vec, sizeof(D3DVECTOR)); }
+
+	void setWorldMatrix( D3DXMATRIX& worldMatrix ){ pD9Effect->SetMatrix( hWorldMatrix, &worldMatrix ); }  
+
 	void Begin( unsigned int &num )
 	{  this->pD9Effect->Begin( &num, 0 );}
 	void End(){ this->pD9Effect->End(); }
@@ -89,4 +106,12 @@ public:
 	void AddEntity( MyGameSceneEntity* _ent );
 
 	void RenderAllEntities( MyGameSceneManager* sceneMgr );
+	D3DXHANDLE getHandleByName( string name )
+	{	
+		return this->pD9Effect->GetParameterByName( 0, name.c_str() );
+	}
+	void setValueByHandle( D3DXHANDLE handle, void* data, unsigned int size )
+	{
+		this->pD9Effect->SetValue( handle, data, size );
+	}
 };

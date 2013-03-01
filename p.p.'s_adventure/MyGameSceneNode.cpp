@@ -72,25 +72,31 @@ void MyGameSceneNode::scale( float x, float y, float z )
 	localMatrix = rotateMat*scaleMat*posMat;
 }
 
-void MyGameSceneNode::rotateX( float degree )
+void MyGameSceneNode::rotateX( float angle )
 {
 	D3DXMATRIX nscMat;
-	D3DXMatrixRotationX( &nscMat, degree );
+	D3DXMatrixRotationX( &nscMat, angle );
 	rotateMat*=nscMat;
 	localMatrix = rotateMat*scaleMat*posMat;
 }
-void MyGameSceneNode::rotateY( float degree )
+void MyGameSceneNode::rotateY( float angle )
 {
 	D3DXMATRIX nscMat;
-	D3DXMatrixRotationY( &nscMat, degree );
+	D3DXMatrixRotationY( &nscMat, angle );
 	rotateMat*=nscMat;
 	localMatrix = rotateMat*scaleMat*posMat;
 }
-void MyGameSceneNode::rotateZ( float degree )
+void MyGameSceneNode::rotateZ( float angle )
 {
 	D3DXMATRIX nscMat;
-	D3DXMatrixRotationZ( &nscMat, degree );
+	D3DXMatrixRotationZ( &nscMat, angle );
 	rotateMat*=nscMat;
+	localMatrix = rotateMat*scaleMat*posMat;
+}
+
+void MyGameSceneNode::setRotateMatrix( const D3DXMATRIX& rotatemat )
+{
+	rotateMat = rotatemat;
 	localMatrix = rotateMat*scaleMat*posMat;
 }
 

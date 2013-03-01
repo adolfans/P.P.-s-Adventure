@@ -6,25 +6,18 @@
 #include "MyGame3DEffect.h"
 #include "MyGameMusic.h"
 #include "MyGameCamera.h"
+#include "MyShadowMap.h"
+#include "MyCharacterController.h"
 class Scene1
 {
 private:
-	//IDirect3DVertexBuffer9* rectBuffer;
-	//IDirect3DVertexDeclaration9* vDecl;
-	//IDirect3DDevice9* pDevice;
-	//D3DXMATRIX viewMat;
-	//D3DXMATRIX perspectiveMat;
-	D3DXMATRIX lightViewPersMat;
+	//D3DXMATRIX lightViewPersMat;
 	D3DXMATRIX idMat;
-	//IDirect3DTexture9* _tex;
-	//ID3DXEffect* pTransformEffect;
 	MyGame3DEffect* pGenShadowMapEffect;
 	MyGameSceneBillboard* testBoard;
 	SkinnedMesh* loli;
 	MyGameSceneEntity* loliEnt;
 	MyGame3DEffect* pLoliEffect;
-	//ID3DXMesh*
-	//MyGameSceneNode* loliParentNode;
 	MyGameSceneNode* sceneRoot;
 	MyGameMesh* sword;
 	MyGameSceneEntity* swordEnt;
@@ -37,15 +30,20 @@ private:
 	MyGame3DEffect* pPlatformEffect;
 	MyGameSceneNode* boxParentNode;
 
-	IDirect3DSurface9* pScreenRenderSurface;
-	IDirect3DTexture9* pPass1RenderTarget;
-	IDirect3DSurface9* pPass1RenderTargetSurface;
-
 	MyGameSceneManager* sceneMgr;
 
 	MyGameCamera* cam;
 
 	MyGameMusic bgm;
+
+	MyShadowMap* shadowMap;
+
+	MyCharacterController* con;
+
+	MyGame3DEffect*		waterEffect;
+	D3DXHANDLE waterSpeedHandle;
+
+	MyGameCamera* lightCam;
 
 	float stepLength;
 public:

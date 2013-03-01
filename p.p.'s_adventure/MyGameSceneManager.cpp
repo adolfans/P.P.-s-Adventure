@@ -42,6 +42,9 @@ MyGameSceneManager::MyGameSceneManager(void)
 	float w = (float)MyGame3DDevice::GetWidth();
 	D3DXMatrixPerspectiveFovLH( &pMat, D3DX_PI*0.2f, w/h, 5.0f, 100.0f );//最后一个一开始是2000= =||
 	
+	root = new MyGameSceneNode( "root" );
+
+	root->scale( 0.003, 0.003f, 0.003f );
 }
 
 
@@ -72,11 +75,17 @@ IDirect3DTexture9* MyGameSceneManager::getShadowMap()
 	return shadowMap;
 }
 
+const D3DXVECTOR3& MyGameSceneManager::getCameraVector() const
+{
+	return this->currentCamera->getLookingVector();
+}
+
 MyGameCamera* MyGameSceneManager::CreateCamera( float eyeX, float eyeY, float eyeZ, 
 				float targetX, float targetY, float targetZ)
 {
 	MyGameCamera* newCam = new MyGameCamera( eyeX, eyeY, eyeZ, 
 						targetX, targetY, targetZ);
+	newCam->sceneMgr = this;
 	cameraList.push_back( newCam );
 	return newCam;
 }
@@ -99,5 +108,38 @@ void MyGameSceneManager::setCamera( MyGameCamera* cam)
 const D3DXMATRIX& MyGameSceneManager::getViewMat()
 {
 	return this->currentCamera->getViewMatrix();
+}
+
+D3DVECTOR MyGameSceneManager::getCameraPosition()
+{
+	return currentCamera->getPosition();
+}
+
+void MyGameSceneManager::setParallelMainLight( MyGameCamera* cam )
+{
+	
+	float h = (float)MyGame3DDevice::GetHeight();
+	float w = (float)MyGame3DDevice::GetWidth();
+	D3DXMatrixOrthoLH( &this->lightProjMat, w/20.0f, h/20.0f, 5.0f, 80.0f );
+
+	this->lightCamera = cam;
+
+	this->lightViewProjMat = cam->getViewMatrix( ) * lightProjMat;
+}
+
+D3DXMATRIX& MyGameSceneManager::getLightViewProjMat()
+{
+	lightViewProjMat = lightCamera->getViewMatrix( ) * lightProjMat;
+	return lightViewProjMat;
+}
+
+D3DVECTOR MyGameSceneManager::getMainLightPosition()
+{
+	return this->lightCamera->getPosition();
+}
+
+D3DXVECTOR3 MyGameSceneManager::getMainLightVector()
+{
+	return -lightCamera->getLookingVector();
 }
 }

@@ -26,6 +26,7 @@ private:
 	string currentAni;
 	string moveAni;
 
+	PxScene*			phxScene;
 
 	static const PxF32		minDist;
 
@@ -40,10 +41,11 @@ public:
 
 	//void setPosition( float x, float y, float z );
 	void move( float x, float y, float z, PxF32 elapsedTime ) const;
-	void rotateX( float degree ) const;
+	void rotateX( float angle ) const;
 	void scale( float x, float y, float z ) const;
 	void bindAnimToMove( const char* aniName );
 	void playAnim( const char* aniName ) const;
 	bool ifCurrentAnimEnd() const;
+	D3DVECTOR getPosition();
 };
 
