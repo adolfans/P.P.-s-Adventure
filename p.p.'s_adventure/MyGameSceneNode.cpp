@@ -4,7 +4,7 @@
 #include "MyGameSceneEntity.h"
 #include <exception>
 using std::runtime_error;
-
+//应用矩阵的顺序是：先缩放，再旋转，在平移
 namespace MyGameScene{
 	map<string, MyGameSceneNode*> MyGameSceneNode::nodeMap;
 
@@ -61,7 +61,7 @@ void MyGameSceneNode::move( float x, float y, float z )
 	D3DXMATRIX nosMat;
 	D3DXMatrixTranslation( &nosMat, x, y, z );
 	posMat*=nosMat;
-	localMatrix = rotateMat*scaleMat*posMat;
+	localMatrix = scaleMat*rotateMat*posMat;
 }
 
 void MyGameSceneNode::scale( float x, float y, float z )
@@ -69,7 +69,7 @@ void MyGameSceneNode::scale( float x, float y, float z )
 	D3DXMATRIX nsMat;
 	D3DXMatrixScaling( &nsMat, x, y, z );
 	scaleMat*=nsMat;
-	localMatrix = rotateMat*scaleMat*posMat;
+	localMatrix = scaleMat*rotateMat*posMat;
 }
 
 void MyGameSceneNode::rotateX( float angle )
@@ -77,29 +77,36 @@ void MyGameSceneNode::rotateX( float angle )
 	D3DXMATRIX nscMat;
 	D3DXMatrixRotationX( &nscMat, angle );
 	rotateMat*=nscMat;
-	localMatrix = rotateMat*scaleMat*posMat;
+	localMatrix = scaleMat*rotateMat*posMat;
 }
 void MyGameSceneNode::rotateY( float angle )
 {
 	D3DXMATRIX nscMat;
 	D3DXMatrixRotationY( &nscMat, angle );
 	rotateMat*=nscMat;
-	localMatrix = rotateMat*scaleMat*posMat;
+	localMatrix = scaleMat*rotateMat*posMat;
 }
 void MyGameSceneNode::rotateZ( float angle )
 {
 	D3DXMATRIX nscMat;
 	D3DXMatrixRotationZ( &nscMat, angle );
 	rotateMat*=nscMat;
-	localMatrix = rotateMat*scaleMat*posMat;
+	localMatrix = scaleMat*rotateMat*posMat;
 }
 
 void MyGameSceneNode::setRotateMatrix( const D3DXMATRIX& rotatemat )
 {
 	rotateMat = rotatemat;
-	localMatrix = rotateMat*scaleMat*posMat;
+	localMatrix = scaleMat*rotateMat*posMat;
 }
 
+void MyGameSceneNode::setRotationAngleY( float angle )
+{
+	D3DXMATRIX nscMat;
+	D3DXMatrixRotationY( &nscMat, angle );
+	rotateMat = nscMat;
+	localMatrix = scaleMat*rotateMat*posMat;
+}
 
 void MyGameSceneNode::destroyAllNodes( )
 {
@@ -123,12 +130,11 @@ void MyGameSceneNode::destroyAllNodes( )
 	{
 		this->AddChild(_ent->getNode());
 	}
-}
 
-
-void MyGameSceneNode::setPosition( float x, float y, float z )
-{
-	D3DXMatrixTranslation( &posMat, x, y, z );
-	
-	localMatrix = rotateMat*scaleMat*posMat;
+	void MyGameSceneNode::setPosition( float x, float y, float z )
+	{
+		D3DXMatrixTranslation( &posMat, x, y, z );
+		
+		localMatrix = scaleMat*rotateMat*posMat;
+	}
 }

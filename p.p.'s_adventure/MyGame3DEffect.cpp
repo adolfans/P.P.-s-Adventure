@@ -130,6 +130,8 @@ MyGame3DEffect::MyGame3DEffect( const char* fileName )
 	hParallelLightPos = pD9Effect->GetParameterBySemantic( 0, "ParallelLightVector" );
 	hViewMatrix		= pD9Effect->GetParameterBySemantic( 0, "ViewMatrix" );
 	hWorldMatrix	= pD9Effect->GetParameterBySemantic( 0, "WorldMatrix" );
+	hViewProjMatrix = pD9Effect->GetParameterBySemantic( 0, "ViewProjMatrix" );
+	hMirrorReflectionMatrix	= pD9Effect->GetParameterBySemantic( 0, "MirrorReflectionMatrix" );
 	//hTexture1		= pD9Effect->GetParameterBySemantic( "Texture", 1 );
 	
 	for( int i = 0; i != 6; ++ i )
@@ -274,8 +276,11 @@ void MyGame3DEffect::RenderAllEntities( MyGameSceneManager* sceneMgr )
 	this->setTextureByName( sceneMgr->getShadowMap(), MyGame3DEffect::SHADOWMAP );
 	this->pD9Effect->SetValue( this->hCameraPosition, &sceneMgr->getCameraPosition(), sizeof( D3DVECTOR ) );
 	this->pD9Effect->SetValue( this->hCameraVector, &sceneMgr->getCameraVector(), sizeof( D3DXVECTOR3 ) );
+	//this->pD9Effect->SetValue( this->hViewProjMatrix, &sceneMgr->getViewProjCombinedMat(), sizeof( D3DXMATRIX ) );
 	this->pD9Effect->SetValue( this->hParallelLightPos, &sceneMgr->getMainLightVector(), sizeof( D3DVECTOR ) );
 	this->pD9Effect->SetMatrix( this->hViewMatrix, &sceneMgr->getViewMat() );
+	this->pD9Effect->SetMatrix( this->hViewProjMatrix, &sceneMgr->getViewProjCombinedMat() );
+	this->pD9Effect->SetValue( this->hMirrorReflectionMatrix, &sceneMgr->getMirrorReflectionMatrix(), sizeof( D3DXMATRIX ) );
 	this->Begin(num);
 	for( unsigned int i = 0; i < num; ++ i )
 	{
@@ -290,4 +295,3 @@ void MyGame3DEffect::RenderAllEntities( MyGameSceneManager* sceneMgr )
 	}
 	this->End();
 }
-

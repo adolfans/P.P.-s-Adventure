@@ -167,7 +167,7 @@ void MyGameInstance::RunLevel(MyGameLevel *level)
 				delete level;
 			level = l;
 			this->pLevel = level;
-			gameInstance->UpdateLevel(level);
+			gameInstance->UpdateLevel(level,msg);
 		}catch( const runtime_error &e ){
 			::MessageBoxA( 0, e.what(), 0, 0 );
 		}catch( const bad_cast &e ){
@@ -177,14 +177,16 @@ void MyGameInstance::RunLevel(MyGameLevel *level)
 	return;
 }
 
-void MyGameInstance::UpdateLevel( MyGameLevel* level )
+void MyGameInstance::UpdateLevel( MyGameLevel* level, MSG msg )
 {
 	
 	IDirect3DDevice9* pD3D9InstanceDevice = this->pMyDevice->GetDevice();
 
+	level->Update( msg );
+
 	pD3D9InstanceDevice->BeginScene();
 
-	level->Update();
+	level->Render();
 
 	//D3DXMATRIX mat;
 

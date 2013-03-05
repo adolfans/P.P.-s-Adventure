@@ -117,6 +117,8 @@ copy mesh.fx ..\Debug</Command>
     <ClInclude Include="..\p.p.%27s_adventure\MyCharacterController.h" />
     <ClInclude Include="..\p.p.%27s_adventure\MyGameCamera.h" />
     <ClInclude Include="..\p.p.%27s_adventure\MyGameMusic.h" />
+    <ClInclude Include="..\p.p.%27s_adventure\MyPlayerRole.h" />
+    <ClInclude Include="..\p.p.%27s_adventure\MyRenderTargetTexture.h" />
     <ClInclude Include="..\p.p.%27s_adventure\MyShadowMap.h" />
     <ClInclude Include="..\p.p.%27s_adventure\OggPlayer.h" />
     <ClInclude Include="main.h" />
@@ -158,6 +160,8 @@ copy mesh.fx ..\Debug</Command>
     <ClCompile Include="..\p.p.%27s_adventure\MyCharacterController.cpp" />
     <ClCompile Include="..\p.p.%27s_adventure\MyGameCamera.cpp" />
     <ClCompile Include="..\p.p.%27s_adventure\MyGameMusic.cpp" />
+    <ClCompile Include="..\p.p.%27s_adventure\MyPlayerRole.cpp" />
+    <ClCompile Include="..\p.p.%27s_adventure\MyRenderTargetTexture.cpp" />
     <ClCompile Include="..\p.p.%27s_adventure\MyShadowMap.cpp" />
     <ClCompile Include="..\p.p.%27s_adventure\OggPlayer.cpp" />
     <ClCompile Include="main.cpp" />

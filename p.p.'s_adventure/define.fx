@@ -29,3 +29,21 @@ technique aaaaa
 {
 
 }
+
+
+float shadowTest( float2 shadowMapCoord, float3 lightVec	)//如果是阴影，返回-1,如果不是，返回0
+{
+	float4 shadowMapPix = tex2D( ShadowTex, shadowMapCoord );
+	
+	// if( lightVec.r - shadowMapPix.r > 0.01 )
+	// //if( lightVec.r > shadowMapPix.r )
+		// color = tex2D( tex0, tex )-float4( 0.5f, 0.5f, 0.5f, 0.0f );
+	// else
+		// color = tex2D( tex0, tex );
+	
+	//return color;
+	//return float4( diffuse*saturate( lightVec * normal )+color, 1.0 );
+	//float4 specularColor;
+	float jiongjiong = saturate(lightVec.r);
+	return jiongjiong - shadowMapPix.r > 0.01 ? -1.0f : 0;
+}

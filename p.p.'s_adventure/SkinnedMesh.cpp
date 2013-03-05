@@ -173,6 +173,7 @@ class AllocMeshHierarchy : public ID3DXAllocateHierarchy
 		}
 	};
 SkinnedMesh::SkinnedMesh(void)
+	:animLoop( true )
 {
 }
 
@@ -185,19 +186,7 @@ SkinnedMesh::~SkinnedMesh(void)
 		pHierarchyRoot = 0;
 	}
 	
-	IRelease(pSkinnedMesh);
 	IRelease(pAnimCtrller);
-	IRelease(vDecl);
-	for( vector<IDirect3DTexture9*>::iterator _itr = texList.begin(); 
-		_itr != texList.end(); ++ _itr )
-	{
-		IRelease( *_itr );
-	}
-	/*
-	IRelease(meshEffect);
-	*/
-
-	delete effect;
 
 	IRelease(pSkinInfo);
 
@@ -239,9 +228,9 @@ void SkinnedMesh::loadFromX(MyGameSceneManager* sMgr)
 								&pHierarchyRoot,
 								&pAnimCtrller ) );
 
-	effect = new MyGame3DEffect( "newMesh.fx" );
+	//effect = new MyGame3DEffect( "newMesh.fx" );
 	
-	effect->setBOOLByName( TRUE, MyGame3DEffect::VERTBLEND );
+	//effect->setBOOLByName( TRUE, MyGame3DEffect::VERTBLEND );
 
 		//遍历树。目前已经毫无意义了	
 		//stack< D3DXFRAME* > hiStack;
@@ -290,33 +279,11 @@ void SkinnedMesh::loadFromX(MyGameSceneManager* sMgr)
 
 
 	D3DVERTEXELEMENT9 verElmt[MAX_FVF_DECL_SIZE];
-	pSkinInfo->GetDeclaration( verElmt );
-	pDevice->CreateVertexDeclaration( verElmt, &vDecl );
-
-	for( unsigned int i = 0; i < meshContainer->NumMaterials; ++ i )
-	{
-		IDirect3DTexture9* pTex = 0;
-		D3DXCreateTextureFromFileA( pDevice, meshContainer->pMaterials[i].pTextureFilename, &pTex );
-		texList.push_back( pTex );
-	}
+	pSkinInfo->GetDeclaration( verElmt );;
 
 	ID3DXMesh* pMesh = meshContainer->MeshData.pMesh;
 
-	BYTE* v = 0;
-
-	pMesh->LockVertexBuffer( 0, (void**)&v );
-
-	D3DXVECTOR3 minPoint, maxPoint;
-
-	HR( D3DXComputeBoundingBox( 
-					(D3DXVECTOR3*)v,
-					pMesh->GetNumVertices(),
-					D3DXGetFVFVertexSize( pMesh->GetFVF() ),
-					&minPoint,
-					&maxPoint) );
-
-
-	pMesh->UnlockVertexBuffer();
+	//BYTE* v = 0;
 
 	this->buildSkinnedMesh( pMesh );
 	
@@ -327,7 +294,7 @@ void SkinnedMesh::loadFromX(MyGameSceneManager* sMgr)
 
 	this->getAnimation( this->animList );
 
-	setAnimation( string("attack1") );
+	//setAnimation( string("stop"), true );
 	lastTime = clock();
 
 }
@@ -352,24 +319,33 @@ void SkinnedMesh::getAnimation( vector<string> &animations )
 			
 }
 
-void SkinnedMesh::setAnimation( string &name )
+void SkinnedMesh::setAnimation( const string &name, bool loop)
 {
+	if( loop && currentAnim == name )	// 如果正在循环并且正在播放的动画就是当前想要播放的动画，则直接返回
+		return;
 	ID3DXAnimationSet *anim = 0;
 	pAnimCtrller->GetAnimationSetByName( name.c_str(), &anim );
 		pAnimCtrller->SetTrackAnimationSet(0, anim);
 		currentAnimDurationTime = anim->GetPeriod();
+		pAnimCtrller->SetTrackPosition( 0, 0.0f );
+		//pAnimCtrller->KeyTrackPosition( 0, 0.0f, 0.0f );
+	
 	anim->Release();
-
+	currentAnim = name;
+	pAnimCtrller->ResetTime();
+	this->animLoop = loop;//设置是否循环
 }
-
 
 void SkinnedMesh::buildSkinnedMesh( ID3DXMesh* mesh )
 {
 	ID3DXBuffer* boneComboTable = 0;
-	pSkinnedMesh = 0;
+	//pSkinnedMesh = 0;
 	maxVertInfluences= 0;
 
 	mesh->AddRef();
+
+	ID3DXMesh* pSkinnedMesh;
+
 	HR( pSkinInfo->ConvertToIndexedBlendedMesh( 
 				mesh,
 				D3DXMESH_MANAGED | D3DXMESH_WRITEONLY,
@@ -383,12 +359,18 @@ void SkinnedMesh::buildSkinnedMesh( ID3DXMesh* mesh )
 				&boneComboTable,
 				&pSkinnedMesh ) );
 
+	D3DXFRAME* f = findNodeWithMesh( this->pHierarchyRoot );
+	if( f==0 ) HR(E_FAIL);
+	D3DXMESHCONTAINER* meshContainer = f->pMeshContainer;
 	
-	/*
-	HR( pSkinInfo->ConvertToBlendedMesh(
-					mesh,
-					D3DXMESH_MANAGED | D3DXMESH_WRITEONLY,
-	*/
+	this->setID3DXMesh( pSkinnedMesh );
+
+	for( unsigned int i = 0; i < meshContainer->NumMaterials; ++ i )
+	{
+		
+		this->addMtrls(meshContainer->pMaterials[i].MatD3D, meshContainer->pMaterials[i].pTextureFilename );
+	}
+
 	IRelease(boneComboTable );
 
 	IRelease( mesh );
@@ -398,6 +380,7 @@ void SkinnedMesh::buildSkinnedMesh( ID3DXMesh* mesh )
 	attributeTable = new D3DXATTRIBUTERANGE[NumAttributeGroups];
 	pSkinnedMesh->GetAttributeTable(attributeTable, NULL);
 
+	
 
 }
 /*
@@ -423,6 +406,7 @@ void SkinnedMesh::buildCombinedTransforms()//已废弃，以后不需要此方法了
 	}
 }
 */
+/*
 void SkinnedMesh::render()
 {
 	IDirect3DDevice9* pDevice = MyGame3DDevice::GetSingleton()->GetDevice();
@@ -452,41 +436,52 @@ void SkinnedMesh::render()
 	//meshEffect->End();
 	effect->End();
 }
-
+*/
 void SkinnedMesh::render( MyGame3DEffect* _pEffect )
 {
+	////判断不循环的动画是否结束
+	//if( (!this->animLoop) && this->ifAnimEnded() )
+	//{
+	//	animLoop =
+	//}
 	this->frameMove();
 
 	D3DXMATRIX worldViewProj = sceneMgr->getViewProjCombinedMat();
 
-	_pEffect->setMatrixByName( worldViewProj, MyGame3DEffect::WVPMATRIX );
+	//_pEffect->setMatrixByName( worldViewProj, MyGame3DEffect::WVPMATRIX );
 
 	_pEffect->setMatrixByName( sceneMgr->getLightViewProjMat(), MyGame3DEffect::LVPMATRIX );
 
 	_pEffect->setMatrixArrayByName( finalTransforms, numBones, MyGame3DEffect::FINMATARRAY );
 
 	IDirect3DDevice9* pDevice = MyGame3DDevice::GetSingleton()->GetDevice();
-	
-	pDevice->SetVertexDeclaration(this->vDecl);
 
 	_pEffect->setBOOLByName( TRUE, MyGame3DEffect::VERTBLEND );
 
-	unsigned int j = 0;
-	for( vector<IDirect3DTexture9*>::iterator _itr = texList.begin();
-			_itr != texList.end();
-			 ++ _itr )
-	{
-			_pEffect->setTextureByName( *_itr, MyGame3DEffect::TEXTURE );
-			for( int k = 0; k < NumAttributeGroups; ++ k )
-			{
-				_pEffect->CommitChanges();
-				int mtrlIndex = attributeTable[k].AttribId;
-				
-				pSkinnedMesh->DrawSubset( mtrlIndex );
-			}
-			++j;
-	}
+	MyGameMesh::render( _pEffect );
+	//unsigned int j = 0;
+	//for( vector<IDirect3DTexture9*>::iterator _itr = texList.begin();
+	//		_itr != texList.end();
+	//		 ++ _itr )
+	//{
+	//		//_pEffect->setTextureByName( *_itr, MyGame3DEffect::TEXTURE );
+	//		_pEffect->setTexture( 0, *_itr );
+	//		
+	//		for( int k = 0; k < NumAttributeGroups; ++ k )
+	//		{
+	//			_pEffect->CommitChanges();
+	//			int mtrlIndex = attributeTable[k].AttribId;
+	//			
+	//			//pSkinnedMesh->DrawSubset( mtrlIndex );
+	//		}
+	//		++j;
+	//}
 	_pEffect->setBOOLByName( FALSE, MyGame3DEffect::VERTBLEND );
+}
+
+void SkinnedMesh::prepare()
+{
+	this->frameMove();
 }
 
 void SkinnedMesh::frameMove( /*float deltaTime*/ /*,
@@ -496,10 +491,11 @@ void SkinnedMesh::frameMove( /*float deltaTime*/ /*,
 	lastTime = clock();
 
 	//if( currentAnimDurationTime > pAnimCtrller->GetTime() )
-		this->pAnimCtrller->AdvanceTime( timeDelta, 0 );
-	//if( ifAnimEnded() )
+	this->pAnimCtrller->AdvanceTime( timeDelta, 0 );
+	
+	//if( !animLoop && ifAnimEnded()  )//如果处于非循环状态并且当前动画播放已经结束
 	//{
-	//	this->setAnimation( string("stop")); 
+	//	this->setAnimation( string("stop"), true ); 
 	//}
 
 	for( unsigned int i = 0; i < numBones; ++ i )
@@ -512,8 +508,20 @@ void SkinnedMesh::frameMove( /*float deltaTime*/ /*,
 
 bool SkinnedMesh::ifAnimEnded()
 {
-	 if( currentAnimDurationTime <= pAnimCtrller->GetTime() )
-		 return true;
-	 else
-		 return false;
+	//float time = pAnimCtrller->GetTime();
+	//如果是在循环播放，则永远返回false
+	if( animLoop )
+		return false;
+	if( currentAnimDurationTime - pAnimCtrller->GetTime() < 0.05 )
+		return true;
+	else
+		return false;
 }
+/*
+bool SkinnedMesh::ifStopped()
+{
+	if( currentAnim == string("stop") )
+		return true;
+	else
+		return false;
+}*/

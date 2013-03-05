@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<GUILayout >
+    <Window Type="DefaultWindow" Name="Root" >
+        <Property Name="UnifiedAreaRect" Value="{{0,0},{0,0},{1,0},{1,0}}" />
+        <Window Type="TaharezLook/HorizontalScrollbar" Name="Root/Volume" >
+            <Property Name="PageSize" Value="0" />
+            <Property Name="StepSize" Value="1" />
+            <Property Name="OverlapSize" Value="0" />
+            <Property Name="DocumentSize" Value="1" />
+            <Property Name="ScrollPosition" Value="0" />
+            <Property Name="UnifiedAreaRect" Value="{{0.667362,0},{0.0347206,0},{0.984029,0},{0.0571519,0}}" />
+        </Window>
+        <Window Type="TaharezLook/StaticText" Name="Root/VolumeText" >
+            <Property Name="Text" Value="Volume" />
+            <Property Name="HorzExtent" Value="91" />
+            <Property Name="VertExtent" Value="19.88" />
+            <Property Name="UnifiedAreaRect" Value="{{0.541666,0},{0.0256176,0},{0.6625,0},{0.0636539,0}}" />
+        </Window>
+        <Window Type="TaharezLook/HorizontalScrollbar" Name="Root/WaterSpeed" >
+            <Property Name="PageSize" Value="0" />
+            <Property Name="StepSize" Value="1" />
+            <Property Name="OverlapSize" Value="0" />
+            <Property Name="DocumentSize" Value="1" />
+            <Property Name="ScrollPosition" Value="0" />
+            <Property Name="UnifiedAreaRect" Value="{{0.667362,0},{0.0814046,0},{0.984029,0},{0.103836,0}}" />
+        </Window>
+        <Window Type="TaharezLook/StaticText" Name="Root/VolumeText1" >
+            <Property Name="Text" Value="WaterSpeed" />
+            <Property Name="HorzExtent" Value="148" />
+            <Property Name="VertExtent" Value="19.88" />
+            <Property Name="UnifiedAreaRect" Value="{{0.541666,0},{0.0743172,0},{0.6625,0},{0.112354,0}}" />
+        </Window>
+        <Window Type="TaharezLook/Checkbox" Name="Root/shadow" >
+            <Property Name="Text" Value="Enable Shadow" />
+            <Property Name="UnifiedAreaRect" Value="{{0.819445,0},{0.854097,0},{0.969444,0},{0.894733,0}}" />
+        </Window>
+        <Window Type="TaharezLook/Checkbox" Name="Root/reflection" >
+            <Property Name="Text" Value="Enable Reflection" />
+            <Property Name="UnifiedAreaRect" Value="{{0.819445,0},{0.896879,0},{0.990278,0},{0.937516,0}}" />
+        </Window>
+        <Window Type="TaharezLook/StaticText" Name="Root/FPS" >
+            <Property Name="Text" Value="FPS:" />
+            <Property Name="HorzExtent" Value="50" />
+            <Property Name="VertExtent" Value="19.88" />
+            <Property Name="UnifiedAreaRect" Value="{{0.0159721,0},{0.0124839,0},{0.131944,0},{0.0934324,0}}" />
+        </Window>
+    </Window>
+</GUILayout>

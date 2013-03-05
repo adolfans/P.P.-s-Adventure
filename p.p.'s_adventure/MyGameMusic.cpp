@@ -21,6 +21,11 @@ MyGameMusic::~MyGameMusic(void)
 	Mix_FreeChunk( sample );
 }
 
+void MyGameMusic::setVolume( float volume )
+{
+	Mix_VolumeChunk(sample, static_cast<int>(volume*MIX_MAX_VOLUME));
+}
+
 void MyGameMusic::InitMusicSystem()
 {
 	if(SDL_Init(SDL_INIT_AUDIO)==-1) {

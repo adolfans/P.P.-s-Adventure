@@ -1,6 +1,7 @@
 #include "StdAfx.h"
 #include "MyCharacterController.h"
 #include "MyGame3DDevice.h"
+#include <math.h>
 const PxF32 MyCharacterController::minDist = 0.001;
 
 MyCharacterController::MyCharacterController(//PxPhysics& sdk,
@@ -10,7 +11,7 @@ MyCharacterController::MyCharacterController(//PxPhysics& sdk,
 											SkinnedMesh* pMesh,
 											MyGameSceneEntity* pEnt)
 											:
-			pCharMesh(pMesh),pCharEntity( pEnt ),phxScene(pScene)
+			pCharMesh(pMesh),pCharEntity( pEnt ),phxScene(pScene),animating( false )
 {
 	PxMaterial* mMaterial		= MyGame3DDevice::GetSingleton()->getPhysX()->createMaterial( 0.5, 0.5, 0.5 );//sdk.createMaterial( 0.5, 0.5, 0.5 );
 	PxCapsuleControllerDesc desc;
@@ -45,7 +46,7 @@ MyCharacterController::~MyCharacterController(void)
 	this->pCharacterCtl->release();
 }
 
-void MyCharacterController::move( float x, float y, float z, PxF32 elapsedTime ) const
+void MyCharacterController::move( float x, float y, float z, PxF32 elapsedTime )
 {
 	if( pCharacterCtl->getFootPosition().y  - 1.0 > 0.0 )//如果脚在空中
 	{
@@ -71,6 +72,33 @@ void MyCharacterController::move( float x, float y, float z, PxF32 elapsedTime )
 	const PxExtendedVec3 pos = pCharacterCtl->getFootPosition();//脚的位置
 
 	this->pCharEntity->getNode()->setPosition( pos.x, pos.y, pos.z );
+
+	//根据移动方向计算角度：
+	D3DXVECTOR3 moveDir( x, 0.0f, z );
+	D3DXVECTOR3 currentDir( 0.0f, 0.0f, -1.0f );
+	float angle;
+	float dot = D3DXVec3Dot( &moveDir, &currentDir );
+	dot = dot/(D3DXVec3Length(&moveDir)*D3DXVec3Length(&currentDir) );
+	if( x > 0 )//逆时针转动的,取负值 
+	{
+		angle = -acosf( dot );
+	}else
+	{
+		angle = acosf( dot );
+	}
+	//this->changeDirection( angle );
+	if( angle - currentDirection > 0.001 || angle - currentDirection < -0.001 )
+	{
+		this->changeDirection( angle );
+		currentDirection = angle;
+	}
+	if( !this->animating )//如果正在攻击动作的动画，则不切换动画,如果没移动多少，或者说本函数的参数小于某个范围，则播放“stop”动画（这个好像不用我播放）
+		//this->pCharMesh->setAnimation( string( "run" ), true );//尽量减少setAnimation的调用，把判断动画是否应该终止放到SkinnedMesh中，并由SkinnedMesh来管理是否停止
+		if( fabsf(x) < 0.1 && fabsf(y) < 0.1 && fabsf(z) < 0.1 )
+			pCharMesh->setAnimation( string("stop"), true );
+		else
+			pCharMesh->setAnimation( string("run"), true );
+	//如果move的距离小于一定的值，并且没有其他动画正在播放，则循环播放stop，注意，循环播放stop的函数只要调用一次就够了
 }
 
 void MyCharacterController::bindAnimToMove( const char* aniName )
@@ -78,11 +106,16 @@ void MyCharacterController::bindAnimToMove( const char* aniName )
 	moveAni = aniName;
 }
 
-void MyCharacterController::playAnim( const char* aniName ) const
+void MyCharacterController::playAnim( const string& aniName )
 {
+	//需要把它改成插入某个队列的吗？我看不需要……
 	//currentAni = string( aniName);
-	pCharMesh->setAnimation( string( aniName ));
-	
+	if( !animating )
+	{
+		pCharMesh->setAnimation( aniName, false );
+		//pCharMesh->addAnimToQueue( string(aniName) );
+		animating = true;
+	}
 }
 
 D3DVECTOR MyCharacterController::getPosition()
@@ -90,4 +123,34 @@ D3DVECTOR MyCharacterController::getPosition()
 	PxExtendedVec3 fpos = pCharacterCtl->getFootPosition();
 	D3DVECTOR pos = { fpos.x, fpos.y, fpos.z };
 	return pos;
+}
+
+void MyCharacterController::update()
+{
+	//如果正在播放的动画结束了，则将animating设为false
+	//if(animating&&pCharMesh->ifAnimEnded())
+	//	animating = false;
+
+	if( animating&&pCharMesh->ifAnimEnded() )
+	{
+		////判断队列中是否有动画未播放，如果没有的话，将animating设为false
+		//if( animQueue.size() )
+		//{
+		//	animating = false;
+		//	this->playAnim( animQueue.back() );
+		//	animQueue.pop();
+		//}else
+			animating = false;
+	}//else
+	if( animQueue.size()&&!animating )//如果在奔跑或者是在静止
+	{
+		this->playAnim( animQueue.front() );
+		animQueue.pop();
+		animating = true;
+	}
+}
+
+void MyCharacterController::addAnimToQueue( const string& animName )
+{
+	animQueue.push( animName );
 }

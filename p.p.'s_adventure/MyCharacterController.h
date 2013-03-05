@@ -1,5 +1,7 @@
 #pragma once
 #include "MyGameSceneEntity.h"
+#include <queue>
+using std::queue;
 #ifdef free
 #undef free
 #endif
@@ -30,6 +32,10 @@ private:
 
 	static const PxF32		minDist;
 
+	float				currentDirection;
+	bool				animating;//除了移动之外的动画的播放中状态
+
+	queue<string>		animQueue;
 public:
 	MyCharacterController(//PxPhysics& sdk,
 											PxScene* pScene,
@@ -40,12 +46,21 @@ public:
 	~MyCharacterController(void);
 
 	//void setPosition( float x, float y, float z );
-	void move( float x, float y, float z, PxF32 elapsedTime ) const;
+	void move( float x, float y, float z, PxF32 elapsedTime );
 	void rotateX( float angle ) const;
 	void scale( float x, float y, float z ) const;
 	void bindAnimToMove( const char* aniName );
-	void playAnim( const char* aniName ) const;
-	bool ifCurrentAnimEnd() const;
+	void playAnim( const string& aniName );
+	bool ifCurrentAnimEnd() const{ return pCharMesh->ifAnimEnded()&&!animQueue.size(); }
 	D3DVECTOR getPosition();
+	void changeDirection( float angle ) const
+	{	this->pCharEntity->getNode()->setRotationAngleY( angle );}
+	void update();
+
+	//void bindAnimToMove( const string& move );
+	//void bindAnimToStillnes( const string& move );
+	//void bindAnimToAttack( 
+
+	void addAnimToQueue( const string& animName );
 };
 

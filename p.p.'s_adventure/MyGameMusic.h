@@ -9,6 +9,7 @@ private:
 public:
 	MyGameMusic( string& fileName );
 	~MyGameMusic(void);
+	void setVolume( float volume );
 	static void InitMusicSystem();
 	static void ExitMusicSystem();
 };

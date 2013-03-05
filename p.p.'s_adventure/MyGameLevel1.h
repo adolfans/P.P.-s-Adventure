@@ -10,7 +10,11 @@ public:
 	MyGameLevel1(void);
 	~MyGameLevel1(void);
 	void InitLevel(){}
-	void Update(){
+	virtual void Update(MSG msg)
+	{
+		scene.Update(msg);
+	}
+	virtual void Render(){
 		scene.Render();
 	}
 

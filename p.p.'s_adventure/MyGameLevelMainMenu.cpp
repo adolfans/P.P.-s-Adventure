@@ -64,8 +64,8 @@ MyGameLevelMainMenu::MyGameLevelMainMenu(void)
 											MyGame3DDevice::GetHeight(),
 											1,
 											D3DUSAGE_RENDERTARGET,
-											//D3DFMT_A8R8G8B8,
-											D3DFMT_R16F,
+											D3DFMT_A8R8G8B8,
+											//D3DFMT_R16F,
 											D3DPOOL_DEFAULT,
 											&pPass1RenderTarget,
 											0 ) );
@@ -136,62 +136,66 @@ MyGameLevelMainMenu::MyGameLevelMainMenu(void)
     
 	System::getSingleton().setDefaultMouseCursor("TaharezLook", "MouseArrow");
 
-	Window* myRoot = WindowManager::getSingleton().loadWindowLayout( "testttt.layout" );
+	Window* root = WindowManager::getSingleton().createWindow( "DefaultWindow","MyRoot" );
 	
+	System::getSingleton().setGUISheet( root );
+
+	myRoot = WindowManager::getSingleton().loadWindowLayout( "testttt.layout" );
+	
+	System::getSingleton().getGUISheet()->addChildWindow( myRoot );
 	//subscribeEvent("TextDemo/HorzLeft", RadioButton::EventSelectStateChanged, Event::Subscriber(&TextDemo::formatChangedHandler, this));
   
-	System::getSingleton().setGUISheet( myRoot );
 
 	CEGUI::AnimationManager::getSingleton().loadAnimationsFromXML( "../datafiles/animations/example.xml", "animation" );
 
-	CEGUI::Window* startBtn =WindowManager::getSingleton().getWindow("Root/main/startBtn");
+	//CEGUI::Window* startBtn =WindowManager::getSingleton().getWindow("Root/main/startBtn");
 	CEGUI::Animation *anim = CEGUI::AnimationManager::getSingleton().getAnimation( "MyMainMenuItem" );
 	CEGUI::Animation *anim2 = CEGUI::AnimationManager::getSingleton().getAnimation( "MyMainMenuItem2" );
 
-	CEGUI::AnimationInstance* instance = CEGUI::AnimationManager::getSingleton().instantiateAnimation(anim);
-	// after we instantiate the animation, we have to set its target window
-	instance->setTargetWindow(startBtn);	//设置到btn
-	instance = CEGUI::AnimationManager::getSingleton().instantiateAnimation(anim2);
-	instance->setTargetWindow(startBtn);
-	
-	CEGUI::Window* loadBtn =WindowManager::getSingleton().getWindow("Root/main/loadBtn");
-	CEGUI::AnimationInstance* instance2 = CEGUI::AnimationManager::getSingleton().instantiateAnimation(anim);
-	// after we instantiate the animation, we have to set its target window
-	instance2->setTargetWindow(loadBtn);	//设置到btn
-	instance = CEGUI::AnimationManager::getSingleton().instantiateAnimation(anim2);
-	instance->setTargetWindow(loadBtn);
+	//CEGUI::AnimationInstance* instance = CEGUI::AnimationManager::getSingleton().instantiateAnimation(anim);
+	//// after we instantiate the animation, we have to set its target window
+	//instance->setTargetWindow(startBtn);	//设置到btn
+	//instance = CEGUI::AnimationManager::getSingleton().instantiateAnimation(anim2);
+	//instance->setTargetWindow(startBtn);
+	//
+	//CEGUI::Window* loadBtn =WindowManager::getSingleton().getWindow("Root/main/loadBtn");
+	//CEGUI::AnimationInstance* instance2 = CEGUI::AnimationManager::getSingleton().instantiateAnimation(anim);
+	//// after we instantiate the animation, we have to set its target window
+	//instance2->setTargetWindow(loadBtn);	//设置到btn
+	//instance = CEGUI::AnimationManager::getSingleton().instantiateAnimation(anim2);
+	//instance->setTargetWindow(loadBtn);
 
 
-	CEGUI::Window* configBtn =WindowManager::getSingleton().getWindow("Root/main/configBtn");
-	CEGUI::AnimationInstance* instance3 = CEGUI::AnimationManager::getSingleton().instantiateAnimation(anim);
-	// after we instantiate the animation, we have to set its target window
-	instance3->setTargetWindow(configBtn);	//设置到btn
-	instance = CEGUI::AnimationManager::getSingleton().instantiateAnimation(anim2);
-	instance->setTargetWindow(configBtn);
+	//CEGUI::Window* configBtn =WindowManager::getSingleton().getWindow("Root/main/configBtn");
+	//CEGUI::AnimationInstance* instance3 = CEGUI::AnimationManager::getSingleton().instantiateAnimation(anim);
+	//// after we instantiate the animation, we have to set its target window
+	//instance3->setTargetWindow(configBtn);	//设置到btn
+	//instance = CEGUI::AnimationManager::getSingleton().instantiateAnimation(anim2);
+	//instance->setTargetWindow(configBtn);
 
-	
-	CEGUI::Window* exitBtn =WindowManager::getSingleton().getWindow("Root/main/exitBtn");
-	CEGUI::AnimationInstance* instance4 = CEGUI::AnimationManager::getSingleton().instantiateAnimation(anim);
-	// after we instantiate the animation, we have to set its target window
-	instance4->setTargetWindow(exitBtn);	//设置到btn
-	instance = CEGUI::AnimationManager::getSingleton().instantiateAnimation(anim2);
-	instance->setTargetWindow(exitBtn);
+	//
+	//CEGUI::Window* exitBtn =WindowManager::getSingleton().getWindow("Root/main/exitBtn");
+	//CEGUI::AnimationInstance* instance4 = CEGUI::AnimationManager::getSingleton().instantiateAnimation(anim);
+	//// after we instantiate the animation, we have to set its target window
+	//instance4->setTargetWindow(exitBtn);	//设置到btn
+	//instance = CEGUI::AnimationManager::getSingleton().instantiateAnimation(anim2);
+	//instance->setTargetWindow(exitBtn);
 
 
 
 
 	CEGUI::Window* btttn;
-	btttn	=WindowManager::getSingleton().getWindow("Root/new/new");
+	btttn	=WindowManager::getSingleton().getWindow("Root/new");
 
 	CEGUI::AnimationInstance* inst = CEGUI::AnimationManager::getSingleton().instantiateAnimation(anim);
 	// after we instantiate the animation, we have to set its target window
 	inst->setTargetWindow(btttn);	//设置到btn
 	inst = CEGUI::AnimationManager::getSingleton().instantiateAnimation(anim2);
 	inst->setTargetWindow(btttn);
-	myconn= btttn->subscribeEvent( ButtonBase::EventMouseClick, Event::Subscriber( &MyGameLevelMainMenu::Button1Clicked, this ) );
+	myconn= btttn->subscribeEvent( ButtonBase::EventMouseClick, Event::Subscriber( &MyGameLevelMainMenu::OnStart, this ) );
 
 
-	btttn =WindowManager::getSingleton().getWindow("Root/new/load");
+	btttn =WindowManager::getSingleton().getWindow("Root/load");
 	inst = CEGUI::AnimationManager::getSingleton().instantiateAnimation(anim);
 	// after we instantiate the animation, we have to set its target window
 	inst->setTargetWindow(btttn);	//设置到btn
@@ -199,7 +203,7 @@ MyGameLevelMainMenu::MyGameLevelMainMenu(void)
 	inst->setTargetWindow(btttn);
 
 
-	btttn =WindowManager::getSingleton().getWindow("Root/new/sys");
+	btttn =WindowManager::getSingleton().getWindow("Root/sys");
 	inst = CEGUI::AnimationManager::getSingleton().instantiateAnimation(anim);
 	// after we instantiate the animation, we have to set its target window
 	inst->setTargetWindow(btttn);	//设置到btn
@@ -207,19 +211,51 @@ MyGameLevelMainMenu::MyGameLevelMainMenu(void)
 	inst->setTargetWindow(btttn);
 
 	
-	btttn =WindowManager::getSingleton().getWindow("Root/new/info");
+	btttn =WindowManager::getSingleton().getWindow("Root/info");
 	inst = CEGUI::AnimationManager::getSingleton().instantiateAnimation(anim);
 	// after we instantiate the animation, we have to set its target window
 	inst->setTargetWindow(btttn);	//设置到btn
 	inst = CEGUI::AnimationManager::getSingleton().instantiateAnimation(anim2);
 	inst->setTargetWindow(btttn);
 
+
+	
+	btttn =WindowManager::getSingleton().getWindow("Root/exit");
+	inst = CEGUI::AnimationManager::getSingleton().instantiateAnimation(anim);
+	// after we instantiate the animation, we have to set its target window
+	inst->setTargetWindow(btttn);	//设置到btn
+	inst = CEGUI::AnimationManager::getSingleton().instantiateAnimation(anim2);
+	inst->setTargetWindow(btttn);
+
+
+	//CEGUI::Window* btttn1;
+	//btttn1	=WindowManager::getSingleton().getWindow("Root/blendMode/btn1");
+	//btttn1->subscribeEvent( ButtonBase::EventMouseClick, Event::Subscriber( &MyGameLevelMainMenu::Button1Clicked, this ) );
+
+	//
+	//CEGUI::Window* btttn2;
+	//btttn2	=WindowManager::getSingleton().getWindow("Root/blendMode/btn2");
+	//btttn2->subscribeEvent( ButtonBase::EventMouseClick, Event::Subscriber( &MyGameLevelMainMenu::Button2Clicked, this ) );
+
+	//CEGUI::Window* btttn3;
+	//btttn3	=WindowManager::getSingleton().getWindow("Root/blendMode/btn3");
+	//btttn3->subscribeEvent( ButtonBase::EventMouseClick, Event::Subscriber( &MyGameLevelMainMenu::Button3Clicked, this ) );
+
+	//CEGUI::Window* btttn4;
+	//btttn4	=WindowManager::getSingleton().getWindow("Root/blendMode/btn4");
+	//btttn4->subscribeEvent( ButtonBase::EventMouseClick, Event::Subscriber( &MyGameLevelMainMenu::Button4Clicked, this ) );
+
+	//
+	//CEGUI::Window* btttn5;
+	//btttn5	=WindowManager::getSingleton().getWindow("Root/blendMode/btn5");
+	//btttn5->subscribeEvent( ButtonBase::EventMouseClick, Event::Subscriber( &MyGameLevelMainMenu::Button5Clicked, this ) );
+
 }
 
 
 MyGameLevelMainMenu::~MyGameLevelMainMenu(void)
-{	
-
+{
+	using namespace CEGUI;
 	HR( D3DXSaveTextureToFile( L"囧.png",D3DXIFF_PNG,pPass1RenderTarget, NULL ) );
 	this->pBgTexture->Release();
 	this->pPass1RenderTarget->Release();
@@ -231,12 +267,13 @@ MyGameLevelMainMenu::~MyGameLevelMainMenu(void)
 	this->pTransformEffect->Release();
 
 	myconn->disconnect();
-   
 	
+	//WindowManager::getSingleton().destroyWindow( "Root" );
+	//CEGUI::WindowManager::getSingleton().cleanDeadPool(); 
 }
 
 
-void MyGameLevelMainMenu::Update()
+void MyGameLevelMainMenu::Render()
 {
 	D3DXMATRIX mat;
 
@@ -273,6 +310,25 @@ void MyGameLevelMainMenu::Update()
 #include "MyGameLevel1.h"
 bool MyGameLevelMainMenu::Button1Clicked(const CEGUI::EventArgs&)
 {
+	MyGameLevel *childLevel = new MyGameLevel1();
+	//childLevel->SetPtr( &childLevel );
+	this->ModifyCurrentLevel( childLevel );
+	return true;
+}
+
+bool MyGameLevelMainMenu::OnStart(const CEGUI::EventArgs&)
+{
+	
+	CEGUI::Animation *anim = CEGUI::AnimationManager::getSingleton().getAnimation( "MyMainMenuItem" );
+	CEGUI::Animation *anim2 = CEGUI::AnimationManager::getSingleton().getAnimation( "MyMainMenuItem2" );
+
+	CEGUI::AnimationManager::getSingleton().destroyAllInstancesOfAnimation(anim);
+	CEGUI::AnimationManager::getSingleton().destroyAllInstancesOfAnimation(anim2);
+	
+	System::getSingleton().getGUISheet()->removeChildWindow( "Root" );
+
+	WindowManager::getSingleton().destroyWindow( "Root" );
+
 	MyGameLevel *childLevel = new MyGameLevel1();
 	//childLevel->SetPtr( &childLevel );
 	this->ModifyCurrentLevel( childLevel );

@@ -1,17 +1,19 @@
+//extern float4x4 matViewProjection;
+//extern float4x4 matViewProjection = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 };
+
+
+//uniform extern texture gTex;
 #include "define.fx"
 
 float3 ambient : Ambient;
 float3 diffuse : Diffuse;
 float3 specular: Specular;
 float3 camera  : CameraPosition;
-float3 cameraVec : CameraVector;
-float3 lightVec: ParallelLightVector;
+float3 lightPos: ParallelLightVector;
 float4x4 viewMatrix : ViewMatrix;
 float4x4 worldMatrix: WorldMatrix;
-texture texture1 : Texture1;
-texture texture0 : Texture0;
-texture reflectionTexture;
-float2 waterspeed;
+texture texture0		: Texture0;
+float4x4 mirrorMatrix;
 
 sampler tex0 = sampler_state
 {
@@ -24,16 +26,6 @@ sampler tex0 = sampler_state
     AddressV  = WRAP;
 };
 
-sampler tex1 = sampler_state
-{
-	Texture = <texture1>;
-	MinFilter = Anisotropic;
-	MagFilter = LINEAR;
-	MipFilter = LINEAR;
-	MaxAnisotropy = 8;
-	AddressU  = WRAP;
-    AddressV  = WRAP;
-};
 
 struct VS_INPUT 
 {
@@ -83,12 +75,13 @@ VS_OUTPUT vs_main( VS_INPUT Input )
    float3 fvObjectPosition = normalize(mul( Input.Position, worldMatrix ));
    
    Output.viewDirection = camera - fvObjectPosition;
-  
+   
+   
    //Output.Tex = Input.Tex;
    return( Output );
 }
 
-float4 ps_main(float2 texcoord: TEXCOORD0, float3 lightVec: TEXCOORD1,float2 shadowMapCoord: TEXCOORD2, float3 normal: TEXCOORD3, float3 viewDirection: TEXCOORD4 ) : COLOR0
+float4 ps_main(float2 tex: TEXCOORD0, float3 lightVec: TEXCOORD1,float2 shadowMapCoord: TEXCOORD2, float3 normal: TEXCOORD3, float3 viewDirection: TEXCOORD4) : COLOR0
 {
 	//float4 shadowMapPix = tex2D( ShadowTex, shadowMapCoord );
 	//浮点的精度导致某些本该相等的shadowMapPix和lightVec大小有差距
@@ -96,32 +89,23 @@ float4 ps_main(float2 texcoord: TEXCOORD0, float3 lightVec: TEXCOORD1,float2 sha
 	//此处改为lightVec.r - shadowMapPix.r  > 0.01来解决此问题
 	//但是恐导致shadow平移
 
+	float4 shadowMapPix = tex2D( ShadowTex, shadowMapCoord );
+	float4 color;
+	if( lightVec.r - shadowMapPix.r > 0.01 )
+	//if( lightVec.r > shadowMapPix.r )
+		color = tex2D( tex0, tex )-float4( 0.5f, 0.5f, 0.5f, 0.0f );
+	else
+		color = tex2D( tex0, tex );
 	
 	//return color;
 	//return float4( diffuse*saturate( lightVec * normal )+color, 1.0 );
 	//float4 specularColor;
-	float2 coord1 = texcoord;
-	coord1 +=waterspeed;
-	float2 coord2 = texcoord;
-	coord2.x += waterspeed.x;
-	coord2.y += 0.5*waterspeed.y;
-	float3 mapNormal = (tex2D( tex0, coord1 ) + tex2D( tex1, coord2 )) * 0.5;	//从normal map上取得的法线
 	
-	mapNormal *= 2.0f;
-	mapNormal -= 1.0f;
-	
-	float3 realNormal = mapNormal;
-	realNormal.x = mapNormal.x;
-	realNormal.y = mapNormal.z;
-	realNormal.z = -mapNormal.y;
-	
-	realNormal = normalize(mul( realNormal,worldMatrix ));
-   
-	float3 fvLightDirection = normalize( lightVec );//或者应该取反？
-	float3 fvNormal         = normalize( realNormal );
+	float3 fvLightDirection = normalize( lightPos );//或者应该取反？
+	float3 fvNormal         = normalize( normal );
 	float  fNDotL           = dot( fvNormal, fvLightDirection ); 
    
-	float3 fvReflection     = normalize( ( ( 2.0f * fvNormal ) * ( fNDotL ) ) - fvLightDirection ); //从顶点到光的出发点的反射点的向量。
+	float3 fvReflection     = normalize( ( ( 2.0f * fvNormal ) * ( fNDotL ) ) - fvLightDirection ); 
 	float3 fvViewDirection  = normalize( viewDirection );
 	float  fRDotV           = max( 0.0f, dot( fvReflection, fvViewDirection ) );
    
@@ -131,17 +115,9 @@ float4 ps_main(float2 texcoord: TEXCOORD0, float3 lightVec: TEXCOORD1,float2 sha
 	//float4 fvTotalDiffuse   = fvDiffuse * fNDotL * fvBaseColor; 
 	float3 fvTotalSpecular  =  pow( fRDotV, 25.0f) * specular;
 	
-	// float2 shadowmap= shadowMapCoord;
-	// float4 shadowMapPix = tex2D( ShadowTex, shadowmap );
-	// float4 color;
-	
-	// color = lightVec.r - shadowMapPix.r > 0.01 ? -float4( 0.5f, 0.5f, 0.5f, 0.0f ) : 0;
-
-	float4 color = float4( 0.5f, 0.5f, 0.5f, 0.0f )*shadowTest( shadowMapCoord+ 0.01* mapNormal, lightVec );
-
 	//return float4( fvTotalSpecular, 1.0f );
 	
-	return float4( diffuse*saturate(dot( normalize(lightVec), realNormal )), 0.5f ) + color /* float4( diffuse, 1.0f )*/+ float4( fvTotalSpecular, 0.0f );
+	return float4( diffuse*saturate(dot( normalize(lightPos), normal )), 1.0f ) + color + float4( fvTotalSpecular, 1.0f );
 	//return shadowMapPix;
 }
 
@@ -152,9 +128,8 @@ technique main
     {
         // Specify the vertex and pixel shader associated with this pass.
         CullMode = none;
-		AlphaBlendEnable = true;
-		vertexShader = compile vs_3_0 vs_main();
-        pixelShader  = compile ps_3_0 ps_main();
+		vertexShader = compile vs_2_0 vs_main();
+        pixelShader  = compile ps_2_0 ps_main();
 
 		// Specify the render/device states associated with this pass.
 		//FillMode = Wireframe;

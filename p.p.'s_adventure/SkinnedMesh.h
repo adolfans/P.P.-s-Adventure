@@ -3,11 +3,12 @@
 #include <vector>
 #include <map>
 #include <string>
+#include <queue>
 #include <WinDef.h>
 using std::map;
 using std::vector;
 using std::string;
-
+using std::queue;
 //#include "MyGameSceneNode.h"
 #include "MyGameMesh.h"
 #include "MyGameBoneNode.h"
@@ -28,31 +29,20 @@ class SkinnedMesh
 	: public MyGameMesh
 {
 	friend class MyGameMeshManager;
-public:
-
-
 private:
-	//class AllocMeshHierarchy;
 	MyGameSceneManager* sceneMgr;
 
 	D3DXFRAME* findNodeWithMesh(D3DXFRAME* frame );
 
 	void buildSkinnedMesh( ID3DXMesh* mesh );
 
-	//void buildCombinedTransforms();
 	LPD3DXFRAME pHierarchyRoot;
 
 	ID3DXAnimationController* pAnimCtrller;
 	ID3DXSkinInfo* pSkinInfo;
 	DWORD maxVertInfluences;
-	ID3DXMesh* pSkinnedMesh;
+
 	vector<D3DXMATRIX> combinedTransforms;
-	//D3DXMATRIX combinedTransforms[21];
-	vector<IDirect3DTexture9*> texList;
-	/*
-	ID3DXEffect* meshEffect;
-	*/
-	IDirect3DVertexDeclaration9* vDecl;
 	unsigned int numBones;	
 	DWORD  numBoneComboEntries;
 
@@ -74,14 +64,18 @@ private:
 
 	//vector<D3DXMATRIX> offsetMatrixList;
 	
-	MyGame3DEffect* effect;
+	//MyGame3DEffect* effect;
 	
 	static const unsigned int MAX_NUM_BONES_SUPPORTED = 26;
 
 	MyGameSceneNode* rootSceneNode;
 
 	double currentAnimDurationTime;
-	//friend class MyGameMesh;
+
+	bool animLoop;
+
+	string currentAnim;
+
 protected:
 		
 	SkinnedMesh(void);
@@ -100,9 +94,13 @@ public:
 
 	MyGameSceneNode* getSkeletonRoot(){ return rootSceneNode; }
 
-	void setAnimation( string &name );
+	void setAnimation( const string &name, bool loop );
 
 	bool ifAnimEnded();
+
+	//bool ifStopped();
+
+	virtual void prepare();
 };
 
 

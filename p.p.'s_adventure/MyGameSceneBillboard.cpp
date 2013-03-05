@@ -1,6 +1,8 @@
 #include "StdAfx.h"
 #include "MyGameSceneBillboard.h"
 #include "MyGameSceneManager.h"
+#include <sstream>
+
 namespace MyGameScene{
 vector<MyGameSceneBillboard*> MyGameSceneBillboard::list;
 IDirect3DVertexBuffer9*	MyGameSceneBillboard::vb = 0;
@@ -65,7 +67,10 @@ MyGameSceneBillboard* MyGameSceneBillboard::CreateBillboard( MyGameSceneManager*
 	MyGameSceneBillboard* _b = new MyGameSceneBillboard();
 	_b->sceneManager = sMgr;
 	static int billboardnum = 1;
-	string name = "billboard" + billboardnum;
+	std::stringstream ss;
+	ss << "billboard" << billboardnum;
+	string name = ss.str();
+	++billboardnum;
 	_b->node = sMgr->CreateSceneNode( name.c_str() );
 	return _b;
 }
@@ -194,11 +199,12 @@ void MyGameSceneBillboard::DrawAllBillboards()
 		_transpose._43 = 0;
 		_transpose._44 = 1;
 		//D3DXMatrixMultiply( &worldMat, &scaleMat, &_transpose );
+		/*(*_itr)->getNode()->g*/
 		(*_itr)->getNode()->setRotateMatrix( _transpose );
 		//上面的工作直到下一帧才会应用
 		//下面的工作是获得上一帧的worldmat;
 		D3DXMATRIX worldmat = (*_itr)->getNode()->getCombinedMatrix();
-		D3DXMATRIX wvp = worldmat
+		D3DXMATRIX wvp = worldmat//worldmat里只是scale的矩阵吧
 			*(*_itr)->sceneManager->getViewMat()
 			*(*_itr)->sceneManager->getProjMat();//perspectiveMat;
 		

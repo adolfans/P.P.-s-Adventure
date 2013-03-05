@@ -9,10 +9,11 @@ float3 ambient : Ambient;
 float3 diffuse : Diffuse;
 float3 specular: Specular;
 float3 camera  : CameraPosition;
-
+texture texture0		: Texture0;
+float4x4 viewProjMatrix : ViewProjMatrix;
 sampler2D S0 = sampler_state
 {
-	Texture = <Tex>;
+	Texture = <texture0>;
 	MinFilter = LINEAR;
 	MagFilter = LINEAR;
 	MipFilter = LINEAR;
@@ -50,7 +51,7 @@ VS_OUTPUT VertexBlend( float4 pos :POSITION0,
 	p+= lastWeight *mul( pos, FinalTransforms[boneIndices[n]] );
 	p.w = 1.0f;
 	
-	output.pos = mul( p, WorldViewProj );
+	output.pos = mul( p, viewProjMatrix );
 	
 	//计算
 	
@@ -80,24 +81,25 @@ VS_OUTPUT VertexBlend( float4 pos :POSITION0,
 
 float4 ps_main(float2 tex: TEXCOORD0, float2 shadowMapCoord: TEXCOORD2, float3 lightVec: TEXCOORD1) : COLOR0
 {  
-	float4 shadowMapPix = tex2D( ShadowTex, shadowMapCoord );
-	//float pix = tex2D( ShadowTex, smcoord );
-/*	if( lightVec.r - shadowMapPix.r > 0.01 )
-		return float4( 0.0f, 0.0f, 0.0f, 1.0f );
-	else
-		return tex2D( S0, tex );
-*/
-   //return tex2D( S0, tex );
-   
-	float4 color = tex2D( S0, tex );
-	//return float4( shadowMapPix.r, shadowMapPix.r, shadowMapPix.r, 1 );
-	// if( lightVec.r - shadowMapPix.r > 0 )
-		// return color - float4( 0.5, 0.5, 0.5, 0 );
+	// float4 shadowMapPix = tex2D( ShadowTex, shadowMapCoord );
+	// //float pix = tex2D( ShadowTex, smcoord );
+// /*	if( lightVec.r - shadowMapPix.r > 0.01 )
+		// return float4( 0.0f, 0.0f, 0.0f, 1.0f );
 	// else
-		// return color;
+		// return tex2D( S0, tex );
+// */
+   // //return tex2D( S0, tex );
+   
+	// float4 color = tex2D( S0, tex );
+	// //return float4( shadowMapPix.r, shadowMapPix.r, shadowMapPix.r, 1 );
+	// // if( lightVec.r - shadowMapPix.r > 0 )
+		// // return color - float4( 0.5, 0.5, 0.5, 0 );
+	// // else
+		// // return color;
 	
-	return lightVec.r-shadowMapPix.r > 0.01 ? color - float4( 0.5, 0.5, 0.5, 0 ) : color;
-		
+	// return lightVec.r-shadowMapPix.r > 0.01 ? color - float4( 0.5, 0.5, 0.5, 0 ) : color;
+	return tex2D( S0, tex ) + float4( 0.5f, 0.5f, 0.5f, 0.0f )*shadowTest( shadowMapCoord, lightVec );
+
 }
 
 technique main

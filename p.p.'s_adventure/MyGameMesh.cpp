@@ -11,6 +11,8 @@ MyGameMesh::MyGameMesh()
 	:pDXMesh(0), adjBuffer(0), extraTexture(0)//,pVerBuffer(0),pVerDecl(0), tex(0)
 {
 	//nodes.push_back( MyGameSceneManager::CreateSceneNode( name ));
+	pDevice = MyGame3DDevice::GetSingleton()->GetDevice();
+	
 }
 
 
@@ -40,7 +42,7 @@ void MyGameMesh::loadMeshFromXFile( const char* fileName )
 {
 	if( pDXMesh )
 		throw runtime_error( "此Entity已经加载了XFile" );
-	IDirect3DDevice9* pDevice = ::MyGame3DDevice::GetSingleton()->GetDevice();
+	pDevice = ::MyGame3DDevice::GetSingleton()->GetDevice();
 	
 	ID3DXBuffer* mtrlBuffer = 0;
 
@@ -82,6 +84,7 @@ void MyGameMesh::loadMeshFromXFile( const char* fileName )
 
 		mtrlBuffer->Release();
 	}
+	this->generateBoundingBox();
 }
 //getNode可以被MyGameSceneNode里的GetNodeByName替换掉
 /*
@@ -412,4 +415,9 @@ physx::PxTriangleMesh* MyGameMesh::generatePxTriangleMesh(  )
 	newMesh->Release();
 
 	return physics->createTriangleMesh( readBuffer );
+}
+
+void MyGameMesh::prepare()
+{
+
 }

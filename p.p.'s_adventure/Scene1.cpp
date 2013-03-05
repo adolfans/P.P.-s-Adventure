@@ -38,14 +38,38 @@ using namespace physx;
 PxReal myTimestep = 1.0f/60.0f;
 PxRigidActor *box;
 PxDefaultCpuDispatcher* mCpuDispatcher;
-
+#include <sstream>
+using std::stringstream;
 //PxController* characterCtl;
 Scene1::Scene1(void):
 	bgm(string("YSO_001.ogg"))
 {
 	IDirect3DDevice9* pDevice = MyGame3DDevice::GetSingleton()->GetDevice();
 
+	testTarget1 = new MyRenderTargetTexture();
+
+	testTarget1->setRenderTarget( 1 );
+
 	
+	//WindowManager::getSingleton().destroyAllWindows();
+	//CEGUI::WindowManager::getSingleton().cleanDeadPool(); 
+	
+	
+	Window* myRoot = WindowManager::getSingleton().loadWindowLayout( "level1.layout");
+	
+	CEGUI::System::getSingleton().getGUISheet()->addChildWindow(myRoot);
+
+	waterSpeedController = static_cast<CEGUI::Scrollbar*>(WindowManager::getSingleton().getWindow( "Root/WaterSpeed" ));
+	waterSpeedController->setScrollPosition( 0.5 );
+	bgmVolume = static_cast<CEGUI::Scrollbar*>(WindowManager::getSingleton().getWindow( "Root/Volume" ));
+	bgmVolume->setScrollPosition( 0.5 );
+	shadowCheckBox = static_cast<CEGUI::Checkbox*>(WindowManager::getSingleton().getWindow( "Root/shadow" ));
+	shadowCheckBox->setSelected( true );
+	reflectionCheckBox = static_cast<CEGUI::Checkbox*>(WindowManager::getSingleton().getWindow( "Root/reflection" ));
+	fpsBoard = WindowManager::getSingleton().getWindow( "Root/FPS" );
+
+	
+
 	sceneMgr = new MyGameSceneManager;
 	
 	sceneRoot = sceneMgr->getRootNode();//->CreateSceneNode("sceneRoot");
@@ -65,7 +89,7 @@ Scene1::Scene1(void):
 
 	pGenShadowMapEffect = new MyGame3DEffect( "shadowMapping.fx" );
 
-	pLoliEffect = new MyGame3DEffect( "newMesh.fx" );
+	//pLoliEffect = new MyGame3DEffect( "newMesh.fx" );
 
 	pPlatformEffect = new MyGame3DEffect( "scene.fx" );
 
@@ -74,7 +98,7 @@ Scene1::Scene1(void):
 
 	waterSpeedHandle = waterEffect->getHandleByName( ("waterspeed") );
 	//shadow map 创建
-	shadowMap = new MyShadowMap(MyGame3DDevice::GetWidth(), MyGame3DDevice::GetHeight() );
+	shadowMap = new MyShadowMap(MyGame3DDevice::GetWidth(), MyGame3DDevice::GetHeight());
 
 	sceneMgr->setShadowMap( shadowMap->getShadowMap() );
 
@@ -95,6 +119,18 @@ Scene1::Scene1(void):
 	sceneRoot->attachEntity( waterEnt );
 	this->waterEffect->AddEntity( waterEnt );
 
+	D3DXVECTOR3 minPos, maxPos;
+	waterMesh->getBoundingBox( minPos, maxPos );
+
+	D3DXMATRIX mirrorMatrix;
+
+	D3DXPLANE  waterPlane( 0, 1, 0,  -sceneMgr->sceneLengthToNormalLength(minPos.y));
+
+	D3DXMatrixReflect( &mirrorMatrix, &waterPlane );
+
+	sceneMgr->setMirrorReflectionMatrix( mirrorMatrix );
+	//sceneRoot->setTranslationMatrix( mirrorMatrix );
+	//sceneRoot->setRotateMatrix( mirrorMatrix );
 
 	//必须打开那啥编译选项
 	loli = dynamic_cast<SkinnedMesh*>(MyGameMeshManager::createMyGameMesh( MyGameMeshManager::SKINNED ));
@@ -102,7 +138,8 @@ Scene1::Scene1(void):
 	loliEnt = sceneMgr->CreateSceneEntity( loli, "testLoli" );
 	sceneRoot->attachEntity( loliEnt );
 	pGenShadowMapEffect->AddEntity( loliEnt );
-	pLoliEffect->AddEntity( loliEnt );
+	//pLoliEffect->AddEntity( loliEnt );
+	pPlatformEffect->AddEntity( loliEnt );
 	//loliEnt->getNode()->move( 0.0f, 0.01f, 0.0f );
 	//loliEnt->getNode()->setPosition( 0.0f, 0.0f ,0.0f );
 
@@ -209,13 +246,79 @@ Scene1::Scene1(void):
 	box = actor;
 	
 	PxControllerManager* manager = MyGame3DDevice::GetSingleton()->getPhysXControllerManager();
-	stepLength = 20.0f;
+	//stepLength = 20.0f;
 
 	//MyGameMusic newPlayer( string("YSO_001.ogg") );
 
-	con = new MyCharacterController( gScene, manager, 1500.0f, this->loli, loliEnt );
+	//con = new MyCharacterController( gScene, manager, 1500.0f, this->loli, loliEnt );
+	role1 = new MyPlayerRole( gScene, manager, 1500.0f, this->loli, loliEnt );
 }
 
+void Scene1::Update( MSG msg )
+{
+	static unsigned int lastTime = clock();
+	unsigned int currentTime = clock();
+	static int frames;
+	if( currentTime - lastTime < 1000.0f )//不满一秒
+	{
+		frames++;
+	}else
+	{
+		stringstream ss;
+		ss << "FPS:"<<(float)frames/(currentTime - lastTime)*1000.0f;
+		string fpsText = ss.str();
+		lastTime = currentTime;
+		fpsBoard->setText( fpsText );
+		frames = 0;
+	}
+
+	PxScene* gScene = this->sceneMgr->getPhysXScene();
+
+	//PxVec3 moveVec( 0.0f, 0.0f, 0.0f );
+
+	if(msg.message == WM_KEYDOWN)//如果有键按下
+	{
+		if( msg.wParam == 'A' )
+			cam->rotate( D3DX_PI * 0.0125 );
+		else if( msg.wParam == 'D' )
+			cam->rotate( D3DX_PI * -0.0125 );
+
+	}
+
+	role1->update( msg );
+
+	PxControllerFilters filters( 0 );
+
+
+	//this->cam->setTargetPosition( D3DXVECTOR3(con->getPosition()));
+	//lightCam->setTargetPosition( D3DXVECTOR3(con->getPosition()));
+
+	gScene->simulate(myTimestep);       
+
+	//...perform useful work here using previous frame's state data        
+	while(!gScene->fetchResults() )     
+	{
+		// do something useful        
+	}
+	PxU32 nShapes = box->getNbShapes();
+	PxShape** shapes = new PxShape*[nShapes];
+	 
+	       
+	box->getShapes( shapes, nShapes );
+	while( nShapes-- )
+	{
+		//DrawShape(shapes[nShapes]);
+		//PxTransform pT = PxShapeExt::getGlobalPose(*shapes[nShapes]);
+		PxTransform pT = box->getGlobalPose();
+		boxParentNode->setPosition( pT.p.x, pT.p.y, pT.p.z );
+		PxBoxGeometry bg;
+		shapes[nShapes]->getBoxGeometry(bg);
+		//PxMat33 m = PxMat33(pT.q ); //PxMat33Legacy(pT.q );
+	}
+
+	delete[] shapes;
+}
+/*
 void Scene1::UpdatePhysx()
 {
 	PxScene* gScene = this->sceneMgr->getPhysXScene();
@@ -223,14 +326,21 @@ void Scene1::UpdatePhysx()
 	PxVec3 moveVec( 0.0f, 0.0f, 0.0f );
 	if(GetAsyncKeyState('A') & 0x8000)
 		//box->mov -= 3;
+	{
 		moveVec.x = -stepLength;
+	}
 	if(GetAsyncKeyState('D') & 0x8000)
+	{
 		moveVec.x = stepLength;//x_A += 3;
+	}
 	if(GetAsyncKeyState('W') & 0x8000)
+	{
 		moveVec.z = stepLength;//y_A += 3;
+	}
 	if(GetAsyncKeyState('S') & 0x8000)
+	{
 		moveVec.z = -stepLength;//y_A -= 3;
-	
+	}
 	//PxControllerFilters filters(0, mFilterData, mFilterCallback);
 	PxControllerFilters filters( 0 );
 	if(GetAsyncKeyState('X') & 0x8000)
@@ -276,18 +386,20 @@ void Scene1::UpdatePhysx()
 
 	delete[] shapes;
 }
-
+*/
 Scene1::~Scene1(void)
 {
 	//characterCtl->release();
 	//HR( D3DXSaveSurfaceToFileW( L"test.tga", D3DXIFF_TGA  , pPass1RenderTargetSurface, 0, 0 ) );
-	delete this->con;
+	::D3DXSaveTextureToFile( L"test.png", D3DXIFF_PNG, sceneMgr->getShadowMap(), 0 );
+	//delete this->con;
+	delete role1;
 	delete pGenShadowMapEffect;
 	delete testBoard;
-	delete pLoliEffect;
 	delete pPlatformEffect;
 	delete waterEffect;
 	delete shadowMap;
+	//delete pLoliEffect;
 	MyGameMeshManager::destroyAllMeshes();
 	MyGameSceneNode::destroyAllNodes();
 	MyGameSceneBillboard::DestroyAllBillboards();
@@ -296,16 +408,25 @@ Scene1::~Scene1(void)
 	sceneMgr->destroyAllEntities();
 	
 	delete this->sceneMgr;
+	delete testTarget1;
 }
 
 void Scene1::Render()
 {
-	UpdatePhysx();
+	this->waterEffect->attachTextureToName( "reflectionTexture", this->testTarget1->getTexture() );
+	//UpdatePhysx();
 	IDirect3DDevice9* pDevice = MyGame3DDevice::GetSingleton()->GetDevice();
 	
+	
+	float waterScrollPos = waterSpeedController->getScrollPosition();
+
 	static D3DXVECTOR2 vec(0.0f, 0.0f);
-	vec.x-=0.001;
-	vec.y+=0.002;
+	vec.x-=(0.0006*waterScrollPos);
+	vec.y+=0.0012*waterScrollPos;
+
+	bgm.setVolume( bgmVolume->getScrollPosition() );
+
+	//waterSpeedController->getsc
 	this->waterEffect->setValueByHandle( waterSpeedHandle, &vec, sizeof( D3DXVECTOR2 ) );
 	//
 
@@ -319,23 +440,33 @@ void Scene1::Render()
 	
 	//深度图渲染
 
-	this->shadowMap->start();
-	
+	if( shadowCheckBox->isSelected() )	//如果启用了shadow
 	{
+		this->shadowMap->start();
+	
+		{
 			//渲染该Effect里面的所有Entity
 			pGenShadowMapEffect->RenderAllEntities( this->sceneMgr );
 			pDevice->SetRenderState( D3DRS_ZENABLE, true );
 			pDevice->SetRenderState( D3DRS_ZWRITEENABLE, true );
+		}
+
+		this->shadowMap->end();
+	}else
+	{
+		this->shadowMap->start();
+	
+		{
+			pDevice->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER,/* 0x00FFFFFF*/D3DCOLOR_ARGB( 255, 255, 255, 255), 1.0f, 0);
+		}
+
+		this->shadowMap->end();
 	}
-
-	this->shadowMap->end();
-
 	
 	pDevice->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0x00FFFFFF, 1.0f, 0);
 	
 	{
-
-		pLoliEffect->RenderAllEntities( this->sceneMgr );
+		//pLoliEffect->RenderAllEntities( this->sceneMgr );
 		pPlatformEffect->RenderAllEntities(this->sceneMgr);
 		waterEffect->RenderAllEntities( this->sceneMgr );
 	}
@@ -348,4 +479,11 @@ void Scene1::Render()
 	pDevice->SetRenderState( D3DRS_ZENABLE, true );
 	pDevice->SetRenderState( D3DRS_ZWRITEENABLE, true );
 
+}
+
+bool Scene1::OnWaterSpeedChanged( const CEGUI::EventArgs& e )
+{
+	CEGUI::UVector2 vec = waterSpeedController->getPosition();
+	//e
+	return true;
 }

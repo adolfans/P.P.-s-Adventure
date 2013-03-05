@@ -58,7 +58,7 @@ private:
 
 public:
 	void RunLevel( MyGameLevel* level );
-	void UpdateLevel( MyGameLevel* level );
+	void UpdateLevel( MyGameLevel* level, MSG msg );
 	static  MyGameInstance* GetMyGameInstance(HINSTANCE _hInstance,
 												int _nCmdShow);
 

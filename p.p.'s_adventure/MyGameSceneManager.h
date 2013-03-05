@@ -23,6 +23,7 @@ private:
 	D3DXMATRIX pMat;
 	D3DXMATRIX lightViewProjMat;
 	D3DXMATRIX lightProjMat;
+	D3DXMATRIX mirrorReflectionMatrix;
 	MyGameCamera* lightCamera;
 	IDirect3DTexture9* shadowMap;
 	vector< MyGameSceneEntity * > entityList;
@@ -53,7 +54,14 @@ public:
 		entityList.push_back( newEnt );
 		return newEnt;
 	}
-
+	void setMirrorReflectionMatrix( const D3DXMATRIX& mat )
+	{
+		mirrorReflectionMatrix = mat;
+	}
+	const D3DXMATRIX& getMirrorReflectionMatrix()
+	{
+		return mirrorReflectionMatrix;
+	}
 	MyGameCamera* CreateCamera( float eyeX, float eyeY, float eyeZ, 
 				float targetX, float targetY, float targetZ);
 
@@ -84,6 +92,11 @@ public:
 	UnitOfLength getUnitOfLength()
 	{	return this->unit; }
 
+	
+	void updateAllEntities();
+
+
+	
 	template< typename length >
 	length sceneLengthToNormalLength( length& originLength )
 	{

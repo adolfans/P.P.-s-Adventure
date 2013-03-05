@@ -44,5 +44,8 @@ namespace MyGameScene{
 		return pNode;
 	}
 
-
+	void MyGameSceneEntity::prepare()
+	{
+		pMesh->prepare();
+	}
 }

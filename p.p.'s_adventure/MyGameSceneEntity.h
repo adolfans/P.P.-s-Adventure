@@ -29,5 +29,6 @@ namespace MyGameScene{
 	public:
 		void render( MyGame3DEffect* _pEffect );
 		MyGameSceneNode* getNode();
+		void prepare();
 	};
 }

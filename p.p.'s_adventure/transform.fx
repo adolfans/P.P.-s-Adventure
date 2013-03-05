@@ -37,9 +37,9 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 {
    VS_OUTPUT Output;
 
-   Output.Position = mul( Input.Position, matViewProjection );
+  // Output.Position = mul( Input.Position, matViewProjection );
    
-   //Output.Position = Input.Position;
+   Output.Position = Input.Position;
    
    Output.Tex = Input.Tex;
    

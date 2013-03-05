@@ -19,15 +19,15 @@
 	
 	<AnimationDefinition name="MyMainMenuItem" duration="0.3" replayMode="once">
         <Affector property="UnifiedXPosition" interpolator="UDim">
-            <KeyFrame position="0" value="{0.619946, 0}" />
-            <KeyFrame position="0.3" value="{0.3, 0}" />
+            <KeyFrame position="0" value="{0.815088, 0}" />
+            <KeyFrame position="0.3" value="{0.6, 0}" />
         </Affector>
         <Subscription event="MouseEntersArea" action="Start" />
     </AnimationDefinition>
 	<AnimationDefinition name="MyMainMenuItem2" duration="0.3" replayMode="once">	
 		<Affector property="UnifiedXPosition" interpolator="UDim">
-            <KeyFrame position="0" value="{0.3, 0}" />
-            <KeyFrame position="0.3" value="{0.619946, 0}" />
+            <KeyFrame position="0" value="{0.6, 0}" />
+            <KeyFrame position="0.3" value="{0.815088, 0}" />
         </Affector>
         <Subscription event="MouseLeavesArea" action="Start" />
 	</AnimationDefinition>	

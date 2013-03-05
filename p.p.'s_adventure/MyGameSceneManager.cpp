@@ -120,7 +120,7 @@ void MyGameSceneManager::setParallelMainLight( MyGameCamera* cam )
 	
 	float h = (float)MyGame3DDevice::GetHeight();
 	float w = (float)MyGame3DDevice::GetWidth();
-	D3DXMatrixOrthoLH( &this->lightProjMat, w/20.0f, h/20.0f, 5.0f, 80.0f );
+	D3DXMatrixOrthoLH( &this->lightProjMat, w/20.0f, h/15.0f, 15.0f, 50.0f );
 
 	this->lightCamera = cam;
 
@@ -141,5 +141,14 @@ D3DVECTOR MyGameSceneManager::getMainLightPosition()
 D3DXVECTOR3 MyGameSceneManager::getMainLightVector()
 {
 	return -lightCamera->getLookingVector();
+}
+void MyGameSceneManager::updateAllEntities()
+{
+	for( auto _itr = entityList.begin();
+		_itr != entityList.end();
+		++ _itr )
+	{
+		(*_itr)->prepare();
+	}
 }
 }

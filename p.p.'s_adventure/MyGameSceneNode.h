@@ -43,11 +43,18 @@ public:
 
 	virtual void setRotateMatrix( const D3DXMATRIX& rotatemat );
 
+	virtual void setRotationAngleY( float angle );
+
 	void attachEntity( MyGameSceneEntity* _ent );
 
 	static MyGameSceneNode* getNodeByName( const char* name );
 
 	static void	destroyAllNodes( );
+	
+	virtual void setTranslationMatrix( D3DXMATRIX& trans )
+	{
+		localMatrix = rotateMat*scaleMat*trans;
+	}
 protected:
 	virtual void SetCombinedMatrix( D3DXMATRIX& comMat ){ combinedMatrix = comMat;}
 };
