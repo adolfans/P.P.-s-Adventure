@@ -13,21 +13,12 @@ MyGameWindow::MyGameWindow(void)
 	ifClicked( false ),
 	hInstance( 0 )
 {
-	//::MessageBoxA(0,"MyGameWindow开始调用",0,0);
 }
 
 
 MyGameWindow::~MyGameWindow(void)
 {
-//	delete wTittle;
 }
-
-//
-//POINT	MyGameWindow::GetMyMousePosistion()
-//{
-//	POINT	mousePoint;
-//	return mousePoint;
-//}
 
 void MyGameWindow::SetWidthClient(int _width)
 {
@@ -42,9 +33,6 @@ void MyGameWindow::SetHeightClient(int _height)
 void MyGameWindow::SetWindowTittle(const char* _tittle)
 {
 	this->wTittle = _tittle;
-	//::MyGameStringCopy(&(wTittle),_tittle);
-//	this->SetWTittle(_tittle);
-//	strcpy(wTittle, _tittle);
 }
 
 void MyGameWindow::SetCmdShow(int _nCmdShow)
@@ -57,7 +45,6 @@ void MyGameWindow::SetInstance( HINSTANCE _hInstance )
 	this->hInstance = _hInstance;
 }
 
-//POINT	GetMyMousePosistion();
 int		MyGameWindow::GetWidthClient()
 {
 	return this->wClient;

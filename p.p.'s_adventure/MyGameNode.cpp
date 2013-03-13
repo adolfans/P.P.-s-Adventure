@@ -12,12 +12,6 @@ MyGameNode::MyGameNode( const char* name ):
 
 MyGameNode::~MyGameNode(void)
 {
-	/*
-	if( this->pFirstChildNode )
-		delete pFirstChildNode;
-	if( this->pSiblingNode )
-		delete pSiblingNode;
-		*/
 }
 
 void MyGameNode::AddChild( MyGameNode* child )

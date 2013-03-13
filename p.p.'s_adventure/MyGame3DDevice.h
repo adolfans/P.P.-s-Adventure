@@ -60,25 +60,6 @@ private:
 	IDirect3DDevice9*				pD3D9InstanceDevice;
 	IDirect3D9*						d3d9;
 
-
-	///
-	///D3D9 UI
-	///
-
-
-
-	//const D3DXMATRIX sceneMoveMatrix0;
-
-	//WORD uiRectIndices[6];
-	//IDirect3DIndexBuffer9* pSceneIndexBuffer;
-
-	//IDirect3DSurface9*		pScreenTarget;
-
-	//IDirect3DSurface9*		pTextureTarget;
-
-
-
-	//private functions
 	bool							InitD3DDevice9();
 	
 #endif
@@ -137,11 +118,7 @@ public:
 
 	IDirect3DSurface9*		getScreenSurface();
 	void					restoreScreenRenderTarget();
-/*
-	static void StartRenderToTexture( MyGameTexture* _targetTexture );
 
-	static void EndRenderToTexture();
-*/
 	//
 	//Texture controller
 	//
@@ -188,9 +165,6 @@ public:
 #ifdef DX9	
 	IDirect3DDevice9* GetDevice();
 #endif
-//	void	SetDeviceVersion(D3DXVERSION _deviceVersion);
-
-
 	//Effect
 	static MyGame3DEffect*	CreateEffectFromResourceID( int _rsID );
 

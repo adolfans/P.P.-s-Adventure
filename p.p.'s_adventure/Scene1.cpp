@@ -22,25 +22,12 @@ using std::endl;
 #endif
 #include <PxPhysicsAPI.h>
 using namespace physx;
-
-//static PxPhysics* gPhysicsSDK = NULL;
-//static PxDefaultErrorCallback gDefaultErrorCallback;
-//static PxDefaultAllocator gDefaultAllocatorCallback;
-////static PxSimulationFilterShader gDefaultFilterShader=PxDefaultSimulationFilterShader;
-//
-//PxFoundation* mFoundation;
-//
-//static PxProfileZoneManager* mProfileZoneManager;
-
-// = NULL;
-#include <d3dx9math.h>
-#include <math.h>
 PxReal myTimestep = 1.0f/60.0f;
 PxRigidActor *box;
 PxDefaultCpuDispatcher* mCpuDispatcher;
 #include <sstream>
+#include <iostream>
 using std::stringstream;
-//PxController* characterCtl;
 Scene1::Scene1(void):
 	bgm(string("YSO_001.ogg"))
 {
@@ -346,78 +333,9 @@ void Scene1::Update( MSG msg )
 
 	delete[] shapes;
 }
-/*
-void Scene1::UpdatePhysx()
-{
-	PxScene* gScene = this->sceneMgr->getPhysXScene();
 
-	PxVec3 moveVec( 0.0f, 0.0f, 0.0f );
-	if(GetAsyncKeyState('A') & 0x8000)
-		//box->mov -= 3;
-	{
-		moveVec.x = -stepLength;
-	}
-	if(GetAsyncKeyState('D') & 0x8000)
-	{
-		moveVec.x = stepLength;//x_A += 3;
-	}
-	if(GetAsyncKeyState('W') & 0x8000)
-	{
-		moveVec.z = stepLength;//y_A += 3;
-	}
-	if(GetAsyncKeyState('S') & 0x8000)
-	{
-		moveVec.z = -stepLength;//y_A -= 3;
-	}
-	//PxControllerFilters filters(0, mFilterData, mFilterCallback);
-	PxControllerFilters filters( 0 );
-	if(GetAsyncKeyState('X') & 0x8000)
-	{
-		//characterCtl->getActor()->setGlobalPose( PxTransform( (PxVec3(0, 10, 0 ) )), true );
-		//characterCtl->setPosition( PxExtendedVec3( 0, 10, 0 ) );
-		moveVec.y = stepLength;
-
-	}
-
-
-	if( GetAsyncKeyState(VK_LEFT) & 0x8000 )
-		cam->rotate( D3DX_PI * 0.0125 );
-	if( GetAsyncKeyState(VK_RIGHT) & 0x8000 )
-		cam->rotate( D3DX_PI * -0.0125 );
-	this->con->move( moveVec.x, moveVec.y, moveVec.z, myTimestep );
-	
-	this->cam->setTargetPosition( D3DXVECTOR3(con->getPosition()));
-	lightCam->setTargetPosition( D3DXVECTOR3(con->getPosition()));
-
-	gScene->simulate(myTimestep);       
-
-	//...perform useful work here using previous frame's state data        
-	while(!gScene->fetchResults() )     
-	{
-		// do something useful        
-	}
-	PxU32 nShapes = box->getNbShapes();
-	PxShape** shapes = new PxShape*[nShapes];
-	 
-	       
-	box->getShapes( shapes, nShapes );
-	while( nShapes-- )
-	{
-		//DrawShape(shapes[nShapes]);
-		//PxTransform pT = PxShapeExt::getGlobalPose(*shapes[nShapes]);
-		PxTransform pT = box->getGlobalPose();
-		boxParentNode->setPosition( pT.p.x, pT.p.y, pT.p.z );
-		PxBoxGeometry bg;
-		shapes[nShapes]->getBoxGeometry(bg);
-		//PxMat33 m = PxMat33(pT.q ); //PxMat33Legacy(pT.q );
-	}
-
-	delete[] shapes;
-}
-*/
 Scene1::~Scene1(void)
 {
-	//characterCtl->release();
 	//HR( D3DXSaveSurfaceToFileW( L"test.tga", D3DXIFF_TGA  , pPass1RenderTargetSurface, 0, 0 ) );
 	::D3DXSaveTextureToFile( L"test.png", D3DXIFF_PNG, sceneMgr->getShadowMap(), 0 );
 	//delete this->con;

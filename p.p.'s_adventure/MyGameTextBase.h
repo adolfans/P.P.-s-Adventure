@@ -30,20 +30,14 @@ public:
 	MyGameTextBase( float _height, float _width, int _weight, string _fontName, bool _italic );
 	virtual ~MyGameTextBase(void);
 	void DestroyText();
-	//void DrawUIText( const char* _text, int _count, int _x, int _y, int _rectWidth, int _rectHeight, DWORD _format, D3DCOLOR _corlor );
 	void DrawUIText( wchar_t* _text, int _count, LPRECT _rect, DWORD _format, D3DCOLOR _color );
 	void DrawUIText( const char* _text, int _count, LPRECT _rect, DWORD _format, D3DCOLOR _color );
-	//static void SetDevice( MyGame3DDevice* _pDevice ){
-	//	pDevice = _pDevice->GetDevice();
-	//}
+
 	static void SetDevice( LPDIRECT3DDEVICE9 _pDevice )
 	{
 		pDevice = _pDevice;
 	}
 
-
-
-	
 	void	SetDestRectForScreen(int _x, int _y, int _width, int _height);
 	void	SetDestRectForTexture( int _x, int _y, int _width, int _height);
 	void	SetRect(int _x, int _y, int _width, int _height);

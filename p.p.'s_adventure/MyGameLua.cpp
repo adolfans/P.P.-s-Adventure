@@ -5,10 +5,7 @@
 MyGameLua::MyGameLua(void)
 	:luaState(0)
 {
-	//MessageBoxA(0,"囧，MyGameLua构造函数开始",0,0);
-		
 	luaState = luaL_newstate();
-	//MessageBoxA(0,"囧，luaL_newstate()调用成功",0,0);
 #ifdef _DEBUG
 	luaL_openlibs(luaState);
 #endif
@@ -86,22 +83,7 @@ bool MyGameLua::PushCFunctionToLuaByName(int (*lua_CFunction)(lua_State*),/* con
 	lua_setglobal( luaState,_newFunctionName.c_str() );
 	return true;
 }
-/*
-int MyGameLua::cFunction( lua_State* L)
-{
-	return Func(this);
-}
 
-bool MyGameLua::PushFunction( int (*_fun)(MyGameLua* _luaScript), const char* _newFuncName)
-{
-	if( !_fun )
-		return false;
-	this->Func = _fun;
-	lua_pushcfunction( luaState, cFunction );
-	lua_setglobal( luaState, _newFuncName);
-	return true;
-}
-*/
 void MyGameLua::CleanStack()
 {
 	lua_settop(luaState, 0);

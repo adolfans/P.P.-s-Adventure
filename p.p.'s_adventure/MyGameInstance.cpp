@@ -1,13 +1,11 @@
 #include "StdAfx.h"
 #include "MyGameInstance.h"
 #include "MyGameFunctions.h"
-//#include "MyGameDecoration.h"
 #include <time.h>
 #include "Resource.h"
 #include <RendererModules/Direct3D9/CEGUIDirect3D9Renderer.h>
 #include <CEGUI.h>
 
-//#include "MyGameClock.h"
 #include <exception>
 using std::runtime_error;
 using std::bad_cast;

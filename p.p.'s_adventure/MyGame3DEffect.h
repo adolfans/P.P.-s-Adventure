@@ -6,13 +6,7 @@ using std::map;
 #include "MyGameTexture.h"
 #include "MyGameScene.h"
 using namespace MyGameScene;
-/*
-#define WVPMATRIX "WorldViewProj"
-#define FINMATARRAY "FinalTransforms"
-#define TEXTURE "Tex"
-#define VERTBLEND "VertBlend"
-#define TECH		"main"
-*/
+
 class MyGame3DEffect
 {
 public:

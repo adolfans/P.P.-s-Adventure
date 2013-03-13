@@ -57,10 +57,6 @@ public:
 	{	this->pCharEntity->getNode()->setRotationAngleY( angle );}
 	void update();
 
-	//void bindAnimToMove( const string& move );
-	//void bindAnimToStillnes( const string& move );
-	//void bindAnimToAttack( 
-
 	void addAnimToQueue( const string& animName );
 };
 

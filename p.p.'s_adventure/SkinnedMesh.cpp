@@ -55,9 +55,6 @@ class AllocMeshHierarchy : public ID3DXAllocateHierarchy
 									ID3DXSkinInfo* pSkinInfo,
 									D3DXMESHCONTAINER** ppNewMeshContainer )
 		{
-			//*ppNewMeshContainer = new D3DXMESHCONTAINER_EX;
-			//memset( *ppNewMeshContainer, 0, sizeof(D3DXMESHCONTAINER_EX) );
-			
 			D3DXMESHCONTAINER_EX* ctn = new D3DXMESHCONTAINER_EX;
 			memset( ctn, 0, sizeof(D3DXMESHCONTAINER_EX) );
 			ctn->NumMaterials = NumMaterials;
@@ -104,29 +101,6 @@ class AllocMeshHierarchy : public ID3DXAllocateHierarchy
 			{
 				ctn->pSkinInfo = pSkinInfo;
 				ctn->pSkinInfo->AddRef();
-				//ID3DXBuffer* boneComboTable = 0;
-				//UINT MaxMatrices = 26;
-				////ctn->NumPaletteEntries = min( MaxMatrices, pSkinInfo->GetNumBones() );
-				//
-				//HR( pSkinInfo->ConvertToIndexedBlendedMesh(
-				//	pMeshData->pMesh,
-				//	D3DXMESH_MANAGED | D3DXMESH_WRITEONLY,
-				//	ctn->NumPaletteEntries,
-				//	//MAX_NUM_BONES_SUPPORTED,
-				//	//pMeshContainer->pAdjacency,
-				//	NULL,
-				//	NULL, NULL, NULL,
-				//	&ctn->NumInfl,
-				//	&ctn->NumAttributeGroups,
-				//	&boneComboTable,
-				//	&ctn->MeshData.pMesh ));
-				//IRelease(boneComboTable);
-				/*
-				//Get Attribute Table
-				DWORD NumAttributeGroups;
-				ctn->MeshData.pMesh->GetAttributeTable(NULL, &NumAttributeGroups);
-				rand();
-				*/
 			}
 
 			*ppNewMeshContainer = ctn;
@@ -228,34 +202,14 @@ void SkinnedMesh::loadFromX(MyGameSceneManager* sMgr)
 								&pHierarchyRoot,
 								&pAnimCtrller ) );
 
-	//effect = new MyGame3DEffect( "newMesh.fx" );
 	
-	//effect->setBOOLByName( TRUE, MyGame3DEffect::VERTBLEND );
-
-		//遍历树。目前已经毫无意义了	
-		//stack< D3DXFRAME* > hiStack;
-		//while( true )
-		//{
-		//	for( ; node; node = node->pFrameFirstChild )
-		//	{
-		//		//::MessageBoxA( 0, node->Name, 0, 0 );
-		//		hiStack.push( node );
-		//	}
-		//	if( !hiStack.size() )
-		//		break;
-		//	node = hiStack.top();
-		//	hiStack.pop();
-		//	node = node->pFrameSibling;
-		//}
 
 	this->rootSceneNode = static_cast<MyGameBoneNode*>(pHierarchyRoot);
 
-	//IDirect3DDevice9* pDevice = MyGame3DDevice::GetSingleton()->GetDevice();
 
 	D3DXFRAME* f = findNodeWithMesh( this->pHierarchyRoot );
 	if( f==0 ) HR(E_FAIL);
 	D3DXMESHCONTAINER* meshContainer = f->pMeshContainer;
-	//D3DXMESHCONTAINER* meshContainer = pHierarchyRoot->pMeshContainer;
 	pSkinInfo = meshContainer->pSkinInfo;
 	pSkinInfo->AddRef();
 
@@ -283,18 +237,12 @@ void SkinnedMesh::loadFromX(MyGameSceneManager* sMgr)
 
 	ID3DXMesh* pMesh = meshContainer->MeshData.pMesh;
 
-	//BYTE* v = 0;
-
 	this->buildSkinnedMesh( pMesh );
 	
-	
-
 	finalTransforms = new D3DXMATRIX[numBones];
-//	this->buildCombinedTransforms();
 
 	this->getAnimation( this->animList );
 
-	//setAnimation( string("stop"), true );
 	lastTime = clock();
 
 }
@@ -315,8 +263,6 @@ void SkinnedMesh::getAnimation( vector<string> &animations )
 		}
 	}
 
-	//this->pAnimCtrller->GetAnimationSet(0, &anim);
-			
 }
 
 void SkinnedMesh::setAnimation( const string &name, bool loop)
@@ -383,67 +329,8 @@ void SkinnedMesh::buildSkinnedMesh( ID3DXMesh* mesh )
 	
 
 }
-/*
-void SkinnedMesh::buildCombinedTransforms()//已废弃，以后不需要此方法了
-{
-	D3DXMATRIX idMat;
-	D3DXMatrixIdentity( &idMat );
-	map<string, D3DXMATRIX> jionga;
-	//FrameEx::CombineTransforms( pHierarchyRoot, idMat, jionga);
-	//this->rootSceneNode->ComputeCombinedMatrix(idMat);
-	//this->rootSceneNode = static_cast<MyGameBoneNode*>(pHierarchyRoot);
-	//rootSceneNode->ComputeCombinedMatrix(idMat);
-	//把jionga中的东西保存到combinedTransforms中去？
-	combinedTransforms.clear();
-	for( unsigned int i = 0; i < numBones; ++ i )
-	{
-		const char* boneName = pSkinInfo->GetBoneName( i );
-		if( MyGameSceneNode::getNodeByName(boneName) == 0 )
-			::MessageBoxA( 0, "cuo", 0, 0 );
-		else
-			//this->combinedTransforms.push_back( jionga[boneName] );
-			this->combinedTransforms.push_back( MyGameSceneNode::getNodeByName(boneName)->getCombinedMatrix() );
-	}
-}
-*/
-/*
-void SkinnedMesh::render()
-{
-	IDirect3DDevice9* pDevice = MyGame3DDevice::GetSingleton()->GetDevice();
-	
-	//meshEffect->SetTechnique(hTech);
-
-	effect->setTechniqueByName( MyGame3DEffect::TECH );
-
-	unsigned int numPasses = 0;
-	
-	//meshEffect->Begin( &numPasses, 0 );
-
-	effect->Begin( numPasses );
-
-	//pSkinnedMesh->GetAttributeTable( 0, &NumAttributeGroups );
-
-	for( unsigned int i = 0; i < numPasses; ++i )
-	{
-		//meshEffect->BeginPass(i);
-		
-		effect->BeginPass( i );
-		{
-			this->render( effect );
-		}
-		effect->EndPass();
-	}
-	//meshEffect->End();
-	effect->End();
-}
-*/
 void SkinnedMesh::render( MyGame3DEffect* _pEffect )
 {
-	////判断不循环的动画是否结束
-	//if( (!this->animLoop) && this->ifAnimEnded() )
-	//{
-	//	animLoop =
-	//}
 	this->frameMove();
 
 	D3DXMATRIX worldViewProj = sceneMgr->getViewProjCombinedMat();
@@ -459,23 +346,7 @@ void SkinnedMesh::render( MyGame3DEffect* _pEffect )
 	_pEffect->setBOOLByName( TRUE, MyGame3DEffect::VERTBLEND );
 
 	MyGameMesh::render( _pEffect );
-	//unsigned int j = 0;
-	//for( vector<IDirect3DTexture9*>::iterator _itr = texList.begin();
-	//		_itr != texList.end();
-	//		 ++ _itr )
-	//{
-	//		//_pEffect->setTextureByName( *_itr, MyGame3DEffect::TEXTURE );
-	//		_pEffect->setTexture( 0, *_itr );
-	//		
-	//		for( int k = 0; k < NumAttributeGroups; ++ k )
-	//		{
-	//			_pEffect->CommitChanges();
-	//			int mtrlIndex = attributeTable[k].AttribId;
-	//			
-	//			//pSkinnedMesh->DrawSubset( mtrlIndex );
-	//		}
-	//		++j;
-	//}
+
 	_pEffect->setBOOLByName( FALSE, MyGame3DEffect::VERTBLEND );
 }
 
@@ -490,13 +361,7 @@ void SkinnedMesh::frameMove( /*float deltaTime*/ /*,
 	float timeDelta = (clock() - lastTime)/1000.0f;
 	lastTime = clock();
 
-	//if( currentAnimDurationTime > pAnimCtrller->GetTime() )
 	this->pAnimCtrller->AdvanceTime( timeDelta, 0 );
-	
-	//if( !animLoop && ifAnimEnded()  )//如果处于非循环状态并且当前动画播放已经结束
-	//{
-	//	this->setAnimation( string("stop"), true ); 
-	//}
 
 	for( unsigned int i = 0; i < numBones; ++ i )
 	{
@@ -517,11 +382,3 @@ bool SkinnedMesh::ifAnimEnded()
 	else
 		return false;
 }
-/*
-bool SkinnedMesh::ifStopped()
-{
-	if( currentAnim == string("stop") )
-		return true;
-	else
-		return false;
-}*/

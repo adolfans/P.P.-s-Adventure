@@ -14,9 +14,8 @@ using std::runtime_error;
 #endif
 
 MyGameMesh::MyGameMesh()
-	:pDXMesh(0), adjBuffer(0), extraTexture(0)//,pVerBuffer(0),pVerDecl(0), tex(0)
+	:pDXMesh(0), adjBuffer(0), extraTexture(0)
 {
-	//nodes.push_back( MyGameSceneManager::CreateSceneNode( name ));
 	pDevice = MyGame3DDevice::GetSingleton()->GetDevice();
 	
 }
@@ -26,21 +25,11 @@ MyGameMesh::~MyGameMesh(void)
 {
 	IRelease(adjBuffer);
 	IRelease(pDXMesh);
-	/*		for( int i = 0; i < Mtrls.size(); i++ )
-		{
-			//pDevice->SetMaterial( &Mtrls[i] );
-			//pDevice->SetTexture( 0, Textures[i] );
-			Textures[i]->Release();
-		}
-		*/
 	for( vector< IDirect3DTexture9* >::iterator _itr = Textures.begin();
 		_itr != Textures.end();
 		++ _itr )
 		IRelease((*_itr));
 
-	//IRelease(pVerBuffer);
-	//IRelease(pVerDecl);
-	//IRelease( tex );
 	IRelease( extraTexture );
 }
 
@@ -92,97 +81,9 @@ void MyGameMesh::loadMeshFromXFile( const char* fileName )
 	}
 	this->generateBoundingBox();
 }
-//getNode可以被MyGameSceneNode里的GetNodeByName替换掉
-/*
-MyGameSceneNode* MyGameMesh::getNode()
-{
-	return pNode;
-}
-*/
-/*
-void MyGameMesh::Draw()
-{
-	D3DXMATRIX idMat;
-	D3DXMatrixIdentity( &idMat );
-	IDirect3DDevice9* pDevice = MyGame3DDevice::GetSingleton()->GetDevice();
-	pDevice->SetTransform( D3DTS_VIEW, &MyGameSceneManager::getViewProjCombinedMat() );
-	pDevice->SetTransform( D3DTS_PROJECTION, &idMat );
-	for( vector<MyGameSceneNode* >::iterator _itr = nodes.begin();
-		_itr != nodes.end();
-		++ _itr )
-	{
-		pDevice->SetTransform( D3DTS_WORLD, &(*_itr)->getCombinedMatrix() );
-		for( int i = 0; i < Mtrls.size(); i++ )
-		{
-			pDevice->SetMaterial( &Mtrls[i] );
-			pDevice->SetTexture( 0, Textures[i] );
-			this->pDXMesh->DrawSubset( i );
-		}
-	}
-}
-*/
-/*
-void MyGameMesh::addNode( const char* name )
-{
-	nodes.push_back( MyGameSceneManager::CreateSceneNode( name ));
-}
-*/
 void MyGameMesh::createPlaneXZ( float width, float height )
 {
-	//float _x = width/2; float _z = height/2;
-	//float vB[8*6] =
-	//{
-	//	-_x, 0.0f, _z, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-	//	_x,  0.0f, _z, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
-	//	-_x, 0.0f,-_z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,
-	//	-_x, 0.0f, -_z,0.0f, 0.0f, 0.0f, 0.0f, 1.0f,
-	//	_x, 0.0f,  _z, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
-	//	_x, 0.0f, -_z, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f,
-	//};
 	IDirect3DDevice9* pDevice = MyGame3DDevice::GetSingleton()->GetDevice();
-	//IDirect3DVertexBuffer9* pVerBuffer;
-	//HR(pDevice->CreateVertexBuffer( sizeof(float)*8*6, D3DUSAGE_WRITEONLY, 0, D3DPOOL_MANAGED, &pVerBuffer, 0 ));
-	//float* dest;
-
-	//pVerBuffer->Lock( 0, sizeof(float)*8*6, (void**)&dest, 0 );
-	//memcpy( dest, vB, sizeof(float)*8*6 );
-	//pVerBuffer->Unlock();
-
-	//HR( pDevice->CreateIndexBuffer( sizeof(unsigned short )* 6, D3DUSAGE_WRITEONLY, D3DFMT_INDEX16, D3DPOOL_MANAGED, &this->pIndicesBuffer, 0 ));
-
-	//unsigned short indices[] = { 0, 1, 2, 3, 4,5 };
-
-	//void* inDest;
-
-	//pIndicesBuffer->Lock( 0, sizeof(unsigned short), &inDest, 0 );
-
-	//memcpy( inDest, indices, sizeof( indices ) );
-
-	//pIndicesBuffer->Unlock();
-
-	//D3DVERTEXELEMENT9 decl[] = {
-	//	{
-	//		0, 0, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0
-	//	},
-	//	{
-	//		0, 12, D3DDECLTYPE_FLOAT3,D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_COLOR,0
-	//		//0, 12, D3DDECLTYPE_D3DCOLOR ,D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_COLOR,0
-	//	},
-	//	{
-	//		0, 24, D3DDECLTYPE_FLOAT2,D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0
-	//	},
-	//	D3DDECL_END()
-	//};
-	//	D3DVERTEXELEMENT9 decl[] = {
-	//	{
-	//		0, 0, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0
-	//	},
-	//	{
-	//		0, 12, D3DDECLTYPE_FLOAT2,D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD,0
-	//	},
-	//	D3DDECL_END()
-	//};
-	//HR( pDevice->CreateVertexDeclaration( decl, &pVerDecl ) );
 
 	float _x = width/2; float _z = height/2;
 	float vB[8*6] =
@@ -194,14 +95,6 @@ void MyGameMesh::createPlaneXZ( float width, float height )
 		_x, 0.0f,  _z, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
 		_x, 0.0f, -_z, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f,
 	};
-	//IDirect3DDevice9* pDevice = MyGame3DDevice::GetSingleton()->GetDevice();
-	//IDirect3DVertexBuffer9* pVerBuffer;
-	//HR(pDevice->CreateVertexBuffer( sizeof(float)*8*6, D3DUSAGE_WRITEONLY, 0, D3DPOOL_MANAGED, &pVerBuffer, 0 ));
-	//float* dest;
-
-	//pVerBuffer->Lock( 0, sizeof(float)*8*6, (void**)&dest, 0 );
-	//memcpy( dest, vB, sizeof(float)*8*6 );
-	//pVerBuffer->Unlock();
 
 	D3DVERTEXELEMENT9 decl[] = {
 		{
@@ -216,7 +109,6 @@ void MyGameMesh::createPlaneXZ( float width, float height )
 		},
 		D3DDECL_END()
 	};
-	////HR( pDevice->CreateVertexDeclaration( decl, &pVerDecl ) );
 
 	D3DXCreateMesh( 2, 6, D3DXMESH_MANAGED/* | D3DXMESH_32BIT加上这个参数会导致一些奇怪的问题*/, decl, pDevice, &this->pDXMesh );
 
@@ -254,17 +146,6 @@ void MyGameMesh::createPlaneXZ( float width, float height )
 void MyGameMesh::render( MyGame3DEffect* pEffect )
 {
 	IDirect3DDevice9* pDevice = MyGame3DDevice::GetSingleton()->GetDevice();
-	//if( pVerBuffer )
-	//{
-	//	pDevice->SetVertexDeclaration(this->pVerDecl);
-	//	pEffect->setTextureByName( tex, MyGame3DEffect::TEXTURE );
-	//	//pEffect->setTexture( 0, tex );
-	//	pEffect->CommitChanges();
-	//	HR(pDevice->SetStreamSource( 0, this->pVerBuffer, 0, sizeof(float)*8 ) );
-	//	HR(pDevice->SetIndices( this->pIndicesBuffer ));
-	//	HR( pDevice->DrawIndexedPrimitive( D3DPT_TRIANGLELIST, 0, 0, 6, 0, 2 ) );
-	//	//HR(pDevice->DrawPrimitive( D3DPT_TRIANGLELIST, 0, 2 ));	
-	//}else if( this->pDXMesh )
 	{
 		for( int i = 0; i < Mtrls.size(); i++ )
 		{

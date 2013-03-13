@@ -14,9 +14,6 @@ using namespace CEGUI;
 class Scene1
 {
 private:
-	//D3DXMATRIX lightViewPersMat;
-	
-
 	MyGameMusic		bgm;
 
 

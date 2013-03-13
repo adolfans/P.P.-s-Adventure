@@ -25,7 +25,6 @@ MyGameTextBase::MyGameTextBase( float _height, float _width, int _weight, string
 		screenWidth = MyGame3DDevice::GetWidth();
 		screenHeight = MyGame3DDevice::GetHeight();
 	}
-	//MessageBoxA(0,"囧，MyGameTextBase构造函数开始",0,0);
 	ZeroMemory( &df, sizeof( D3DXFONT_DESC ) );
 	df.Height   = _height*( (float)screenHeight / 768.0 );
 	df.Width	= _width*( (float)screenWidth / 1024.0 );
@@ -73,38 +72,6 @@ void MyGameTextBase::DestroyText()
 	font = 0;
 	destroyed = true;
 }
-
-//void MyGameTextBase::DrawUIText( const char* _text, int _count, int _x, int _y, int _rectWidth, int _rectHeight, DWORD _format, D3DCOLOR _color )
-//{
-//	RECT _rect = { _x*1024/800, _y*1024/800, (_x + _rectWidth)*1024/800, (_y + _rectHeight)*1024/800 };
-//	try{
-//		//int errorCode = this->font->DrawTextA( 0, _text, _count, &_rect, _format, _color );
-//		wchar_t _textWide[500];
-//		mbstowcs( _textWide, _text, strlen( _text ) + 1 ); 
-//		int errorCode = this->font->DrawTextW( 0, _textWide, _count, &_rect, _format, _color );
-//		if (errorCode ==0 )
-//			throw runtime_error( "DrawText-Error,errorcode:"+ errorCode );
-//	}catch( runtime_error _err){
-//		cout<<"MyGameUISprite.cpp"<<_err.what();
-//	}
-//}
-
-//void MyGameTextBase::DrawUIText( const char* _text, int _count, LPRECT _rect, DWORD _format, D3DCOLOR _color )
-//{
-//	if( _count == 0 )
-//		return;
-//	try{
-//		//int errorCode = this->font->DrawTextA( 0, _text, _count, &_rect, _format, _color );
-//		wchar_t _textWide[500];
-//		setlocale(LC_ALL, "zh_CN");
-//		mbstowcs( _textWide, _text, strlen( _text ) ); 
-//		int errorCode = this->font->DrawTextW( 0, _textWide, _count, _rect, _format, _color );
-//		if (errorCode ==0 )
-//			throw runtime_error( "DrawText-Error,errorcode:"+ errorCode );
-//	}catch( runtime_error _err){
-//		cout<<"MyGameUISprite.cpp"<<_err.what()<<std::endl;
-//	}
-//}
 
 void MyGameTextBase::DrawUIText( wchar_t* _text, int _count, LPRECT _rect, DWORD _format, D3DCOLOR _color )
 {
@@ -165,18 +132,6 @@ void myWstrcpy( wchar_t* _dest, const wchar_t* _src )
 {
 	if( _dest == _src )
 		return;
-	// unsigned int i = 0;
-	//for(i = 0; _src[i] != L'\0'; ++ i )
-	//{
-	//	_dest[i] = _src[i];
-	//}
-	//_dest[i+1] = L'\0';
-	//unsigned int i = 0;
-	//*_dest = *_src;
-	//while( _src != L'\0' )
-	//{
-	//	*(++_dest) = *(++_src);
-	//}
 	unsigned int len = wcslen( _src );
 	memcpy( _dest, _src, sizeof(wchar_t)*(len+1));
 }
@@ -194,16 +149,6 @@ int MyGameTextBase::SetText( const char* _text )
 	//static wstring text_w;
 	if( len >= 50 )
 		MyGameMessage("the string to render is too long");
-	//if( len >= 22 )
-	//{
-	//	text_w = textToDraw;
-	//	for( int i = len/20; i != 0; --i )
-	//	{
-	//		text_w.insert( 20*i, L"\n" );
-	//	}
-	//	myWstrcpy(textToDraw, text_w.c_str() );
-	//}
-	//mbstowcs( textToDraw, _text, strlen( _text )+1 ); 
 	return len;
 }
 
@@ -211,14 +156,6 @@ void MyGameTextBase::SetCount(int _count)
 {
 	this->count = _count;
 }
-
-//void MyGameUIText::SetRect( int _x, int _y, int _width, int _height )
-//{
-//	this->pDestRect->left = _x*1024/800;
-//	this->pDestRect->right = (_x + _width)*1024/800;
-//	this->pDestRect->top	= _y*1024/800;
-//	this->pDestRect->bottom = (_y + _height)*1024/800;
-//}
 
 void MyGameTextBase::SetColor( D3DCOLOR _color )
 {

@@ -13,45 +13,15 @@ MyGame3DDevice::MyGame3DDevice(void)
 	:
 #ifdef DX9
 	pMyGameUIVertexDecl(0),
-	pD3D9InstanceDevice(0)/*,
-	uiMoveMatrix0( 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 ),
-	uiMoveMatrix( 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 ),
-	worldMatName( "gUIWorld" ),
-	viewMatName( "gUIView" ),
-	projMatName( "gUIProj" ),
-	moveMatName( "gUIMove" ),
-	techniqueName( "TransformTech" ),
-	textureHandleName( "gTex" ),
-	pUIIndexBuffer( 0 ),
-	d3dpp(),
-	mFX(0),
-	mhTex(0),
-	mhUIWorldMatHandle(0),
-	mhUIViewMatHandle(0),
-	mhUIProjMatHandle(0),
-	mhUIMoveMatHandle(0),
-	mhAlphaEnabled(0),
-	pScreenTarget(0),
-	pTextureTarget(0)*/
+	pD3D9InstanceDevice(0)
 #endif
 {
-/*	uiRectIndices[0] = 0;
-	uiRectIndices[1] = 1;
-	uiRectIndices[2] = 2;
-	uiRectIndices[3] = 2;
-	uiRectIndices[4] = 1;
-	uiRectIndices[5] = 3;*//*{ 0, 1, 2, 2, 1, 3 };*/
 }
 
 	//typedef void (*new_handler) ();
 	//new_handler set_new_handler( new_handler p ) throw();
 
 
-/*
-void MyGame3DDevice::SetDeviceVersion(D3DXVERSION _deviceVersion)
-{
-	this->deviceVersion = _deviceVersion;
-}*/
 
 
 bool MyGame3DDevice::InitVertexDecl( D3DVERTEXELEMENT9* _decl )
@@ -127,29 +97,7 @@ MyGame3DDevice* MyGame3DDevice::GetSingleton()
 		return pMyGameDevice;
 	pMyGameDevice = new MyGame3DDevice;
 	pMyGameDevice->InitDevice();
-	
-	//
-	//init UI vertex declaration
-	//
-/*	D3DVERTEXELEMENT9 decl[]=
-	{
-		{ 0, 0, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT,
-		D3DDECLUSAGE_POSITION, 0},
-		{ 0, 12, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT,
-		D3DDECLUSAGE_NORMAL, 0},
-		{ 0, 24, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT,
-		D3DDECLUSAGE_TEXCOORD, 0},
-		D3DDECL_END()
-	};
-	pMyGameDevice->InitVertexDecl( decl );
-	//init effect shader
-	pMyGameDevice->InitUIEffectShader();
-	pMyGameDevice->InitUIIndexBuffer();
-	MyGameTexture::SetTextureDevice(pMyGameDevice->GetDevice());
-	MyGame3DEffect::SetEffectDevice( pMyGameDevice->GetDevice() );
-	MyGameTextBase::SetDevice( pMyGameDevice->GetDevice() );
-	MyGameIndexBuffer::SetIndexBufferDevice( pMyGameDevice->GetDevice() );
-	*/
+
 	return MyGame3DDevice::pMyGameDevice;
 }
 void MyGame3DDevice::SetGameWindow(MyGameWindow* _pGameWindow)
@@ -161,17 +109,6 @@ MyGame3DDevice::~MyGame3DDevice(void)
 {
 	
 #ifdef DX9
-	//Release all the texture in list
-
-	//for( map< int, IDirect3DTexture9* >::iterator _iter = myTextureList.begin();
-	//for( map< int, MyGameTexture* >::iterator _iter = myTextureList.begin();
-	//	_iter != myTextureList.end();
-	//	++ _iter )
-	//{	/*( *_iter ).second->Release();*/
-	//	delete ( *_iter ).second;
-	//}
-		//IRelease(pUIIndexBuffer);
-		//IRelease(pUIIndexBuffer);
 	phxControllerManager->release();
 	PxCloseExtensions();
 	phxCooking->release();
@@ -179,17 +116,9 @@ MyGame3DDevice::~MyGame3DDevice(void)
 	phxProfileZoneManager->release();
 	phxFoundation->release();
 	IRelease( screenSurface );
-		IRelease( pMyGameUIVertexDecl );
-		//pD3D9InstanceDevice->Release();
-		//pD3D9InstanceDevice->Release();
-		//pD3D9InstanceDevice->Release();
-		IRelease(pD3D9InstanceDevice);
-		//this->d3d9->Release();
-		//d3d9->Release();
-		//d3d9->Release();
-		//this->d3d9->Release();
-		//this->d3d9->Release();
-		IRelease(this->d3d9);
+	IRelease( pMyGameUIVertexDecl );
+	IRelease(pD3D9InstanceDevice);
+	IRelease(this->d3d9);
 #endif
 #ifdef DX11
 		IRelease(this->d3d11Objects.pD3D11DeviceContext);
@@ -405,71 +334,17 @@ void MyGame3DDevice::EndRender()
 MyGameTexture* MyGame3DDevice::CreateMyTextureFromFile( const char* _fileName )
 {
 	static unsigned int textureKey = 0;
-/*
-	IDirect3DTexture9* pSpriteTexture;
 
-	HR(D3DXCreateTextureFromFileExA( pMyGameDevice->pD3D9InstanceDevice,
-								_fileName,
-								D3DX_DEFAULT,
-								D3DX_DEFAULT,
-								D3DX_DEFAULT,
-								0,
-								D3DFMT_INDEX16,
-								D3DPOOL_MANAGED,
-								D3DX_DEFAULT,
-								D3DX_DEFAULT,
-								0,
-								NULL,
-								NULL,
-								&pSpriteTexture));
-*/
 	MyGameTexture* pSpriteTexture = new MyGameTexture(_fileName);
-	/*pMyGameDevice->myTextureList[textureKey] = pSpriteTexture;*/
 
-	//return textureKey++;
 	return pSpriteTexture;
 }
 
 MyGameTexture* MyGame3DDevice::CreateMyTextureForText( int _width, int _height )
 {
 	MyGameTexture* pSpriteTexture = new MyGameTexture( _width, _height);
-	/*pMyGameDevice->myTextureList[textureKey] = pSpriteTexture;*/
-
-	//return textureKey++;
 	return pSpriteTexture;
 }
-
-
-
-//int MyGame3DDevice::CreateVertexBuffer( VertexType _type, void* _vertices, unsigned int verticeSize )
-//{
-//	static unsigned int key = 0;
-//	
-//	IDirect3DVertexBuffer9*	pVertexBuffer;
-//
-//	HR( pMyGameDevice->pD3D9InstanceDevice->CreateVertexBuffer(
-//												verticeSize,
-//												D3DUSAGE_WRITEONLY,
-//												0,
-//												D3DPOOL_MANAGED,
-//												&pVertexBuffer,
-//												0 ) );
-//
-//	myVertex* destVertices = 0;
-//	pVertexBuffer->Lock( 0, 0, (void**)&destVertices, 0 );
-//	memcpy( destVertices, _vertices, verticeSize );
-//	pVertexBuffer->Unlock();
-//
-//	MyGameVertexBuffer* _myVertexBuffer = new MyGameVertexBuffer;
-//
-//	_myVertexBuffer->SetBufferSize( verticeSize );
-//
-//	_myVertexBuffer->EnableVertexBuffer( pVertexBuffer );
-//
-//	pMyGameDevice->myVertexBufferList[key] = _myVertexBuffer;
-//
-//	return key++;
-//}
 
 MyGameVertexBuffer* MyGame3DDevice::CreateVertexBuffer( VertexType _type, void* _vertices, unsigned int verticeSize )
 {

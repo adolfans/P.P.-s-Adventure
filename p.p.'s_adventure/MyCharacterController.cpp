@@ -108,12 +108,9 @@ void MyCharacterController::bindAnimToMove( const char* aniName )
 
 void MyCharacterController::playAnim( const string& aniName )
 {
-	//需要把它改成插入某个队列的吗？我看不需要……
-	//currentAni = string( aniName);
 	if( !animating )
 	{
 		pCharMesh->setAnimation( aniName, false );
-		//pCharMesh->addAnimToQueue( string(aniName) );
 		animating = true;
 	}
 }
@@ -127,21 +124,10 @@ D3DVECTOR MyCharacterController::getPosition()
 
 void MyCharacterController::update()
 {
-	//如果正在播放的动画结束了，则将animating设为false
-	//if(animating&&pCharMesh->ifAnimEnded())
-	//	animating = false;
-
 	if( animating&&pCharMesh->ifAnimEnded() )
 	{
-		////判断队列中是否有动画未播放，如果没有的话，将animating设为false
-		//if( animQueue.size() )
-		//{
-		//	animating = false;
-		//	this->playAnim( animQueue.back() );
-		//	animQueue.pop();
-		//}else
 			animating = false;
-	}//else
+	}
 	if( animQueue.size()&&!animating )//如果在奔跑或者是在静止
 	{
 		this->playAnim( animQueue.front() );

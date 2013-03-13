@@ -33,8 +33,6 @@ void MyPlayerRole::update( MSG msg )
 			long param = msg.lParam;
 			bitset<sizeof(long)*8> b(param);
 			if( !b[30] )//如果第30位为0
-				///::MessageBoxA( 0, "上一次没有按下该键", 0, 0 );
-				//this->con->playAnim( "attack1" );
 			{
 				if( this->attack == 0 )
 				{
@@ -50,17 +48,6 @@ void MyPlayerRole::update( MSG msg )
 					con->addAnimToQueue( "attack3");
 					this->attack = 3;
 				}
-				/*
-				float currentTime = static_cast<float>(clock())/1000.0f;
-				if( currentTime - lastAttackTime < 0.3 )
-				{
-					if( attackTimes == 3 )
-						attackTimes = 0;
-					else
-						attackTimes++;
-				}else
-					attackTimes = 1;
-				lastAttackTime = currentTime;*/
 			}
 		}
 

@@ -26,7 +26,6 @@ public:
 				variable( _variable ), frequency( _frequency ),initValue( _variable),
 					plus( _ifPlus ),stopped( false ), destroyed( false ), limit( _limit )
 	{
-		//MessageBoxA(0,"囧，MyGameClock构造函数开始",0,0);
 		static int _key = 0;
 		key = _key;
 		clockList[key] = this;

@@ -31,8 +31,6 @@ public:
 
 	virtual void ComputeCombinedMatrix(D3DXMATRIX& parentMat);
 
-	virtual void ComputeCombinedMatrix(D3DXMATRIX& parentMat, map<string, D3DXMATRIX>& matMap );
-	
 	bool getIfMngdByDXAllocHrc(){ return this->mangdByDXAllocHrc; }
 };
 

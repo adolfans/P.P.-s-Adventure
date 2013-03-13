@@ -26,8 +26,6 @@ MyGameTexture::MyGameTexture( const char* _fileName )
 MyGameTexture::MyGameTexture( int _width, int _height )
 	:pD9Texture(0),forText(true)
 {
-	//if( pD9Texture )
-	//	pD9Texture->Release();		//if it was created, release it first
 
 	HR( pD9Device->CreateTexture( _width,
 									_height,

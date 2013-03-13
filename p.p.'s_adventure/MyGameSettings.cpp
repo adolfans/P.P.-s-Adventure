@@ -2,11 +2,6 @@
 #include "MyGameSettings.h"
 #include "MyGameFunctions.h"
 
-//MyGameSettings::MyGameSettings(void)
-//	:wWidth(0), wHeight(0), wTittle(""), gVersion(9)
-//{
-//}
-
 
 MyGameSettings::~MyGameSettings(void)
 {
@@ -17,7 +12,7 @@ MyGameSettings::MyGameSettings(string _scriptName)
 {
 	
 	MyGameLua _config;
-	//MessageBoxA(0,"‡å£¬_config¹¹ÔìÍê±Ï£¿",0,0);
+
 	_config.LoadAScriptFile( _scriptName );
 	
 	_config.PushGlobalByName("gversion");
@@ -36,7 +31,7 @@ MyGameSettings::MyGameSettings(string _scriptName)
 	gVersion = _config.GetIntFromStack(-4);
 	
 	_config.CleanStack();
-	//::MessageBoxA( 0, "‡å£¬_config.CleanStack();;",0,0 );
+
 }
 
 void MyGameSettings::SetLoadedSettingsToInst(MyGameWindow* _pGameWindow)
@@ -48,6 +43,5 @@ void MyGameSettings::SetLoadedSettingsToInst(MyGameWindow* _pGameWindow)
 
 void MyGameSettings::setWTittle(const char* _tittle)
 {
-	//::MyGameStringCopy(&(wTittle),_tittle);
 	this->wTittle = _tittle;
 }

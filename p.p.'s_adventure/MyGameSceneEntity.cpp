@@ -14,14 +14,6 @@ namespace MyGameScene{
 			pNode->AddChild( pSkinned->getSkeletonRoot() );
 	}
 	
-/*	MyGameSceneEntity::MyGameSceneEntity( SkinnedMesh* _pSkinnedMesh, const char* entName, MyGameSceneNode* node, MyGameSceneManager* sMgr )
-		:pNode( node ), sceneMgr( sMgr )
-	{
-		//pNode = new MyGameSceneNode( entName );
-		pMesh = _pSkinnedMesh;
-		pNode->AddChild(_pSkinnedMesh->getSkeletonRoot());
-	}
-	*/
 	MyGameSceneEntity::~MyGameSceneEntity(void)
 	{
 	}

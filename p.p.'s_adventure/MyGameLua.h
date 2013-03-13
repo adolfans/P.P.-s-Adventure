@@ -41,8 +41,6 @@ public:
 
 	bool PushLuaFunctionToCByName(const char* _valueName) const;
 
-//	bool PushFunction(int (*_fun)(MyGameLua* _luaScript), const char* _newFuncName);
-	
 	//clean the stack
 	void CleanStack();
 

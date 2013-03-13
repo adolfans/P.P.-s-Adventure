@@ -7,12 +7,6 @@
 using std::stringstream;
 using std::runtime_error;
 namespace MyGameScene{
-	/*
-	D3DXMATRIX MyGameSceneManager::vMat;
-	D3DXMATRIX MyGameSceneManager::pMat;
-	D3DXMATRIX MyGameSceneManager::lightViewProjMat;
-	IDirect3DTexture9* MyGameSceneManager::shadowMap = 0;
-	*/
 MyGameSceneManager::MyGameSceneManager(void)
 	:unit(Millimeter)
 {
@@ -47,24 +41,14 @@ MyGameSceneManager::MyGameSceneManager(void)
 	root = new MyGameSceneNode( "root" );
 
 	root->scale( 0.003, 0.003f, 0.003f );
-	
-	//IDirect3DDevice9* device = MyGame3DDevice::GetSingleton()->GetDevice();
-	//device->GetRenderTarget( 0, &screenSurface );
 }
 
 
 MyGameSceneManager::~MyGameSceneManager(void)
 {
-	//IRelease(screenSurface);
 	mCpuDispatcher->release();
 	phxScene->release();
 }
-/*
-void MyGameSceneManager::setViewProjMat( const D3DXMATRIX& _vMat, const D3DXMATRIX& _pMat )
-{
-	vMat = _vMat; pMat = _pMat;
-}
-*/
 D3DXMATRIX MyGameSceneManager::getViewProjCombinedMat()
 {
 	//return vMat* pMat;

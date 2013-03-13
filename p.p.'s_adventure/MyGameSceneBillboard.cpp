@@ -13,18 +13,6 @@ MyGameSceneBillboard::MyGameSceneBillboard(void)
 	D3DXMatrixIdentity( &moveMat );
 	D3DXMatrixIdentity( &scaleMat );
 
-	//float vertmp[6*5] =
-	//{
-	//	-1.0f, 1.0f, 0.0f, 0.0f, 0.0f,
-	//	 1.0f, 1.0f, 0.0f, 1.0f, 0.0f,
-	//	-1.0f,-1.0f, 0.0f, 0.0f, 1.0f,
-	//	-1.0f,-1.0f, 0.0f, 0.0f, 1.0f,
-	//	 1.0f, 1.0f, 0.0f, 1.0f, 0.0f,
-	//	 1.0f,-1.0f, 0.0f, 1.0f, 1.0f
-	//};	
-
-	//memcpy( vertices, 
-
 }
 
 
@@ -138,27 +126,9 @@ void MyGameSceneBillboard::SetPosition( float _x, float _y, float _z )
 
 void MyGameSceneBillboard::SetSize( float _width, float _height )
 {
-	//D3DXMatrixScaling( &scaleMat, _width, _height,  1.0f );
-	//D3DXMATRIX _transpose;
-	//D3DXMATRIX viewMatrix = sceneManager->getViewMat();
-	//::D3DXMatrixTranspose( &_transpose, &viewMatrix );
-	//_transpose._14 = 0;
-	//_transpose._24 = 0;
-	//_transpose._34 = 0;
-	//_transpose._41 = 0;
-	//_transpose._42 = 0;
-	//_transpose._43 = 0;
-	//_transpose._44 = 1;
-	//D3DXMatrixMultiply( &worldMat, &scaleMat, &_transpose );
-	//D3DXMatrixMultiply( &worldMat, &worldMat, &moveMat ); 
 	this->node->scale( _width, _height, 0.0f );
 }
-/*
-void MyGameSceneBillboard::SetViewMatrix( const D3DXMATRIX* pMat )
-{
-	viewMatrix = *pMat;
-}
-*/
+
 void MyGameSceneBillboard::DrawAllBillboards()
 {
 	IDirect3DDevice9* pDevice = MyGame3DDevice::GetSingleton()->GetDevice();
@@ -220,42 +190,6 @@ void MyGameSceneBillboard::DrawAllBillboards()
 	pDevice->SetTransform( D3DTS_WORLD, &idMat);
 	pDevice->SetTransform( D3DTS_PROJECTION, &idMat );
 	pDevice->SetTransform( D3DTS_VIEW, &idMat );
-
-
-
-
-
-
-	//下面是后来加的
-
-
-
-
-
-
-	//D3DXMATRIX idMat;
-	//D3DXMatrixIdentity( &idMat );
-
-	//pDevice->SetTransform( D3DTS_WORLD, &idMat);
-	//pDevice->SetTransform( D3DTS_PROJECTION, &idMat );
-	//pDevice->SetTransform( D3DTS_VIEW, &idMat );
-
-
-	//float h = (float)MyGame3DDevice::GetHeight();
-	//float w = (float)MyGame3DDevice::GetWidth();
-	//float pi = 3.1415926536f;	//囧
-	//D3DXMATRIX perspectiveMat;
-	//D3DXMatrixPerspectiveFovLH( &perspectiveMat, pi*0.5F, w/h, 5.0f, 2000.0f );
-
-	////pDevice->SetTransform( D3DTS_PROJECTION, &perspectiveMat );
-
-	//pDevice->SetStreamSource( 0, vb, 0, sizeof(float)*5 );
-	//for( vector<MyGameSceneBillboard*>::iterator _itr = list.begin(); _itr != list.end(); ++ _itr )
-	//{
-	//	pDevice->SetTexture( 0, (*_itr)->pTexture );
-	//	pDevice->SetTransform( D3DTS_WORLD, &( (*_itr)->worldMat) );
-	//	pDevice->DrawPrimitive( D3DPT_TRIANGLELIST, 0, 2 ); 
-	//}
 
 }
 }

@@ -1,6 +1,5 @@
 #pragma once
-//#include "MyGame3DDevice.h"
-//#include <d3dx9.h>
+
 #include "MyGameTextBase.h"
 #include "MyGameVertexBuffer.h"
 class MyGameTexture
@@ -15,7 +14,7 @@ public:
 	~MyGameTexture(void);
 	void SetTextOfTexture( const char* _text, MyGameTextBase* _textObj, MyGameTexture* targetTexture, MyGameVertexBuffer* pVertexBuffer );
 	void MyGameTexture::SaveTexutureToPng( const char* _fileName);
-	//void EnableMyGameTexture();
+
 	IDirect3DTexture9* GetD9Texture();
 	static void SetTextureDevice( IDirect3DDevice9* _d9Device );
 };
