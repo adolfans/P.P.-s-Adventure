@@ -18,6 +18,7 @@ public:
 	void updatePosToScene();
 	const D3DXMATRIX& getViewMatrix();
 	const D3DXVECTOR3& getLookingVector() const{ return lookingVector;}
+	void setLookingVector( const D3DXVECTOR3& vec ) { lookingVector = vec; }
 	void rotateY( float angle );
 	void move( float _x, float _y, float _z );
 

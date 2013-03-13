@@ -13,7 +13,7 @@ float3 lightVector: ParallelLightVector;
 float4x4 viewMatrix : ViewMatrix;
 float4x4 worldMatrix: WorldMatrix;
 float4x4 viewProjMatrix : ViewProjMatrix;
-float4x4 reflectionMatrix : MirrorReflectionMatrix;
+//float4x4 reflectionMatrix : MirrorReflectionMatrix;
 texture texture0		: Texture0;
 
 
@@ -43,8 +43,8 @@ struct VS_OUTPUT
 {
    float4 Position : POSITION0;
    float2 Tex      : TEXCOORD0;
-   float4 lightViewPos : TEXCOORD1;
-   float4 shadowMapCoord : TEXCOORD2;
+   float3 lightViewPos : TEXCOORD1;
+   float2 shadowMapCoord : TEXCOORD2;
    float3 normal	: TEXCOORD3;
    float3 viewDirection : TEXCOORD4;
 };
@@ -83,17 +83,12 @@ VS_OUTPUT vs_main( VS_INPUT Input )
    float4 lightViewPoint = mul( InPos, LightViewProj );
    
    //如果这货大于在Shadow map上采样到的那货的话，它就是影子
-   Output.lightViewPos = lightViewPoint.z;
-   Output.lightViewPos.w = lightViewPoint.w;
+   Output.lightViewPos = lightViewPoint.z/lightViewPoint.w;
+   //Output.lightViewPos.w = lightViewPoint.w;
    
-   Output.shadowMapCoord.x = 0.5 *( lightViewPoint.x + lightViewPoint.w );
+   Output.shadowMapCoord.x = 0.5 *( lightViewPoint.x + lightViewPoint.w )/lightViewPoint.w;
    
-   Output.shadowMapCoord.y = 0.5 * ( lightViewPoint.w - lightViewPoint.y );
-   
-   Output.shadowMapCoord.z = 0;
-   
-   Output.shadowMapCoord.w = lightViewPoint.w;
-   
+   Output.shadowMapCoord.y = 0.5 * ( lightViewPoint.w - lightViewPoint.y )/lightViewPoint.w;
    
    Output.normal = normalize(mul( Input.Normal,worldMatrix ));
    
@@ -106,7 +101,7 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 }
 struct PS_out{
 	float4 c0 :COLOR0;
-	float4 c1 :COLOR1;
+	float4 c1 :COLOR1;	//渲染深度图，作卡通渲染之用咩哈哈
 };
 PS_out ps_main(float2 tex: TEXCOORD0, float3 lightViewPos: TEXCOORD1,float2 shadowMapCoord: TEXCOORD2, float3 normal: TEXCOORD3, float3 viewDirection: TEXCOORD4)
 {
@@ -130,7 +125,7 @@ PS_out ps_main(float2 tex: TEXCOORD0, float3 lightViewPos: TEXCOORD1,float2 shad
 	
 	//float4 color;
 	//color = lightViewPos.r - shadowMapPix.r > 0.01 ? -float4( 0.5f, 0.5f, 0.5f, 0.0f ) : 0;
-	float4 color = float4( 0.5f, 0.5f, 0.5f, 0.0f )*shadowTest( shadowMapCoord, lightViewPos );
+	float4 color = float4( 0.5f, 0.5f, 0.5f, 0.0f )*shadowTest( shadowMapCoord, lightViewPos.r );
 
 	float3 fvLightDirection = normalize( lightVector );//或者应该取反？
 	float3 fvNormal         = normalize( normal );
@@ -157,7 +152,7 @@ PS_out aa( float4 c0 : COLOR0)
 {
 	PS_out output;
 	output.c0 = c0;
-	output.c1 =float4( 0.0f, 0.0f, 0.0f, 1.0f );
+	output.c1 = float4( 0.0f, 0.0f, 0.0f, 1.0f );
 	return output;
 }
 technique main
@@ -171,16 +166,6 @@ technique main
 
 		// Specify the render/device states associated with this pass.
 		//FillMode = Wireframe;
-		/*
-		AlphaBlendEnable = alphaEnable;
-		SrcBlend = srcalpha;
-		DestBlend = invsrcalpha;
-		
-		SeparateAlphaBlendEnable = false;
-		SrcBlendAlpha = SrcAlpha;
-		DestBlendAlpha = InvSrcAlpha;
-		BlendOpAlpha = add;
-		*/
 		//AlphaBlendEnable = false;
 
     }

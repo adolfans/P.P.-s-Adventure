@@ -48,9 +48,9 @@ MyCharacterController::~MyCharacterController(void)
 
 void MyCharacterController::move( float x, float y, float z, PxF32 elapsedTime )
 {
-	if( pCharacterCtl->getFootPosition().y  - 1.0 > 0.0 )//如果脚在空中
+	if( pCharacterCtl->getFootPosition().y  - 1.0 > -120.0 )//如果脚在空中
 	{
-		PxVec3 moveVec( 0.0f, -pCharacterCtl->getFootPosition().y, 0.0f );
+		PxVec3 moveVec( 0.0f, -pCharacterCtl->getFootPosition().y-120, 0.0f );
 		static PxControllerFilters filters( 0 );//只是为了防止这个对象重复构造而已
 		pCharacterCtl->move( moveVec, 0.01f, elapsedTime, filters );
 

@@ -8,7 +8,7 @@
 #include <vector>
 #include "MyGame3DEffect.h"
 using std::vector;
-
+#include <fbxsdk.h>
 
 #ifdef free
 #undef free
@@ -75,9 +75,15 @@ protected:
 
 		pDXMesh->UnlockVertexBuffer();
 	}
+
+	IDirect3DTexture9* createTextureFromFile( const char* fileName );
+
+
 public:
 
 	virtual void loadMeshFromXFile( const char* fileName );
+	void loadMeshFromFbxFile( const char* fileName );
+	void loadMeshFromFbxNodeAttribute( FbxNodeAttribute* attr );
 	virtual void createPlaneXZ( float width, float height  );
 	virtual void createTexture( const char* fileName, unsigned int num = 0 );
 	virtual void createExtraTexture( const char* fileName );

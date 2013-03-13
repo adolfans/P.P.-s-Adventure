@@ -3,6 +3,8 @@
 #include "MyGameCamera.h"
 #include <d3dx9math.h>
 #include <exception>
+#include <sstream>
+using std::stringstream;
 using std::runtime_error;
 namespace MyGameScene{
 	/*
@@ -18,7 +20,7 @@ MyGameSceneManager::MyGameSceneManager(void)
 	PxPhysics* pxPhysics = MyGame3DDevice::GetSingleton()->getPhysX();
 	PxSceneDesc sceneDesc(pxPhysics->getTolerancesScale());
 	
-	sceneDesc.gravity=PxVec3(0.0f, -9.8f, 0.0f)*unit;
+	sceneDesc.gravity=PxVec3(0.0f, -9.8f, 0.0f)*(physx::PxReal)unit;
 
 	if(!sceneDesc.cpuDispatcher) {
 		mCpuDispatcher = PxDefaultCpuDispatcherCreate(1);
@@ -45,11 +47,15 @@ MyGameSceneManager::MyGameSceneManager(void)
 	root = new MyGameSceneNode( "root" );
 
 	root->scale( 0.003, 0.003f, 0.003f );
+	
+	//IDirect3DDevice9* device = MyGame3DDevice::GetSingleton()->GetDevice();
+	//device->GetRenderTarget( 0, &screenSurface );
 }
 
 
 MyGameSceneManager::~MyGameSceneManager(void)
 {
+	//IRelease(screenSurface);
 	mCpuDispatcher->release();
 	phxScene->release();
 }
@@ -151,4 +157,69 @@ void MyGameSceneManager::updateAllEntities()
 		(*_itr)->prepare();
 	}
 }
+}
+
+void getNodeFromFbxNode( MyGameScene::MyGameSceneManager* sceneMgr, FbxNode* node, MyGameSceneNode* parentSceneNode, MyGame3DEffect* effect )
+{
+	MyGameSceneNode* snode = sceneMgr->CreateSceneNode( node->GetName() );
+	FbxDouble3 translation = node->LclTranslation.Get();
+	FbxDouble3 rotation = node->LclRotation.Get();
+	FbxDouble3 scaling = node->LclScaling.Get();
+	snode->setPosition( translation.mData[0], translation.mData[1], translation.mData[2] );
+	snode->rotateX( rotation.mData[0] );
+	snode->rotateY( rotation.mData[1] );
+	snode->rotateZ( rotation.mData[2] );
+	snode->scale( scaling.mData[0], scaling.mData[1], scaling.mData[2] );
+
+	parentSceneNode->AddChild( snode );
+	
+	for( int i = 0; i != node->GetNodeAttributeCount(); ++ i )
+	{
+
+		if( node->GetNodeAttributeByIndex( i )->GetAttributeType() == FbxNodeAttribute::eMesh )
+		{
+				//如果这个节点的attribute是mesh的话就创建mesh和entity，并且把它绑定到节点
+			//TODO: 有可能创建重复的mesh
+			MyGameMesh* mesh = MyGameMeshManager::createMyGameMesh( MyGameMeshManager::MESH );
+			mesh->loadMeshFromFbxNodeAttribute( node->GetNodeAttributeByIndex( i ) );
+			stringstream ss;
+			ss<< node->GetName() << i;			
+			MyGameSceneEntity* ent = sceneMgr->CreateSceneEntity( mesh, ss.str().c_str() );
+			snode->attachEntity( ent );
+			effect->AddEntity( ent );
+			break;
+		}
+	}
+
+	for( int i = 0; i != node->GetChildCount(); ++ i )
+	{
+		getNodeFromFbxNode( sceneMgr, node->GetChild( i ), snode, effect);
+	}
+}
+
+void loadSceneFromFbx( MyGameScene::MyGameSceneManager* sceneMgr, const char* fileName, MyGameSceneNode* node, MyGame3DEffect* effect )
+{
+	FbxManager* fbxMgr= FbxManager::Create();
+	FbxIOSettings* fbxIO = FbxIOSettings::Create( fbxMgr, IOSROOT );
+	fbxMgr->SetIOSettings( fbxIO );
+
+	FbxScene* fbxScene = FbxScene::Create( fbxMgr, "test" );
+	FbxImporter* importer = FbxImporter::Create( fbxMgr, "" );
+	importer->Initialize( fileName, -1, fbxMgr->GetIOSettings() );
+	importer->Import( fbxScene );
+	fbxIO->Destroy();
+
+	FbxNode* rootNode = fbxScene->GetRootNode();
+
+	FbxGeometryConverter converter( fbxMgr );
+	converter.TriangulateInPlace( rootNode );
+
+
+	getNodeFromFbxNode( sceneMgr, rootNode, node, effect );
+
+	rootNode->Destroy();
+
+
+	fbxScene->Destroy();
+	fbxMgr->Destroy();
 }

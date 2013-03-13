@@ -37,6 +37,7 @@
     <Import Project="DirectX9.props" />
     <Import Project="physxsdk_d.props" />
     <Import Project="SDL.props" />
+    <Import Project="fbxsdk.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -45,6 +46,7 @@
     <Import Project="DirectX9.props" />
     <Import Project="physxsdk1.props" />
     <Import Project="SDL.props" />
+    <Import Project="fbxsdk.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -119,6 +121,7 @@ copy mesh.fx ..\Debug</Command>
     <ClInclude Include="..\p.p.%27s_adventure\MyGameMusic.h" />
     <ClInclude Include="..\p.p.%27s_adventure\MyPlayerRole.h" />
     <ClInclude Include="..\p.p.%27s_adventure\MyRenderTargetTexture.h" />
+    <ClInclude Include="..\p.p.%27s_adventure\MySceneWater.h" />
     <ClInclude Include="..\p.p.%27s_adventure\MyShadowMap.h" />
     <ClInclude Include="..\p.p.%27s_adventure\OggPlayer.h" />
     <ClInclude Include="main.h" />
@@ -162,6 +165,7 @@ copy mesh.fx ..\Debug</Command>
     <ClCompile Include="..\p.p.%27s_adventure\MyGameMusic.cpp" />
     <ClCompile Include="..\p.p.%27s_adventure\MyPlayerRole.cpp" />
     <ClCompile Include="..\p.p.%27s_adventure\MyRenderTargetTexture.cpp" />
+    <ClCompile Include="..\p.p.%27s_adventure\MySceneWater.cpp" />
     <ClCompile Include="..\p.p.%27s_adventure\MyShadowMap.cpp" />
     <ClCompile Include="..\p.p.%27s_adventure\OggPlayer.cpp" />
     <ClCompile Include="main.cpp" />

@@ -6,7 +6,6 @@
 #include "MyGame3DEffect.h"
 #include "MyGameMusic.h"
 #include "MyGameCamera.h"
-#include "MyShadowMap.h"
 #include "MyCharacterController.h"
 #include "MyPlayerRole.h"
 #include "MyRenderTargetTexture.h"
@@ -37,17 +36,12 @@ private:
 
 	MyGameSceneEntity* planeEnt;
 	MyGame3DEffect* pPlatformEffect;
+	MyGame3DEffect* mirrorEffect;
 	MyGameSceneNode* boxParentNode;
 
 	MyGameSceneManager* sceneMgr;
 
 	MyGameCamera*	cam;
-
-	
-
-	MyShadowMap*	shadowMap;
-
-	//MyCharacterController* con;
 
 	MyGame3DEffect*		waterEffect;
 	D3DXHANDLE		waterSpeedHandle;
@@ -65,7 +59,11 @@ private:
 	CEGUI::Checkbox*	reflectionCheckBox;
 
 	Window*				fpsBoard;
-	MyRenderTargetTexture* testTarget1;
+
+	CEGUI::Scrollbar*	lightAngle;
+
+	MyRenderTargetTexture*	mirrorTexture;
+	MyRenderTargetTexture*	shadowMap;
 public:
 	Scene1(void);
 	virtual ~Scene1(void);
@@ -73,8 +71,9 @@ public:
 
 	void Update(MSG msg);
 
-	bool OnWaterSpeedChanged( const CEGUI::EventArgs& e );
-
+	bool OnShadowChanged( const CEGUI::EventArgs& e );
+	bool OnLightAngleChanged( const CEGUI::EventArgs& e );
+	bool OnWaterReflectionChanged( const CEGUI::EventArgs& e );
 	//void UpdatePhysx();
 };
 

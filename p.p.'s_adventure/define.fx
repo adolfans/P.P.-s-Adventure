@@ -31,7 +31,7 @@ technique aaaaa
 }
 
 
-float shadowTest( float2 shadowMapCoord, float3 lightVec	)//如果是阴影，返回-1,如果不是，返回0
+float shadowTest( float2 shadowMapCoord, float lightVec	)//如果是阴影，返回-1,如果不是，返回0
 {
 	float4 shadowMapPix = tex2D( ShadowTex, shadowMapCoord );
 	
@@ -44,6 +44,6 @@ float shadowTest( float2 shadowMapCoord, float3 lightVec	)//如果是阴影，�
 	//return color;
 	//return float4( diffuse*saturate( lightVec * normal )+color, 1.0 );
 	//float4 specularColor;
-	float jiongjiong = saturate(lightVec.r);
+	float jiongjiong = saturate(lightVec);
 	return jiongjiong - shadowMapPix.r > 0.01 ? -1.0f : 0;
 }

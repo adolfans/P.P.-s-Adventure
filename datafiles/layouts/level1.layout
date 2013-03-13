@@ -2,14 +2,14 @@
 
 <GUILayout >
     <Window Type="DefaultWindow" Name="Root" >
-        <Property Name="UnifiedAreaRect" Value="{{0,0},{0,0},{1,0},{1,0}}" />
+        <Property Name="UnifiedAreaRect" Value="{{-0.000696379,0},{0,0},{0.999304,0},{1,0}}" />
         <Window Type="TaharezLook/HorizontalScrollbar" Name="Root/Volume" >
             <Property Name="PageSize" Value="0" />
             <Property Name="StepSize" Value="1" />
             <Property Name="OverlapSize" Value="0" />
             <Property Name="DocumentSize" Value="1" />
             <Property Name="ScrollPosition" Value="0" />
-            <Property Name="UnifiedAreaRect" Value="{{0.667362,0},{0.0347206,0},{0.984029,0},{0.0571519,0}}" />
+            <Property Name="UnifiedAreaRect" Value="{{0.668058,0},{0.0347206,0},{0.984725,0},{0.0571519,0}}" />
         </Window>
         <Window Type="TaharezLook/StaticText" Name="Root/VolumeText" >
             <Property Name="Text" Value="Volume" />
@@ -23,7 +23,7 @@
             <Property Name="OverlapSize" Value="0" />
             <Property Name="DocumentSize" Value="1" />
             <Property Name="ScrollPosition" Value="0" />
-            <Property Name="UnifiedAreaRect" Value="{{0.667362,0},{0.0814046,0},{0.984029,0},{0.103836,0}}" />
+            <Property Name="UnifiedAreaRect" Value="{{0.668058,0},{0.0814046,0},{0.984725,0},{0.103836,0}}" />
         </Window>
         <Window Type="TaharezLook/StaticText" Name="Root/VolumeText1" >
             <Property Name="Text" Value="WaterSpeed" />
@@ -43,7 +43,25 @@
             <Property Name="Text" Value="FPS:" />
             <Property Name="HorzExtent" Value="50" />
             <Property Name="VertExtent" Value="19.88" />
-            <Property Name="UnifiedAreaRect" Value="{{0.0159721,0},{0.0124839,0},{0.131944,0},{0.0934324,0}}" />
+            <Property Name="UnifiedAreaRect" Value="{{0.0159721,0},{0.0124839,0},{0.173031,0},{0.0778277,0}}" />
+        </Window>
+        <Window Type="TaharezLook/HorizontalScrollbar" Name="Root/LightAngle" >
+            <Property Name="PageSize" Value="0" />
+            <Property Name="StepSize" Value="1" />
+            <Property Name="OverlapSize" Value="0" />
+            <Property Name="DocumentSize" Value="1" />
+            <Property Name="ScrollPosition" Value="0" />
+            <Property Name="UnifiedAreaRect" Value="{{0.668058,0},{0.130689,0},{0.984725,0},{0.153121,0}}" />
+        </Window>
+        <Window Type="TaharezLook/StaticText" Name="Root/lightAngleText" >
+            <Property Name="Text" Value="Light Angle" />
+            <Property Name="HorzExtent" Value="136" />
+            <Property Name="VertExtent" Value="19.88" />
+            <Property Name="UnifiedAreaRect" Value="{{0.541245,0},{0.124577,0},{0.664161,0},{0.162613,0}}" />
+        </Window>
+        <Window Type="TaharezLook/Checkbox" Name="Root/Skydome" >
+            <Property Name="Text" Value="Sky dome" />
+            <Property Name="UnifiedAreaRect" Value="{{0.820833,0},{0.79545,0},{0.990277,0},{0.859494,0}}" />
         </Window>
     </Window>
 </GUILayout>

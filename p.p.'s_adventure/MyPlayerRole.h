@@ -25,5 +25,9 @@ public:
 	~MyPlayerRole(void);
 
 	void update( MSG msg );
+	D3DXVECTOR3 getPosition()
+	{
+		return con->getPosition();
+	}
 };
 

@@ -18,7 +18,6 @@ MyShadowMap::MyShadowMap(unsigned int width, unsigned int height)
 											0 ) );
 
 	HR( shadowMap->GetSurfaceLevel( 0, &this->shadowMapSurface ));
-	HR( pDevice->GetRenderTarget( 0, &screenSurface ) );//获取当前的显示表面
 
 }
 
@@ -27,7 +26,6 @@ MyShadowMap::~MyShadowMap(void)
 {
 	IRelease( shadowMap );
 	IRelease( shadowMapSurface );
-	IRelease( screenSurface );
 }
 
 void MyShadowMap::start()
@@ -44,7 +42,7 @@ void MyShadowMap::start()
 void MyShadowMap::end()
 {
 	pDevice->EndScene();
-	HR( pDevice->SetRenderTarget(0, this->screenSurface) );	
+	MyGame3DDevice::GetSingleton()->restoreScreenRenderTarget();
 	pDevice->BeginScene();
 }
 

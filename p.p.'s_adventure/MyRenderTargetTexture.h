@@ -3,12 +3,20 @@
 class MyRenderTargetTexture
 {
 private:
+	IDirect3DDevice9* device;
 	IDirect3DTexture9* texture;
 	IDirect3DSurface9* surface;
 public:
-	MyRenderTargetTexture(void);
+	enum TextureMode
+	{
+		Gray,
+		ARGB
+	};
+
+	MyRenderTargetTexture(TextureMode mode);
 	~MyRenderTargetTexture(void);
 	void setRenderTarget( int level );
+	void clear();
 	IDirect3DTexture9* getTexture()
 	{	return texture; }
 };

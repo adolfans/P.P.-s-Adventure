@@ -7,6 +7,12 @@
 #include <exception>
 using std::runtime_error;
 
+#ifdef _DEBUG
+#pragma comment( lib, "fbxsdk-2013.1-mdd.lib" )
+#else
+#pragma comment( lib, "fbxsdk-2013.1-md.lib" )
+#endif
+
 MyGameMesh::MyGameMesh()
 	:pDXMesh(0), adjBuffer(0), extraTexture(0)//,pVerBuffer(0),pVerDecl(0), tex(0)
 {
@@ -420,4 +426,239 @@ physx::PxTriangleMesh* MyGameMesh::generatePxTriangleMesh(  )
 void MyGameMesh::prepare()
 {
 
+}
+
+FbxNodeAttribute* findNode( FbxNode* node )
+{
+	for( int i = 0; i != node->GetNodeAttributeCount(); ++ i )
+	{
+		if( node->GetNodeAttributeByIndex( i )->GetAttributeType() == FbxNodeAttribute::eMesh )
+		{
+			return node->GetNodeAttributeByIndex( i );	//如果这个节点的attribute是mesh的话就返回
+		}
+	}
+	for( int i = 0; i != node->GetChildCount(); ++ i )
+	{
+		return findNode( node->GetChild( i ) );
+	}
+	return 0;
+}
+
+
+struct meshVertex{
+	float x, y, z;
+	float nx, ny, nz;
+	float u, v;
+};
+void MyGameMesh::loadMeshFromFbxFile( const char* fileName )
+{
+	FbxManager* fbxMgr = 0;
+	FbxScene*	fbxScene = 0;
+	{
+	fbxMgr = FbxManager::Create();
+	if( !fbxMgr )
+		throw runtime_error( "Unable to create the FBX SDK manager" );
+
+	FbxIOSettings* fbxIOSetting = FbxIOSettings::Create( fbxMgr, IOSROOT );
+	fbxMgr->SetIOSettings( fbxIOSetting );
+
+	//FbxString path = FbxGetApplicationDirectory();
+	//fbxMgr->LoadPluginsDirectory( path.Buffer() );
+
+	fbxScene = FbxScene::Create( fbxMgr, "MyScene");
+
+	FbxImporter* importer = FbxImporter::Create( fbxMgr, "" );
+	importer->Initialize( fileName, -1, fbxMgr->GetIOSettings() );
+	importer->Import( fbxScene );
+	importer->Destroy();
+	fbxIOSetting->Destroy();
+	}
+
+	FbxNode* rootNode = fbxScene->GetRootNode();
+
+	FbxGeometryConverter converter(fbxMgr );
+
+	converter.TriangulateInPlace( rootNode );//将节点三角化
+	
+	FbxNodeAttribute* attr = findNode( rootNode );
+	
+	this->loadMeshFromFbxNodeAttribute( attr );
+	rootNode->Destroy();
+
+
+	fbxScene->Destroy();
+	fbxMgr->Destroy();
+	
+}
+
+void MyGameMesh::loadMeshFromFbxNodeAttribute( FbxNodeAttribute* attr )
+{
+	FbxMesh* mesh = (FbxMesh*)attr;
+
+	//mesh->get
+	//创建ID3DXMesh接口
+	{
+		DWORD numVertices = mesh->GetPolygonVertexCount();//mesh->GetControlPointsCount();
+		DWORD numFaces =	mesh->GetPolygonVertexCount()/3;
+		
+		D3DVERTEXELEMENT9 decl[] =
+		{
+			{ 0, 0, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 },
+			
+			{ 0, 12, D3DDECLTYPE_FLOAT3,D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_NORMAL,	0 },
+
+			{ 0, 24, D3DDECLTYPE_FLOAT2,D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD,	0 },
+			D3DDECL_END()
+		};
+
+		::D3DXCreateMesh( numFaces, numVertices, D3DXMESH_MANAGED, decl, this->pDevice, &this->pDXMesh );
+
+		//FbxVector4* vertexBuffer = 0;
+
+		WORD* indices;
+
+		pDXMesh->LockIndexBuffer( 0, (void**)&indices );
+
+		for( int i = 0; i != numVertices; ++ i )
+		{
+			indices[i] = i;
+		}
+
+		pDXMesh->UnlockIndexBuffer();
+
+		meshVertex* vertexBuffer=0;
+
+		this->pDXMesh->LockVertexBuffer( 0, (void**)&vertexBuffer );
+
+		int* vert = mesh->GetPolygonVertices();
+		for( unsigned int i = 0; i != mesh->GetPolygonVertexCount(); ++ i )	//现在是一个index对应一个vertex的情况
+		{
+			//这里似乎可以决定物体的z轴y轴翻转的问题
+			vertexBuffer[i].x = mesh->GetControlPointAt( vert[i] ).mData[0];
+			vertexBuffer[i].y = mesh->GetControlPointAt( vert[i] ).mData[2];
+			vertexBuffer[i].z = mesh->GetControlPointAt( vert[i] ).mData[1];
+
+			FbxVector4 normal;
+			mesh->GetPolygonVertexNormal( i/3, i%3, normal );
+			vertexBuffer[i].nx = normal.mData[0];
+			vertexBuffer[i].ny = normal.mData[2];
+			vertexBuffer[i].nz = normal.mData[1];
+
+			FbxStringList uvsetNames;
+			mesh->GetUVSetNames( uvsetNames );
+			const char* name = uvsetNames[0];
+			
+			FbxVector2 uv;
+			mesh->GetPolygonVertexUV( i/3, i%3, name, uv );
+
+			vertexBuffer[i].u = uv.mData[0];
+			vertexBuffer[i].v = uv.mData[1];
+		}
+
+		this->pDXMesh->UnlockVertexBuffer();
+
+		DWORD* attributeBuffer; 
+
+		pDXMesh->LockAttributeBuffer( 0, &attributeBuffer );
+
+		attributeBuffer[0] = 0;
+		attributeBuffer[1] = 0;
+	
+		pDXMesh->UnlockAttributeBuffer();
+	}
+	
+	FbxNode* mNode = attr->GetNode();
+	
+	FbxSurfaceMaterial* mat = mNode->GetMaterial(0);
+	
+	D3DMATERIAL9 mtrl = {0.0, 0.0, 0.0, 1.0,
+								0.0, 0.0, 0.0, 1.0,
+								0.0, 0.0, 0.0, 1.0,
+								0.0, 0.0, 0.0, 1.0} ;
+	
+
+	if( mat->GetClassId() == FbxSurfacePhong::ClassId )
+	{
+		FbxSurfacePhong* phong = static_cast< FbxSurfacePhong* >( mat );
+		FbxDouble3 specular = phong->Specular.Get();
+		mtrl.Specular.r = specular.mData[0];
+		mtrl.Specular.g = specular.mData[1];
+		mtrl.Specular.b = specular.mData[2];
+		mtrl.Specular.a = 1.0;
+
+		FbxDouble3 diffuse = phong->Diffuse.Get();
+		mtrl.Diffuse.r = diffuse.mData[0];
+		mtrl.Diffuse.g = diffuse.mData[1];
+		mtrl.Diffuse.b = diffuse.mData[2];
+		mtrl.Diffuse.a = 1.0;
+
+		FbxDouble3 ambient = phong->Ambient.Get();
+		mtrl.Ambient.r = ambient.mData[0];
+		mtrl.Ambient.g = ambient.mData[1];
+		mtrl.Ambient.b = ambient.mData[2];
+		mtrl.Ambient.a = 1.0;
+		
+		//::MessageBoxA( 0, phong->Diffuse.GetDstObject( )->GetClassId().GetName(), 0, 0 );
+	}else if( mat->GetClassId() == FbxSurfaceLambert::ClassId )
+	{
+		FbxSurfaceLambert* lambert =  static_cast< FbxSurfaceLambert * >(mat);
+		FbxDouble3 diffuse = lambert->Diffuse.Get();
+		mtrl.Diffuse.r = diffuse.mData[0];
+		mtrl.Diffuse.g = diffuse.mData[1];
+		mtrl.Diffuse.b = diffuse.mData[2];
+		mtrl.Diffuse.a = 1.0;
+
+		FbxDouble3 ambient = lambert->Ambient.Get();
+		mtrl.Ambient.r = ambient.mData[0];
+		mtrl.Ambient.g = ambient.mData[1];
+		mtrl.Ambient.b = ambient.mData[2];
+		mtrl.Ambient.a = 1.0;
+
+	}else
+	{
+		throw runtime_error( "mesh不包含材质信息！");
+	}
+	
+	this->Mtrls.push_back( mtrl );
+	
+	FbxProperty prop = mat->FindProperty( FbxSurfaceMaterial::sDiffuse );
+
+	if( prop.GetSrcObjectCount( FbxLayeredTexture::ClassId ) > 0 )		//暂且只读取一个贴图
+	{	//危险！未实现！
+		//prop.
+		FbxLayeredTexture *lLayeredTexture = FbxCast <FbxLayeredTexture>(prop.GetSrcObject(FbxLayeredTexture::ClassId));
+        int lNbTextures = lLayeredTexture->GetSrcObjectCount(FbxTexture::ClassId);
+		FbxTexture* fbxTex = static_cast< FbxTexture* >(lLayeredTexture->GetSrcObject(FbxTexture::ClassId));
+		//Textures.push_back(createTextureFromFile( fbxTex->GetFileName() ));
+	}else if( prop.GetSrcObjectCount( FbxFileTexture::ClassId ) > 0 )
+	{
+		FbxFileTexture *fileTexture = FbxCast <FbxFileTexture>(prop.GetSrcObject(FbxFileTexture::ClassId));
+		//MessageBoxA( 0, fileTexture->GetFileName(), 0, 0 );
+		Textures.push_back(createTextureFromFile( fileTexture->GetFileName() ));
+	}else if( prop.GetSrcObjectCount( FbxProceduralTexture::ClassId ) > 0 )
+	{//危险！未实现！
+		FbxProceduralTexture *lLayeredTexture = FbxCast <FbxProceduralTexture>(prop.GetSrcObject(FbxProceduralTexture::ClassId));
+        int lNbTextures = lLayeredTexture->GetSrcObjectCount(FbxTexture::ClassId);
+		FbxTexture* fbxTex = static_cast< FbxTexture* >(lLayeredTexture->GetSrcObject(FbxTexture::ClassId));
+		MessageBoxA( 0, fbxTex->GetName(), 0, 0 );
+
+	}else if( prop.GetSrcObjectCount( FbxTexture::ClassId ) > 0 )
+	{//危险！未实现！
+		FbxTexture *lLayeredTexture = FbxCast <FbxTexture>(prop.GetSrcObject(FbxTexture::ClassId));
+        int lNbTextures = lLayeredTexture->GetSrcObjectCount(FbxTexture::ClassId);
+		FbxTexture* fbxTex = static_cast< FbxTexture* >(lLayeredTexture->GetSrcObject(FbxTexture::ClassId));
+		MessageBoxA( 0, fbxTex->GetName(), 0, 0 );
+	}else
+		Textures.push_back( 0 );
+
+	mesh->Destroy();
+}
+
+IDirect3DTexture9* MyGameMesh::createTextureFromFile( const char* fileName )
+{
+	IDirect3DTexture9* texture;
+	D3DXCreateTextureFromFileA( this->pDevice,
+								fileName, 
+								&texture );
+	return texture;
 }

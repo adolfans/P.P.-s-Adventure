@@ -92,7 +92,7 @@ private:
 	PxControllerManager*			phxControllerManager;
 	PxCooking*						phxCooking;
 
-
+	IDirect3DSurface9*				screenSurface;
 	//D3D11
 #ifdef DX11
 	typedef struct D3D11Variables
@@ -134,6 +134,9 @@ public:
 	PxFoundation*			getPhysXFoundation();
 	PxControllerManager*	getPhysXControllerManager();
 	PxCooking*				getPhysXCooking();
+
+	IDirect3DSurface9*		getScreenSurface();
+	void					restoreScreenRenderTarget();
 /*
 	static void StartRenderToTexture( MyGameTexture* _targetTexture );
 

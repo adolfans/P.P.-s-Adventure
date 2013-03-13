@@ -9,11 +9,13 @@ float3 ambient : Ambient;
 float3 diffuse : Diffuse;
 float3 specular: Specular;
 float3 camera  : CameraPosition;
-float3 lightPos: ParallelLightVector;
+float3 lightVector: ParallelLightVector;
 float4x4 viewMatrix : ViewMatrix;
 float4x4 worldMatrix: WorldMatrix;
+float4x4 viewProjMatrix : ViewProjMatrix;
+float4x4 reflectionMatrix;
 texture texture0		: Texture0;
-float4x4 mirrorMatrix;
+
 
 sampler tex0 = sampler_state
 {
@@ -30,17 +32,19 @@ sampler tex0 = sampler_state
 struct VS_INPUT 
 {
 	//调换顺序也可以
-   float4 Position : POSITION0;
-   float2 Tex      : TEXCOORD0;
-   float3 Normal	:NORMAL0;
+	float4 Position : POSITION0;
+	float2 Tex      : TEXCOORD0;
+	float3 Normal	:NORMAL0;
+	float2 weights	: BLENDWEIGHT0;
+	int4 boneIndices : BLENDINDICES0;
 };
 
 struct VS_OUTPUT 
 {
    float4 Position : POSITION0;
    float2 Tex      : TEXCOORD0;
-   float4 lightVec : TEXCOORD1;
-   float4 shadowMapCoord : TEXCOORD2;
+   float3 lightViewPos : TEXCOORD1;
+   float2 shadowMapCoord : TEXCOORD2;
    float3 normal	: TEXCOORD3;
    float3 viewDirection : TEXCOORD4;
 };
@@ -48,40 +52,56 @@ struct VS_OUTPUT
 VS_OUTPUT vs_main( VS_INPUT Input )
 {
    VS_OUTPUT Output;
-
-   Output.Position = mul( Input.Position, WorldViewProj );
    
-   //Output.Position = Input.Position;
+   float4 InPos = Input.Position;
+
+	if( VertBlend == true )
+	{
+		float4 p = float4( 0.0f, 0.0f, 0.0f, 1.0f );
+		float lastWeight = 0.0f;
+		int n = NumVertInfluences -1;
+		for( int i = 0; i < n; ++ i )
+		{
+			lastWeight += Input.weights[i];
+			p += Input.weights[i]*mul( InPos,FinalTransforms[Input.boneIndices[i]] );
+		}
+		lastWeight = 1.0f - lastWeight;
+		p+= lastWeight*mul( InPos, FinalTransforms[ Input.boneIndices[n] ] );
+		p.w = 1.0f;
+		InPos = p;
+		Output.Position = mul( InPos, mul(reflectionMatrix,viewProjMatrix) );
+	}else
+	{
+		Output.Position = mul( InPos, mul(mul(worldMatrix,reflectionMatrix),viewProjMatrix) );
+	}
+	
    
    Output.Tex = Input.Tex;
    
-   float4 lightViewPos = mul( Input.Position, LightViewProj );
+   float4 lightViewPoint = mul( InPos, LightViewProj );
    
    //如果这货大于在Shadow map上采样到的那货的话，它就是影子
-   Output.lightVec = lightViewPos.z;
-   Output.lightVec.w = lightViewPos.w;
+   Output.lightViewPos = lightViewPoint.z/lightViewPoint.w;
+   //Output.lightViewPos.w = lightViewPoint.w;
    
-   Output.shadowMapCoord.x = 0.5 *( lightViewPos.x + lightViewPos.w );
+   Output.shadowMapCoord.x = 0.5 *( lightViewPoint.x + lightViewPoint.w )/lightViewPoint.w;
    
-   Output.shadowMapCoord.y = 0.5 * ( lightViewPos.w - lightViewPos.y );
-   
-   Output.shadowMapCoord.z = 0;
-   
-   Output.shadowMapCoord.w = lightViewPos.w;
-   
+   Output.shadowMapCoord.y = 0.5 * ( lightViewPoint.w - lightViewPoint.y )/lightViewPoint.w;
    
    Output.normal = normalize(mul( Input.Normal,worldMatrix ));
    
-   float3 fvObjectPosition = normalize(mul( Input.Position, worldMatrix ));
+   float3 fvObjectPosition = normalize(mul( InPos, worldMatrix ));
    
    Output.viewDirection = camera - fvObjectPosition;
-   
    
    //Output.Tex = Input.Tex;
    return( Output );
 }
-
-float4 ps_main(float2 tex: TEXCOORD0, float3 lightVec: TEXCOORD1,float2 shadowMapCoord: TEXCOORD2, float3 normal: TEXCOORD3, float3 viewDirection: TEXCOORD4) : COLOR0
+struct PS_out{
+	float4 c0 :COLOR0;
+	float4 c1 :COLOR1;	//渲染深度图，作卡通渲染之用咩哈哈
+};
+PS_out ps_main(float2 tex: TEXCOORD0, float3 lightViewPos: TEXCOORD1,float2 shadowMapCoord: TEXCOORD2, float3 normal: TEXCOORD3, float3 viewDirection: TEXCOORD4)
 {
 	//float4 shadowMapPix = tex2D( ShadowTex, shadowMapCoord );
 	//浮点的精度导致某些本该相等的shadowMapPix和lightVec大小有差距
@@ -89,19 +109,23 @@ float4 ps_main(float2 tex: TEXCOORD0, float3 lightVec: TEXCOORD1,float2 shadowMa
 	//此处改为lightVec.r - shadowMapPix.r  > 0.01来解决此问题
 	//但是恐导致shadow平移
 
-	float4 shadowMapPix = tex2D( ShadowTex, shadowMapCoord );
-	float4 color;
-	if( lightVec.r - shadowMapPix.r > 0.01 )
-	//if( lightVec.r > shadowMapPix.r )
-		color = tex2D( tex0, tex )-float4( 0.5f, 0.5f, 0.5f, 0.0f );
-	else
-		color = tex2D( tex0, tex );
+	//float4 shadowMapPix = tex2D( ShadowTex, shadowMapCoord );
+	
+	// if( lightViewPos.r - shadowMapPix.r > 0.01 )
+	// //if( lightViewPos.r > shadowMapPix.r )
+		// color = tex2D( tex0, tex )-float4( 0.5f, 0.5f, 0.5f, 0.0f );
+	// else
+		// color = tex2D( tex0, tex );
 	
 	//return color;
-	//return float4( diffuse*saturate( lightVec * normal )+color, 1.0 );
+	//return float4( diffuse*saturate( lightViewPos * normal )+color, 1.0 );
 	//float4 specularColor;
 	
-	float3 fvLightDirection = normalize( lightPos );//或者应该取反？
+	//float4 color;
+	//color = lightViewPos.r - shadowMapPix.r > 0.01 ? -float4( 0.5f, 0.5f, 0.5f, 0.0f ) : 0;
+	float4 color = float4( 0.5f, 0.5f, 0.5f, 0.0f )*shadowTest( shadowMapCoord, lightViewPos.r );
+
+	float3 fvLightDirection = normalize( lightVector );//或者应该取反？
 	float3 fvNormal         = normalize( normal );
 	float  fNDotL           = dot( fvNormal, fvLightDirection ); 
    
@@ -116,35 +140,37 @@ float4 ps_main(float2 tex: TEXCOORD0, float3 lightVec: TEXCOORD1,float2 shadowMa
 	float3 fvTotalSpecular  =  pow( fRDotV, 25.0f) * specular;
 	
 	//return float4( fvTotalSpecular, 1.0f );
-	
-	return float4( diffuse*saturate(dot( normalize(lightPos), normal )), 1.0f ) + color + float4( fvTotalSpecular, 1.0f );
-	//return shadowMapPix;
+	PS_out output;
+	output.c0 = float4( diffuse*saturate(dot( normalize(lightVector), normal )), 1.0f ) + color + tex2D( tex0, tex) + float4( fvTotalSpecular, 1.0f );
+	output.c1 = float4( 0.0f, 0.0f, 0.0f, 1.0f );
+	//return float4( diffuse*saturate(dot( normalize(lightVector), normal )), 1.0f ) + color + tex2D( tex0, tex) + float4( fvTotalSpecular, 1.0f );
+	return output;
 }
-
-
+PS_out aa( float4 c0 : COLOR0)
+{
+	PS_out output;
+	output.c0 = c0;
+	output.c1 = float4( 0.0f, 0.0f, 0.0f, 1.0f );
+	return output;
+}
 technique main
 {
     pass P0
     {
         // Specify the vertex and pixel shader associated with this pass.
         CullMode = none;
-		vertexShader = compile vs_2_0 vs_main();
-        pixelShader  = compile ps_2_0 ps_main();
+		vertexShader = compile vs_3_0 vs_main();
+        pixelShader  = compile ps_3_0 ps_main();
 
 		// Specify the render/device states associated with this pass.
 		//FillMode = Wireframe;
-		/*
-		AlphaBlendEnable = alphaEnable;
-		SrcBlend = srcalpha;
-		DestBlend = invsrcalpha;
-		
-		SeparateAlphaBlendEnable = false;
-		SrcBlendAlpha = SrcAlpha;
-		DestBlendAlpha = InvSrcAlpha;
-		BlendOpAlpha = add;
-		*/
 		//AlphaBlendEnable = false;
 
     }
-	
+	//pass P1
+    //{
+        // Specify the vertex and pixel shader associated with this pass.
+    //    CullMode = none;
+        //pixelShader  = compile ps_3_0 aa();
+    //}
 }

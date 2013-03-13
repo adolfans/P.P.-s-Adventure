@@ -33,6 +33,7 @@ private:
 	PxScene*					phxScene;
 	MyGameCamera*				currentCamera;
 	MyGameSceneNode*			root;
+	//IDirect3DSurface9*			screenSurface;
 public:
 	MyGameSceneManager(void);
 	~MyGameSceneManager(void);
@@ -116,3 +117,9 @@ public:
 	}
 };
 }
+
+void getNodeFromFbxNode( MyGameScene::MyGameSceneManager* sceneMgr, FbxNode* node, MyGameSceneNode* parentSceneNode, MyGame3DEffect* effect )
+;
+
+void loadSceneFromFbx( MyGameScene::MyGameSceneManager* sceneMgr, const char* fileName, MyGameSceneNode* node, MyGame3DEffect* effect )
+;

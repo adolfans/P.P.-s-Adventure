@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "Scene1.h"
 #include "MyGame3DDevice.h"
 #include "MyGameFunctions.h"
@@ -46,9 +46,8 @@ Scene1::Scene1(void):
 {
 	IDirect3DDevice9* pDevice = MyGame3DDevice::GetSingleton()->GetDevice();
 
-	testTarget1 = new MyRenderTargetTexture();
+	mirrorTexture = new MyRenderTargetTexture( MyRenderTargetTexture::ARGB );
 
-	testTarget1->setRenderTarget( 1 );
 
 	
 	//WindowManager::getSingleton().destroyAllWindows();
@@ -65,11 +64,16 @@ Scene1::Scene1(void):
 	bgmVolume->setScrollPosition( 0.5 );
 	shadowCheckBox = static_cast<CEGUI::Checkbox*>(WindowManager::getSingleton().getWindow( "Root/shadow" ));
 	shadowCheckBox->setSelected( true );
+	shadowCheckBox->subscribeEvent( ButtonBase::EventMouseClick, Event::Subscriber( &Scene1::OnShadowChanged, this ));
 	reflectionCheckBox = static_cast<CEGUI::Checkbox*>(WindowManager::getSingleton().getWindow( "Root/reflection" ));
+	reflectionCheckBox->subscribeEvent( ButtonBase::EventMouseClick, Event::Subscriber( &Scene1::OnWaterReflectionChanged, this ));
 	fpsBoard = WindowManager::getSingleton().getWindow( "Root/FPS" );
 
+	lightAngle = static_cast<CEGUI::Scrollbar*>(WindowManager::getSingleton().getWindow( "Root/LightAngle"));
+	lightAngle->subscribeEvent( CEGUI::Scrollbar::EventMouseEnters, Event::Subscriber( &Scene1::OnLightAngleChanged, this ) );
+	lightAngle->setScrollPosition( 0.5 );
 	
-
+	
 	sceneMgr = new MyGameSceneManager;
 	
 	sceneRoot = sceneMgr->getRootNode();//->CreateSceneNode("sceneRoot");
@@ -77,11 +81,15 @@ Scene1::Scene1(void):
 
 	sceneMgr->setCamera( cam );
 
-	//lightCam,±íÊ¾¹âµÄÎ»ÖÃ= =||
+	//lightCam,è¡¨ç¤ºå…‰çš„ä½ç½®= =||
 	lightCam = sceneMgr->CreateCamera( -10.0f, 30.0f, -10.0f, 0.0f, 0.0f, 0.0f  );
 
 	sceneMgr->setParallelMainLight( lightCam );
 
+	D3DXVECTOR3 vec = lightCam->getLookingVector();
+	vec.x = 0;
+
+	lightCam->setLookingVector( vec );
 	//MyGameSceneBillboard::SetViewMatrix( &viewMat );
 	//MyGameSceneBillboard::SetViewMatrix( &cam->getViewMatrix() );
 
@@ -97,10 +105,12 @@ Scene1::Scene1(void):
 	
 
 	waterSpeedHandle = waterEffect->getHandleByName( ("waterspeed") );
-	//shadow map ´´½¨
-	shadowMap = new MyShadowMap(MyGame3DDevice::GetWidth(), MyGame3DDevice::GetHeight());
 
-	sceneMgr->setShadowMap( shadowMap->getShadowMap() );
+	//shadow map åˆ›å»º
+
+	shadowMap = new MyRenderTargetTexture( MyRenderTargetTexture::Gray );
+
+	sceneMgr->setShadowMap( shadowMap->getTexture() );
 
 	testBoard = MyGameSceneBillboard::CreateBillboard( sceneMgr );
 	MyGameSceneBillboard::AttachBillboardToScene( testBoard );
@@ -119,20 +129,24 @@ Scene1::Scene1(void):
 	sceneRoot->attachEntity( waterEnt );
 	this->waterEffect->AddEntity( waterEnt );
 
+
+
+
+	//
+	//è®¡ç®—å€’å½±çŸ©é˜µ
 	D3DXVECTOR3 minPos, maxPos;
 	waterMesh->getBoundingBox( minPos, maxPos );
-
 	D3DXMATRIX mirrorMatrix;
-
 	D3DXPLANE  waterPlane( 0, 1, 0,  -sceneMgr->sceneLengthToNormalLength(minPos.y));
-
 	D3DXMatrixReflect( &mirrorMatrix, &waterPlane );
-
 	sceneMgr->setMirrorReflectionMatrix( mirrorMatrix );
+
+
+
 	//sceneRoot->setTranslationMatrix( mirrorMatrix );
 	//sceneRoot->setRotateMatrix( mirrorMatrix );
 
-	//±ØÐë´ò¿ªÄÇÉ¶±àÒëÑ¡Ïî
+	//å¿…é¡»æ‰“å¼€é‚£å•¥ç¼–è¯‘é€‰é¡¹
 	loli = dynamic_cast<SkinnedMesh*>(MyGameMeshManager::createMyGameMesh( MyGameMeshManager::SKINNED ));
 	loli->loadFromX( sceneMgr );
 	loliEnt = sceneMgr->CreateSceneEntity( loli, "testLoli" );
@@ -160,19 +174,19 @@ Scene1::Scene1(void):
 	//MyGameSceneNode::getNodeByName("Bip001_Head")->attachEntity( ballEnt );
 
 	//
-	//¼ÓÔØplane
+	//åŠ è½½plane
 	//
 	plane = MyGameMeshManager::createMyGameMesh( MyGameMeshManager::MESH );
-	plane->createPlaneXZ( 4000.0f, 2000.0f );//Éú³ÉÄ£ÐÍ
+	plane->createPlaneXZ( 4000.0f, 2000.0f );//ç”Ÿæˆæ¨¡åž‹
 	plane->createTexture( "colorful-1556.jpg" );
 	planeEnt = sceneMgr->CreateSceneEntity( plane, "testPlane" );
-	sceneRoot->attachEntity( planeEnt );//½«entity attachµ½sceneRoot½ÚµãÏÂÃæ£¨ÆäÊµÊÇ×÷ÎªÆä×Ó½Úµã´æÔÚ£©
-	pGenShadowMapEffect->AddEntity( planeEnt );//½«entity·ÅÈëpGenShadowMapEffectÄÚ£¬ÓÉÆä¹ÜÀíentityµÄäÖÈ¾Ä£Ê½
+	sceneRoot->attachEntity( planeEnt );//å°†entity attachåˆ°sceneRootèŠ‚ç‚¹ä¸‹é¢ï¼ˆå…¶å®žæ˜¯ä½œä¸ºå…¶å­èŠ‚ç‚¹å­˜åœ¨ï¼‰
+	pGenShadowMapEffect->AddEntity( planeEnt );//å°†entityæ”¾å…¥pGenShadowMapEffectå†…ï¼Œç”±å…¶ç®¡ç†entityçš„æ¸²æŸ“æ¨¡å¼
 	pPlatformEffect->AddEntity( planeEnt );
 	
 	//sceneRoot->scale( 0.005, 0.005, 0.005 );
 	//
-	//BoxÄ£ÐÍ
+	//Boxæ¨¡åž‹
 	boxParentNode = sceneMgr->CreateSceneNode( "boxParent" );
 	sceneRoot->AddChild(boxParentNode);
 	boxMesh = MyGameMeshManager::createMyGameMesh( MyGameMeshManager::MESH );
@@ -188,10 +202,23 @@ Scene1::Scene1(void):
 	sceneRoot->AddChild(teapotNode);
 	MyGameMesh* teapotMesh = MyGameMeshManager::createMyGameMesh( MyGameMeshManager::MESH );
 	teapotMesh->loadMeshFromXFile( "testTeapot.X" );
+	//teapotMesh->loadMeshFromFbxFile( "myteapot.FBX" );
 	MyGameSceneEntity* teapotEnt= sceneMgr->CreateSceneEntity( teapotMesh, "testTeapot" );
-	teapotNode->attachEntity( teapotEnt );
+	//teapotNode->attachEntity( teapotEnt );
+	//teapotNode->scale( 10.0f, 10.0f, 10.0f );
+	::loadSceneFromFbx( sceneMgr, "myteapot.FBX", teapotNode, pPlatformEffect );
 	pPlatformEffect->AddEntity( teapotEnt );
 	pGenShadowMapEffect->AddEntity( teapotEnt );
+	
+	
+	mirrorEffect = new MyGame3DEffect( "mirror.fx" );
+
+	mirrorEffect->setEntities( pPlatformEffect );
+
+	mirrorEffect->getHandleByName( "reflectionMatrix" );
+
+	mirrorEffect->attachMatrixToName( "reflectionMatrix", mirrorMatrix );
+
 	//physx
 	
 	PxPhysics* gPhysicsSDK = MyGame3DDevice::GetSingleton()->getPhysX();
@@ -245,13 +272,14 @@ Scene1::Scene1(void):
 
 	box = actor;
 	
+
 	PxControllerManager* manager = MyGame3DDevice::GetSingleton()->getPhysXControllerManager();
-	//stepLength = 20.0f;
-
-	//MyGameMusic newPlayer( string("YSO_001.ogg") );
-
-	//con = new MyCharacterController( gScene, manager, 1500.0f, this->loli, loliEnt );
 	role1 = new MyPlayerRole( gScene, manager, 1500.0f, this->loli, loliEnt );
+	IDirect3DTexture9* texture;
+	D3DXCreateTextureFromFileA( pDevice, "grid.jpg", &texture );
+	waterEffect->attachTextureToName( "reflectionTexture", this->mirrorTexture->getTexture()/*texture*/ );
+	//waterEffect->attachTextureToName( "reflectionTexture", texture );
+
 }
 
 void Scene1::Update( MSG msg )
@@ -259,7 +287,7 @@ void Scene1::Update( MSG msg )
 	static unsigned int lastTime = clock();
 	unsigned int currentTime = clock();
 	static int frames;
-	if( currentTime - lastTime < 1000.0f )//²»ÂúÒ»Ãë
+	if( currentTime - lastTime < 1000.0f )//ä¸æ»¡ä¸€ç§’
 	{
 		frames++;
 	}else
@@ -276,7 +304,7 @@ void Scene1::Update( MSG msg )
 
 	//PxVec3 moveVec( 0.0f, 0.0f, 0.0f );
 
-	if(msg.message == WM_KEYDOWN)//Èç¹ûÓÐ¼ü°´ÏÂ
+	if(msg.message == WM_KEYDOWN)//å¦‚æžœæœ‰é”®æŒ‰ä¸‹
 	{
 		if( msg.wParam == 'A' )
 			cam->rotate( D3DX_PI * 0.0125 );
@@ -290,8 +318,8 @@ void Scene1::Update( MSG msg )
 	PxControllerFilters filters( 0 );
 
 
-	//this->cam->setTargetPosition( D3DXVECTOR3(con->getPosition()));
-	//lightCam->setTargetPosition( D3DXVECTOR3(con->getPosition()));
+	this->cam->setTargetPosition( role1->getPosition());
+	lightCam->setTargetPosition( role1->getPosition());
 
 	gScene->simulate(myTimestep);       
 
@@ -398,6 +426,7 @@ Scene1::~Scene1(void)
 	delete testBoard;
 	delete pPlatformEffect;
 	delete waterEffect;
+	delete mirrorEffect;
 	delete shadowMap;
 	//delete pLoliEffect;
 	MyGameMeshManager::destroyAllMeshes();
@@ -408,21 +437,20 @@ Scene1::~Scene1(void)
 	sceneMgr->destroyAllEntities();
 	
 	delete this->sceneMgr;
-	delete testTarget1;
+	delete mirrorTexture;
 }
 
 void Scene1::Render()
 {
-	this->waterEffect->attachTextureToName( "reflectionTexture", this->testTarget1->getTexture() );
 	//UpdatePhysx();
 	IDirect3DDevice9* pDevice = MyGame3DDevice::GetSingleton()->GetDevice();
 	
 	
-	float waterScrollPos = waterSpeedController->getScrollPosition();
+	float waterSpeed = waterSpeedController->getScrollPosition();
 
 	static D3DXVECTOR2 vec(0.0f, 0.0f);
-	vec.x-=(0.0006*waterScrollPos);
-	vec.y+=0.0012*waterScrollPos;
+	vec.x-=(0.0006*waterSpeed);
+	vec.y+=0.0012*waterSpeed;
 
 	bgm.setVolume( bgmVolume->getScrollPosition() );
 
@@ -431,38 +459,36 @@ void Scene1::Render()
 	//
 
 	D3DXMatrixIdentity( &idMat );
-	sceneRoot->ComputeCombinedMatrix( idMat);//TODO:ÕâÀï¸üÐÂµÄ¾ØÕóÊÇµ½ÏÂÒ»Ö¡²ÅÓ¦ÓÃµ½»­ÃæÉÏ(?)²¢·ÇÈç´Ë
+	sceneRoot->ComputeCombinedMatrix( idMat);//TODO:è¿™é‡Œæ›´æ–°çš„çŸ©é˜µæ˜¯åˆ°ä¸‹ä¸€å¸§æ‰åº”ç”¨åˆ°ç”»é¢ä¸Š(?)å¹¶éžå¦‚æ­¤
 
 	pDevice->SetRenderState( D3DRS_ZENABLE, true );
 	pDevice->SetRenderState( D3DRS_ZWRITEENABLE, true );
 
 	pDevice->SetRenderState( D3DRS_ZFUNC, D3DCMP_LESSEQUAL );
 	
-	//Éî¶ÈÍ¼äÖÈ¾
+	//æ·±åº¦å›¾æ¸²æŸ“
 
-	if( shadowCheckBox->isSelected() )	//Èç¹ûÆôÓÃÁËshadow
+	if( shadowCheckBox->isSelected() )	//å¦‚æžœå¯ç”¨äº†shadow
 	{
-		this->shadowMap->start();
-	
+		this->shadowMap->setRenderTarget( 0 );
 		{
-			//äÖÈ¾¸ÃEffectÀïÃæµÄËùÓÐEntity
-			pGenShadowMapEffect->RenderAllEntities( this->sceneMgr );
+			//æ¸²æŸ“è¯¥Effecté‡Œé¢çš„æ‰€æœ‰Entity
+			pGenShadowMapEffect->RenderAllEntities( this->sceneMgr );/*
 			pDevice->SetRenderState( D3DRS_ZENABLE, true );
-			pDevice->SetRenderState( D3DRS_ZWRITEENABLE, true );
+			pDevice->SetRenderState( D3DRS_ZWRITEENABLE, true );*/
 		}
-
-		this->shadowMap->end();
-	}else
-	{
-		this->shadowMap->start();
-	
-		{
-			pDevice->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER,/* 0x00FFFFFF*/D3DCOLOR_ARGB( 255, 255, 255, 255), 1.0f, 0);
-		}
-
-		this->shadowMap->end();
+		MyGame3DDevice::GetSingleton()->restoreScreenRenderTarget();
 	}
+
+	//é•œåƒå›¾æ¸²æŸ“
+	if( reflectionCheckBox->isSelected() )
+	{
+		mirrorTexture->setRenderTarget( 0 );
 	
+		mirrorEffect->RenderAllEntities( this->sceneMgr );
+
+		MyGame3DDevice::GetSingleton()->restoreScreenRenderTarget();
+	}
 	pDevice->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0x00FFFFFF, 1.0f, 0);
 	
 	{
@@ -481,9 +507,26 @@ void Scene1::Render()
 
 }
 
-bool Scene1::OnWaterSpeedChanged( const CEGUI::EventArgs& e )
+bool Scene1::OnShadowChanged( const CEGUI::EventArgs& e )
 {
-	CEGUI::UVector2 vec = waterSpeedController->getPosition();
+	//CEGUI::UVector2 vec = waterSpeedController->getPosition();
 	//e
+	this->shadowMap->clear();
+	return true;
+}
+
+bool Scene1::OnLightAngleChanged( const CEGUI::EventArgs& e )
+{
+	float pos = this->lightAngle->getScrollPosition();
+	pos-=0.5;
+	D3DXVECTOR3 vec = lightCam->getLookingVector();
+	vec.x = -vec.z * 5 * pos;
+	lightCam->setLookingVector( vec );
+	return true;
+}
+
+bool Scene1::OnWaterReflectionChanged( const CEGUI::EventArgs& e )
+{
+	this->mirrorTexture->clear();
 	return true;
 }

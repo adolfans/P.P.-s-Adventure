@@ -41,7 +41,10 @@ private:
 	D3DXHANDLE hWorldMatrix;
 	D3DXHANDLE hTexture[6];		//代表六重纹理
 	D3DXHANDLE hViewProjMatrix;
-	D3DXHANDLE hMirrorReflectionMatrix;
+
+	map< D3DXHANDLE, IDirect3DTexture9* >	textureList;
+
+	map< D3DXHANDLE, D3DXMATRIX >			matrixList;
 
 public:
 	static const char* WVPMATRIX;// = "WorldViewProj";
@@ -111,6 +114,13 @@ public:
 	{
 		D3DXHANDLE handle = this->pD9Effect->GetParameterByName( 0, name );
 		pD9Effect->SetTexture( handle, texture );
+		this->textureList[handle] = texture;
+	}
+
+	void attachMatrixToName( const char* name, const D3DXMATRIX& matrix )
+	{
+		D3DXHANDLE handle = pD9Effect->GetParameterByName( 0, name );
+		pD9Effect->SetMatrix( handle, &matrix );
 	}
 
 	void RenderAllEntities( MyGameSceneManager* sceneMgr );
@@ -122,4 +132,6 @@ public:
 	{
 		this->pD9Effect->SetValue( handle, data, size );
 	}
+
+	void setEntities( MyGame3DEffect* anotherEffect );
 };

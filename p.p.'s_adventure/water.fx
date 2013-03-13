@@ -5,7 +5,7 @@ float3 diffuse : Diffuse;
 float3 specular: Specular;
 float3 camera  : CameraPosition;
 float3 cameraVec : CameraVector;
-float3 lightVec: ParallelLightVector;
+float3 lightPos: ParallelLightVector;
 float4x4 viewMatrix : ViewMatrix;
 float4x4 worldMatrix: WorldMatrix;
 texture texture1 : Texture1;
@@ -35,6 +35,16 @@ sampler tex1 = sampler_state
     AddressV  = WRAP;
 };
 
+sampler reflectionSampler = sampler_state
+{
+	Texture = <reflectionTexture>;
+	MinFilter = LINEAR;
+	MagFilter = LINEAR;
+	//MipFilter = POINT;
+	//MaxAnisotropy = 8;
+	AddressU  = BORDER;
+    AddressV  = BORDER;
+};
 struct VS_INPUT 
 {
 	//调换顺序也可以
@@ -47,10 +57,11 @@ struct VS_OUTPUT
 {
    float4 Position : POSITION0;
    float2 Tex      : TEXCOORD0;
-   float4 lightVec : TEXCOORD1;
-   float4 shadowMapCoord : TEXCOORD2;
-   float3 normal	: TEXCOORD3;
+   float lightVec : TEXCOORD1;
+   float2 shadowMapCoord : TEXCOORD2;
+   float3 normal	: NORMAL0;
    float3 viewDirection : TEXCOORD4;
+   float2 scrnTexCoord	: TEXCOORD5;
 };
 
 VS_OUTPUT vs_main( VS_INPUT Input )
@@ -59,6 +70,8 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 
    Output.Position = mul( Input.Position, WorldViewProj );
    
+   //Output.scrnTexCoord.x = 0.5 *( Output.Position.x + Output.Position.w )/Output.Position.w;
+   //Output.scrnTexCoord.y = 0.5 *( Output.Position.w - Output.Position.y )/Output.Position.w;
    //Output.Position = Input.Position;
    
    Output.Tex = Input.Tex;
@@ -67,16 +80,10 @@ VS_OUTPUT vs_main( VS_INPUT Input )
    
    //如果这货大于在Shadow map上采样到的那货的话，它就是影子
    Output.lightVec = lightViewPos.z;
-   Output.lightVec.w = lightViewPos.w;
    
-   Output.shadowMapCoord.x = 0.5 *( lightViewPos.x + lightViewPos.w );
+   Output.shadowMapCoord.x = 0.5 *( lightViewPos.x + lightViewPos.w )/lightViewPos.w;
    
-   Output.shadowMapCoord.y = 0.5 * ( lightViewPos.w - lightViewPos.y );
-   
-   Output.shadowMapCoord.z = 0;
-   
-   Output.shadowMapCoord.w = lightViewPos.w;
-   
+   Output.shadowMapCoord.y = 0.5 * ( lightViewPos.w - lightViewPos.y )/lightViewPos.w;
    
    Output.normal = normalize(mul( Input.Normal,worldMatrix ));
    
@@ -84,22 +91,30 @@ VS_OUTPUT vs_main( VS_INPUT Input )
    
    Output.viewDirection = camera - fvObjectPosition;
   
+  
+   Output.scrnTexCoord.x = 0.5 * ( 1 + Output.Position.x/Output.Position.w );
+   Output.scrnTexCoord.y = 0.5 * ( 1 - Output.Position.y/Output.Position.w );
    //Output.Tex = Input.Tex;
    return( Output );
 }
 
-float4 ps_main(float2 texcoord: TEXCOORD0, float3 lightVec: TEXCOORD1,float2 shadowMapCoord: TEXCOORD2, float3 normal: TEXCOORD3, float3 viewDirection: TEXCOORD4 ) : COLOR0
+float4 ps_main(float2 texcoord: TEXCOORD0, float3 lightVec: TEXCOORD1,float2 shadowMapCoord: TEXCOORD2, float3 normal: NORMAL0, float3 viewDirection: TEXCOORD4, 
+				float2 screenPos : VPOS, float2 scrnTexCoord: TEXCOORD5) : COLOR0
 {
 	//float4 shadowMapPix = tex2D( ShadowTex, shadowMapCoord );
 	//浮点的精度导致某些本该相等的shadowMapPix和lightVec大小有差距
 	//所以单纯的lightVec.r > shadowMapPix.r比较会有误差
 	//此处改为lightVec.r - shadowMapPix.r  > 0.01来解决此问题
 	//但是恐导致shadow平移
-
 	
 	//return color;
 	//return float4( diffuse*saturate( lightVec * normal )+color, 1.0 );
 	//float4 specularColor;
+	
+	// float2 scrnTexCoord = 0;
+	// scrnTexCoord.x = screenPos.x / 1024.0f;
+	// scrnTexCoord.y = screenPos.y / 768.0f;
+	
 	float2 coord1 = texcoord;
 	coord1 +=waterspeed;
 	float2 coord2 = texcoord;
@@ -117,7 +132,7 @@ float4 ps_main(float2 texcoord: TEXCOORD0, float3 lightVec: TEXCOORD1,float2 sha
 	
 	realNormal = normalize(mul( realNormal,worldMatrix ));
    
-	float3 fvLightDirection = normalize( lightVec );//或者应该取反？
+	float3 fvLightDirection = normalize( lightPos );//或者应该取反？
 	float3 fvNormal         = normalize( realNormal );
 	float  fNDotL           = dot( fvNormal, fvLightDirection ); 
    
@@ -129,7 +144,7 @@ float4 ps_main(float2 texcoord: TEXCOORD0, float3 lightVec: TEXCOORD1,float2 sha
    
 	//float4 fvTotalAmbient   = fvAmbient * fvBaseColor; 
 	//float4 fvTotalDiffuse   = fvDiffuse * fNDotL * fvBaseColor; 
-	float3 fvTotalSpecular  =  pow( fRDotV, 25.0f) * specular;
+	float3 fvTotalSpecular  =  pow( fRDotV, 10.0f) * specular;
 	
 	// float2 shadowmap= shadowMapCoord;
 	// float4 shadowMapPix = tex2D( ShadowTex, shadowmap );
@@ -137,11 +152,17 @@ float4 ps_main(float2 texcoord: TEXCOORD0, float3 lightVec: TEXCOORD1,float2 sha
 	
 	// color = lightVec.r - shadowMapPix.r > 0.01 ? -float4( 0.5f, 0.5f, 0.5f, 0.0f ) : 0;
 
+	
+	//return 
+	
 	float4 color = float4( 0.5f, 0.5f, 0.5f, 0.0f )*shadowTest( shadowMapCoord+ 0.01* mapNormal, lightVec );
 
 	//return float4( fvTotalSpecular, 1.0f );
 	
-	return float4( diffuse*saturate(dot( normalize(lightVec), realNormal )), 0.5f ) + color /* float4( diffuse, 1.0f )*/+ float4( fvTotalSpecular, 0.0f );
+	return tex2D( reflectionSampler, scrnTexCoord) * 0.3
+	+float4( diffuse*saturate(dot( normalize(lightVec), realNormal )), 0.5f ) * 0.2 
+	+ color + float4( diffuse, 1.0f ) * 0.5
+	+ float4( fvTotalSpecular, 1.0f );
 	//return shadowMapPix;
 }
 
@@ -157,7 +178,7 @@ technique main
         pixelShader  = compile ps_3_0 ps_main();
 
 		// Specify the render/device states associated with this pass.
-		//FillMode = Wireframe;
+		//FillMode = wireframe;
 		/*
 		AlphaBlendEnable = alphaEnable;
 		SrcBlend = srcalpha;

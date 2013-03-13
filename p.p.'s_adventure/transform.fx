@@ -8,10 +8,10 @@ uniform extern texture gTex;
 sampler Texture0 = sampler_state
 {
 	Texture = <gTex>;
-	MinFilter = Anisotropic;
-	MagFilter = LINEAR;
-	MipFilter = LINEAR;
-	MaxAnisotropy = 8;
+	MinFilter = POINT;
+	MagFilter = POINT;
+	MipFilter = NONE;
+	//MaxAnisotropy = 8;
 	AddressU  = WRAP;
     AddressV  = WRAP;
 };

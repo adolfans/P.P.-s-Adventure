@@ -178,6 +178,7 @@ MyGame3DDevice::~MyGame3DDevice(void)
 	phxSDK->release();
 	phxProfileZoneManager->release();
 	phxFoundation->release();
+	IRelease( screenSurface );
 		IRelease( pMyGameUIVertexDecl );
 		//pD3D9InstanceDevice->Release();
 		//pD3D9InstanceDevice->Release();
@@ -258,6 +259,9 @@ bool MyGame3DDevice::InitD3DDevice9()
 */
 
 	//d3d9 = 0;
+
+	HR( pD3D9InstanceDevice->GetRenderTarget( 0, &screenSurface ) );//获取当前的显示表面
+
 
 	if(FAILED(hr))
 		return false;
@@ -573,4 +577,15 @@ PxControllerManager* MyGame3DDevice::getPhysXControllerManager()
 PxCooking*		MyGame3DDevice::getPhysXCooking()
 {
 	return phxCooking;
+}
+
+IDirect3DSurface9* MyGame3DDevice::getScreenSurface()
+{
+	return screenSurface;
+}
+
+void MyGame3DDevice::restoreScreenRenderTarget()
+{
+	HR( pD3D9InstanceDevice->SetRenderTarget(0, this->screenSurface) );	
+
 }

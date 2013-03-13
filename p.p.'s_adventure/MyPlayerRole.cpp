@@ -68,18 +68,39 @@ void MyPlayerRole::update( MSG msg )
 	if( con->ifCurrentAnimEnd() )
 		attack = 0;
 	
+	float per = 0.7071067811865475;
+
+	if((GetAsyncKeyState(VK_LEFT) & 0x8000) && (GetAsyncKeyState(VK_UP) & 0x8000))
+	{
+		moveVec.x = -stepLength*per;
+		moveVec.z = stepLength*per;
+	}else
+	if((GetAsyncKeyState(VK_LEFT) & 0x8000) && (GetAsyncKeyState(VK_DOWN) & 0x8000))
+	{
+		moveVec.x = -stepLength * per;
+		moveVec.z = -stepLength * per;
+	}else
+	if((GetAsyncKeyState(VK_RIGHT) & 0x8000) && (GetAsyncKeyState(VK_UP) & 0x8000))
+	{
+		moveVec.x = stepLength * per;
+		moveVec.z = stepLength * per;
+	}else if((GetAsyncKeyState(VK_RIGHT) & 0x8000) && (GetAsyncKeyState(VK_DOWN) & 0x8000))
+	{
+		moveVec.x = stepLength * per;
+		moveVec.z = -stepLength * per;
+	}else
 	if(GetAsyncKeyState(VK_LEFT) & 0x8000)
 	{
-		moveVec.x = -stepLength;
-	}
+		moveVec.x = -stepLength;//x_A += 3;
+	}else
 	if(GetAsyncKeyState(VK_RIGHT) & 0x8000)
 	{
 		moveVec.x = stepLength;//x_A += 3;
-	}
+	}else
 	if(GetAsyncKeyState(VK_UP) & 0x8000)
 	{
 		moveVec.z = stepLength;//y_A += 3;
-	}
+	}else
 	if(GetAsyncKeyState(VK_DOWN) & 0x8000)
 	{
 		moveVec.z = -stepLength;//y_A -= 3;

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "MyGame3DEffect.h"
 
 #include "MyGame3DDevice.h"
@@ -111,7 +111,7 @@ MyGame3DEffect::MyGame3DEffect( const char* fileName )
 		//MyGameMessage( (char*)errorBuffer->GetBufferPointer() );
 		//errorBuffer->Release();
 		throw runtime_error( (char*)errorBuffer->GetBufferPointer() );
-		errorBuffer->Release();//·ÏÁË= =||
+		errorBuffer->Release();//åºŸäº†= =||
 		return;
 	}
 
@@ -131,12 +131,12 @@ MyGame3DEffect::MyGame3DEffect( const char* fileName )
 	hViewMatrix		= pD9Effect->GetParameterBySemantic( 0, "ViewMatrix" );
 	hWorldMatrix	= pD9Effect->GetParameterBySemantic( 0, "WorldMatrix" );
 	hViewProjMatrix = pD9Effect->GetParameterBySemantic( 0, "ViewProjMatrix" );
-	hMirrorReflectionMatrix	= pD9Effect->GetParameterBySemantic( 0, "MirrorReflectionMatrix" );
+
 	//hTexture1		= pD9Effect->GetParameterBySemantic( "Texture", 1 );
 	
 	for( int i = 0; i != 6; ++ i )
 	{
-		char buff[4];//ÆäÊµÒ»¸ö×Ö½Ú¾Í¹»ÁË- -
+		char buff[4];//å…¶å®žä¸€ä¸ªå­—èŠ‚å°±å¤Ÿäº†- -
 		_itoa_s(i, buff, 4);
 		string textureName( string("Texture") + buff );
 		hTexture[i] = pD9Effect->GetParameterBySemantic( 0, textureName.c_str() );
@@ -145,9 +145,9 @@ MyGame3DEffect::MyGame3DEffect( const char* fileName )
 
 	//if( !mhMatrix )
 	//{
-	//	string err = "µ±Ç°EffectÖÐÕÒ²»µ½";
+	//	string err = "å½“å‰Effectä¸­æ‰¾ä¸åˆ°";
 	//	err	+=_matrixName;
-	//	err +="Õâ¸öMatrix";
+	//	err +="è¿™ä¸ªMatrix";
 	//	throw runtime_error(err);
 	//}
 
@@ -162,9 +162,9 @@ void MyGame3DEffect::setMatrixByName( D3DXMATRIX& _matrix, const char* _matrixNa
 	D3DXHANDLE mhMatrix = pD9Effect->GetParameterByName( 0, _matrixName );
 	if( !mhMatrix )
 	{
-		string err = "µ±Ç°EffectÖÐÕÒ²»µ½";
+		string err = "å½“å‰Effectä¸­æ‰¾ä¸åˆ°";
 		err	+=_matrixName;
-		err +="Õâ¸öMatrix";
+		err +="è¿™ä¸ªMatrix";
 		throw runtime_error(err);
 	}
 	pD9Effect->SetMatrix( mhMatrix, &_matrix );
@@ -177,9 +177,9 @@ void MyGame3DEffect::setTechniqueByName( const char* _techName )
 	D3DXHANDLE mhTech = pD9Effect->GetTechniqueByName( _techName );
 	if( !mhTech )
 	{
-		string err = "µ±Ç°EffectÖÐÕÒ²»µ½";
+		string err = "å½“å‰Effectä¸­æ‰¾ä¸åˆ°";
 		err	+=_techName;
-		err +="Õâ¸öTechnique";
+		err +="è¿™ä¸ªTechnique";
 		throw runtime_error(err);
 	}
 	pD9Effect->SetTechnique( mhTech );
@@ -192,7 +192,7 @@ void MyGame3DEffect::setBOOLByName( BOOL _ifEnable, const char* _boolVarName )
 	D3DXHANDLE mhBOOL = pD9Effect->GetParameterByName( 0, _boolVarName );
 	if( !mhBOOL )
 	{
-		throw runtime_error(string("µ±Ç°EffectÖÐÕÒ²»µ½")+ _boolVarName +"Õâ¸öBOOL");
+		throw runtime_error(string("å½“å‰Effectä¸­æ‰¾ä¸åˆ°")+ _boolVarName +"è¿™ä¸ªBOOL");
 	}	
 	pD9Effect->SetBool( mhBOOL, _ifEnable );
 }
@@ -245,7 +245,7 @@ void MyGame3DEffect::setTextureByName( IDirect3DTexture9* _pTex, const char* _te
 	{	pD9Effect->SetTexture( hTexture_o, _pTex ); return; }
 	D3DXHANDLE mhTexture = pD9Effect->GetParameterByName( 0, _texName );
 	if( !mhTexture )
-		throw runtime_error( string("µ±Ç°EffectÖÐÃ»ÓÐÕÒµ½")+_texName+"Õâ¸ö±äÁ¿");
+		throw runtime_error( string("å½“å‰Effectä¸­æ²¡æœ‰æ‰¾åˆ°")+_texName+"è¿™ä¸ªå˜é‡");
 	HR( pD9Effect->SetTexture( mhTexture, _pTex ) );
 }
 
@@ -256,14 +256,14 @@ void MyGame3DEffect::setMatrixArrayByName( D3DXMATRIX*& _pMat, unsigned int coun
 	D3DXHANDLE mhMatArray = pD9Effect->GetParameterByName( 0, _matArrayName );
 	if( !mhMatArray )
 	{
-		throw runtime_error(string("µ±Ç°EffectÖÐÕÒ²»µ½")+_matArrayName+"Õâ¸öBOOL");
+		throw runtime_error(string("å½“å‰Effectä¸­æ‰¾ä¸åˆ°")+_matArrayName+"è¿™ä¸ªBOOL");
 	}
 	HR( pD9Effect->SetMatrixArray( mhMatArray, _pMat, count ) );
 }
 
 void MyGame3DEffect::AddEntity( MyGameSceneEntity* _ent )
 {
-	//¼´Ê¹ÖØ¸´²åÈëÒ²Ã»ÓÐ¹ØÏµ£¬ÒòÎªEffect²¢²»¹ÜÀí¶ÔÏóµÄÉ¾³ý£¬²»±Ø¹ØÐÄÄÚ´æÐ¹Â©
+	//å³ä½¿é‡å¤æ’å…¥ä¹Ÿæ²¡æœ‰å…³ç³»ï¼Œå› ä¸ºEffectå¹¶ä¸ç®¡ç†å¯¹è±¡çš„åˆ é™¤ï¼Œä¸å¿…å…³å¿ƒå†…å­˜æ³„æ¼
 	entList[_ent->getNode()->getName()] = _ent;
 	//this->entList[ 
 }
@@ -280,7 +280,6 @@ void MyGame3DEffect::RenderAllEntities( MyGameSceneManager* sceneMgr )
 	this->pD9Effect->SetValue( this->hParallelLightPos, &sceneMgr->getMainLightVector(), sizeof( D3DVECTOR ) );
 	this->pD9Effect->SetMatrix( this->hViewMatrix, &sceneMgr->getViewMat() );
 	this->pD9Effect->SetMatrix( this->hViewProjMatrix, &sceneMgr->getViewProjCombinedMat() );
-	this->pD9Effect->SetValue( this->hMirrorReflectionMatrix, &sceneMgr->getMirrorReflectionMatrix(), sizeof( D3DXMATRIX ) );
 	this->Begin(num);
 	for( unsigned int i = 0; i < num; ++ i )
 	{
@@ -294,4 +293,14 @@ void MyGame3DEffect::RenderAllEntities( MyGameSceneManager* sceneMgr )
 		this->EndPass();
 	}
 	this->End();
+}
+
+void MyGame3DEffect::setEntities( MyGame3DEffect* anotherEffect )
+{
+	for( auto _itr = anotherEffect->entList.begin();
+		_itr != anotherEffect->entList.end();
+		 ++ _itr )
+	{
+		this->entList[_itr->first] = _itr->second;
+	}
 }
