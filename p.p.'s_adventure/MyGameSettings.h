@@ -2,11 +2,12 @@
 load settings from a lua script
 */
 #pragma once
-#include "MyGameWindow.h"
-#include "MyGameLua.h"
-#include "string"
+
+#include <string>
 using std::string;
 
+#include "MyGameWindow.h"
+#include "MyGameLua.h"
 class MyGameSettings
 {
 

@@ -1,5 +1,6 @@
 #pragma once
 #include "MyGameSceneEntity.h"
+#include "SkinnedMesh.h"
 #include <queue>
 using std::queue;
 #ifdef free
@@ -9,7 +10,6 @@ using std::queue;
 #undef realloc
 #endif
 #include <PxPhysicsAPI.h>
-#include "SkinnedMesh.h"
 using namespace MyGameScene;
 using namespace physx;
 //绑定Entity和Mesh，并将Mesh中的动画绑定到“移动”等动作。

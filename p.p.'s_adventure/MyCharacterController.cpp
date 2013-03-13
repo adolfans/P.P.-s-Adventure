@@ -1,7 +1,8 @@
 #include "StdAfx.h"
+#include <math.h>
 #include "MyCharacterController.h"
 #include "MyGame3DDevice.h"
-#include <math.h>
+
 const PxF32 MyCharacterController::minDist = 0.001;
 
 MyCharacterController::MyCharacterController(//PxPhysics& sdk,

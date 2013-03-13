@@ -2,14 +2,13 @@
 #include "SkinnedMesh.h"
 #include "MyGame3DDevice.h"
 #include "MyGameSceneManager.h"
-#include <time.h>
-#include <stack>
-using std::stack;
-#include <exception>
-using std::runtime_error;
-//using std::e;
 #include "MyGame3DEffect.h"
 #include "MyGameSceneManager.h"
+#include <time.h>
+#include <stack>
+#include <exception>
+using std::stack;
+using std::runtime_error;
 class AllocMeshHierarchy : public ID3DXAllocateHierarchy
 	{
 	private:
@@ -18,30 +17,8 @@ class AllocMeshHierarchy : public ID3DXAllocateHierarchy
 		AllocMeshHierarchy( MyGameSceneManager* sMgr ): sceneManager(sMgr){}
 		HRESULT STDMETHODCALLTYPE CreateFrame( THIS_ PCSTR Name, D3DXFRAME** ppNewFrame )
 		{
-			//*ppNewFrame = new D3DXFRAME;
-			//memset( *ppNewFrame, 0, sizeof( D3DXFRAME ) );
-			//if(Name)
-			//{
-			//	unsigned int len = strlen(Name);
-			//	(*ppNewFrame)->Name = new char[len+1];
-			//	strcpy( (*ppNewFrame)->Name, Name );
-			//}
-			//const char* myName = 0;
-			//if( strlen( Name ) <1 )
-			//	myName = 0;
-			//else
-			//	myName = Name;
-			//MyGameBoneNode* myNode = new MyGameBoneNode( Name, true );
 			MyGameBoneNode* myNode = this->sceneManager->CreateBoneNode( Name, true );
-			//if(Name)
-			//{
-			//	unsigned int len = strlen(Name);
-			//	myNode->Name = new char[len+1];
-			//	strcpy( myNode->Name, Name );
-			//}else
-			//{
-			//	myNode->Name = 0;
-			//}
+
 			*ppNewFrame = myNode;
 
 			return S_OK;

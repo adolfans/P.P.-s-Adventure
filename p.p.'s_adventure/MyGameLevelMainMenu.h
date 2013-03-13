@@ -1,9 +1,11 @@
 #pragma once
-#include "mygamelevel.h"
 #include <d3d9.h>
 #include <d3dx9.h>
 #include <CEGUI.h>
-	using namespace CEGUI;
+using namespace CEGUI;
+
+#include "mygamelevel.h"
+
 class MyGameLevelMainMenu :
 	public MyGameLevel
 {

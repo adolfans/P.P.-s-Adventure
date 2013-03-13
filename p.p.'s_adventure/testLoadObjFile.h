@@ -1,7 +1,9 @@
 #pragma once
-#include "MyGame3DDevice.h"
+
 #include <map>
 using std::map;
+
+#include "MyGame3DDevice.h"
 
 class testLoadObjFile
 {

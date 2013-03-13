@@ -7,9 +7,11 @@
 //////////////////////////
 
 #pragma once
-#include "mygamescenenode.h"
 #include <map>
 using std::map;
+
+#include "mygamescenenode.h"
+
 class MyGameBoneNode :
 	public MyGameScene::MyGameSceneNode,
 	public D3DXFRAME

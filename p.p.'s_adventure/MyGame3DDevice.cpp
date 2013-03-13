@@ -1,11 +1,12 @@
 #include "StdAfx.h"
-#include "MyGame3DDevice.h"
 #include "Resource.h"
 
-#include "MyGameTexture.h"
-#include "MyGame3DEffect.h"
 #include <exception>
 using std::runtime_error;
+
+#include "MyGame3DDevice.h"
+#include "MyGameTexture.h"
+#include "MyGame3DEffect.h"
 MyGame3DDevice*	MyGame3DDevice::pMyGameDevice = 0;
 MyGameWindow*	MyGame3DDevice::pGameWindow		= 0;
 

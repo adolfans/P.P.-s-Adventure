@@ -1,14 +1,16 @@
 #pragma once
-//#include "MyGameSceneNode.h"
+
+#include <d3dx9.h>
+
 #include "MyGameScene.h"
 #include "MyGameSceneNode.h"
 #include "MyGameBoneNode.h"
 #include "MyGameSceneEntity.h"
 #include "SkinnedMesh.h"
-#include "d3dx9.h"
 #include "MyGame3DDevice.h"
 
-class MyGameCamera;
+class MyGameCamera;		//Camera声明，这样就不必依赖MyGameCamera的定义了。
+
 namespace MyGameScene{
 class MyGameSceneManager
 {

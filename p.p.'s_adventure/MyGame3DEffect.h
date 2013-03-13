@@ -5,6 +5,7 @@ using std::map;
 
 #include "MyGameTexture.h"
 #include "MyGameScene.h"
+
 using namespace MyGameScene;
 
 class MyGame3DEffect

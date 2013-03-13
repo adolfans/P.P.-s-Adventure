@@ -1,9 +1,9 @@
 #pragma once
-#include "mygamenode.h"
-#include "MyGameScene.h"
-#include "d3dx9.h"
+#include <d3dx9.h>
 #include <map>
 using std::map;
+#include "mygamenode.h"
+#include "MyGameScene.h"
 namespace MyGameScene{
 class MyGameSceneNode :
 	public MyGameNode

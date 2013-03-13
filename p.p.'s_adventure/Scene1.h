@@ -1,5 +1,8 @@
 #pragma once
 #include <d3dx9.h>
+#include <CEGUIWindow.h>
+using namespace CEGUI;
+
 #include "MyGameScene.h"
 #include "MyGameSceneBillboard.h"
 #include "SkinnedMesh.h"
@@ -9,8 +12,6 @@
 #include "MyCharacterController.h"
 #include "MyPlayerRole.h"
 #include "MyRenderTargetTexture.h"
-#include "CEGUIWindow.h"
-using namespace CEGUI;
 class Scene1
 {
 private:
