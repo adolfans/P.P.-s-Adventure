@@ -35,7 +35,7 @@ struct VS_INPUT
 	float4 Position : POSITION0;
 	float2 Tex      : TEXCOORD0;
 	float3 Normal	:NORMAL0;
-	float2 weights	: BLENDWEIGHT0;
+	float4 weights	: BLENDWEIGHT0;
 	int4 boneIndices : BLENDINDICES0;
 };
 
