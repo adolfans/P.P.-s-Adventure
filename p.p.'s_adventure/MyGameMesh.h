@@ -19,6 +19,8 @@ using std::vector;
 #include <PxPhysicsAPI.h>
 using namespace physx;
 //using namespace PxToolkit;
+
+
 class MyGameMeshManager;
 class MyGameMesh
 {
@@ -48,7 +50,7 @@ protected:
 		pDXMesh = mesh;
 	}
 
-	void addMtrls( const D3DMATERIAL9& mtrl, const char* name )
+	void addMtrls( D3DMATERIAL9& mtrl, const char* name )
 	{
 		Mtrls.push_back( mtrl );
 		IDirect3DTexture9* texture;

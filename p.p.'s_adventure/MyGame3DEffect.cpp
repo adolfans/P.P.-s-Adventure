@@ -103,7 +103,7 @@ MyGame3DEffect::MyGame3DEffect( const char* fileName )
 
 }
 
-void MyGame3DEffect::setMatrixByName( D3DXMATRIX& _matrix, const char* _matrixName )
+void MyGame3DEffect::setMatrixByName( const D3DXMATRIX& _matrix, const char* _matrixName )
 {
 	if( _matrixName == WVPMATRIX )
 	{	pD9Effect->SetMatrix( hWVPMatrix, &_matrix ); return; }

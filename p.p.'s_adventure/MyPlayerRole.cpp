@@ -36,16 +36,16 @@ void MyPlayerRole::update( MSG msg )
 			{
 				if( this->attack == 0 )
 				{
-					con->playAnim( "attack1" );
+					con->playAnim( string("attack1") );
 					this->attack = 1;
 				}else if( this->attack == 1 )
 				{
-					con->addAnimToQueue( "attack2");
+					con->addAnimToQueue( string("attack2") );
 					this->attack = 2;		//表示已经将attack2加入动画队列，但并不表示已经开始播放了
 				}else if( attack == 2 )
 				{
 					//if( con->ifCurrentAnimEnd() )
-					con->addAnimToQueue( "attack3");
+					con->addAnimToQueue( string("attack3") );
 					this->attack = 3;
 				}
 			}

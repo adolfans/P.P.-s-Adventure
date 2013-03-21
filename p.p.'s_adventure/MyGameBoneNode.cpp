@@ -40,7 +40,7 @@ MyGameBoneNode::~MyGameBoneNode(void)
 	}
 }
 
-void MyGameBoneNode::ComputeCombinedMatrix( D3DXMATRIX& parentMat )
+void MyGameBoneNode::ComputeCombinedMatrix( const D3DXMATRIX& parentMat )
 {
 	
 	//MyGameSceneNode::ComputeCombinedMatrix( parentMat );

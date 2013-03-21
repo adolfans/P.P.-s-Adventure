@@ -18,7 +18,7 @@ public:
 
 	virtual void AddChild( MyGameNode* child );
 	virtual void BreakOutChildLink( MyGameNode* child );
-	virtual void ComputeCombinedMatrix(D3DXMATRIX& parentMat) = 0;
+	virtual void ComputeCombinedMatrix( const D3DXMATRIX& parentMat) = 0;
 
 	virtual string getName(){ return nodeName; }
 };

@@ -63,7 +63,7 @@ public:
 	void SetTextureByHandle( IDirect3DTexture9* _pTex, const char* _texHandle );
 	*/
 	
-	void setMatrixByName( D3DXMATRIX& _matrix, const char* _matrixName );
+	void setMatrixByName( const D3DXMATRIX& _matrix, const char* _matrixName );
 	void setTechniqueByName( const char* _techName );
 	void setBOOLByName( BOOL _ifEnable, const char* _boolVarName );
 	void setMatrixArrayByName( D3DXMATRIX*& _pMat, unsigned int count, const char* _matArrayName );
@@ -89,11 +89,11 @@ public:
 
 	//
 
-	void setDiffuse( D3DVECTOR& vec ){ pD9Effect->SetValue( hDiffuse, &vec, sizeof(D3DVECTOR) );}
-	void setAmbient( D3DVECTOR& vec ){ pD9Effect->SetValue( hAmbient, &vec, sizeof(D3DVECTOR) ); }
-	void setSpecular( D3DVECTOR& vec ){ pD9Effect->SetValue( hSpecular, &vec, sizeof(D3DVECTOR)); }
+	void setDiffuse( const D3DXVECTOR3& vec ){ pD9Effect->SetValue( hDiffuse, &vec, sizeof(D3DXVECTOR3) );}
+	void setAmbient( const D3DXVECTOR3& vec ){ pD9Effect->SetValue( hAmbient, &vec, sizeof(D3DXVECTOR3) ); }
+	void setSpecular( const D3DXVECTOR3& vec ){ pD9Effect->SetValue( hSpecular, &vec, sizeof(D3DXVECTOR3)); }
 
-	void setWorldMatrix( D3DXMATRIX& worldMatrix ){ pD9Effect->SetMatrix( hWorldMatrix, &worldMatrix ); }  
+	void setWorldMatrix( const D3DXMATRIX& worldMatrix ){ pD9Effect->SetMatrix( hWorldMatrix, &worldMatrix ); }  
 
 	void Begin( unsigned int &num )
 	{  this->pD9Effect->Begin( &num, 0 );}
@@ -112,7 +112,7 @@ public:
 		this->textureList[handle] = texture;
 	}
 
-	void attachMatrixToName( const char* name, const D3DXMATRIX& matrix )
+	void attachMatrixToName( const char* name, D3DXMATRIX& matrix )
 	{
 		D3DXHANDLE handle = pD9Effect->GetParameterByName( 0, name );
 		pD9Effect->SetMatrix( handle, &matrix );

@@ -6,6 +6,7 @@ class MyGameMusic
 {
 private:
 	Mix_Chunk *sample;
+	const float defaultVolume;
 public:
 	MyGameMusic( string& fileName );
 	~MyGameMusic(void);

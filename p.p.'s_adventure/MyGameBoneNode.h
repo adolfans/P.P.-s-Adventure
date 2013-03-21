@@ -31,7 +31,7 @@ public:
 	virtual void setOffsetMatrix( D3DXMATRIX& offMat )
 	{ offsetMat = offMat; }
 
-	virtual void ComputeCombinedMatrix(D3DXMATRIX& parentMat);
+	virtual void ComputeCombinedMatrix( const D3DXMATRIX& parentMat);
 
 	bool getIfMngdByDXAllocHrc(){ return this->mangdByDXAllocHrc; }
 };

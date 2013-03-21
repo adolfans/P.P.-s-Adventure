@@ -12,15 +12,18 @@ using namespace CEGUI;
 #include "MyCharacterController.h"
 #include "MyPlayerRole.h"
 #include "MyRenderTargetTexture.h"
+#include "MyGamePointSprites.h"
+#include "MyGameSceneBillboardSet.h"
 class Scene1
 {
 private:
 	MyGameMusic		bgm;
-
+	MyGamePointSprites sprites;
 
 	D3DXMATRIX idMat;
 	MyGame3DEffect* pGenShadowMapEffect;
 	MyGameSceneBillboard* testBoard;
+	MyGameSceneBillboardSet* testBoard1;
 	SkinnedMesh* loli;
 	MyGameSceneEntity* loliEnt;
 	//MyGame3DEffect* pLoliEffect;

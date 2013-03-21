@@ -48,7 +48,7 @@ Scene1::Scene1(void):
 	waterSpeedController = static_cast<CEGUI::Scrollbar*>(WindowManager::getSingleton().getWindow( "Root/WaterSpeed" ));
 	waterSpeedController->setScrollPosition( 0.5 );
 	bgmVolume = static_cast<CEGUI::Scrollbar*>(WindowManager::getSingleton().getWindow( "Root/Volume" ));
-	bgmVolume->setScrollPosition( 0.5 );
+	bgmVolume->setScrollPosition( 0.125 );//防止音量过大
 	shadowCheckBox = static_cast<CEGUI::Checkbox*>(WindowManager::getSingleton().getWindow( "Root/shadow" ));
 	shadowCheckBox->setSelected( true );
 	shadowCheckBox->subscribeEvent( ButtonBase::EventMouseClick, Event::Subscriber( &Scene1::OnShadowChanged, this ));
@@ -107,7 +107,20 @@ Scene1::Scene1(void):
 
 	testBoard->EnableTextureFromId( 0 );
 
-	
+	//BillboardSet
+
+	testBoard1 = new MyGameSceneBillboardSet( 2 , "feena1.png");
+	MyGameSceneNode* testBoard1Node = sceneMgr->CreateSceneNode( "testBoard1Node" );
+	testBoard1Node->scale( 3000.0f, 3000.0f, 1.0f );
+	MyGameSceneNode* testBoard1Node2 = sceneMgr->CreateSceneNode( "testBoard1Node2" );
+	testBoard1Node2->scale( 3000.0f, 3000.0f, 1.0f );
+	testBoard1Node2->setPosition( 3000.0f, 0.0f, 3000.0f );
+	testBoard1->addEntity( testBoard1Node );
+	testBoard1->addEntity( testBoard1Node2 );
+
+	sceneRoot->AddChild( testBoard1Node );
+	sceneRoot->AddChild( testBoard1Node2 );
+
 	MyGameMesh* waterMesh = MyGameMeshManager::createMyGameMesh( MyGameMeshManager::MESH );
 	waterMesh->loadMeshFromXFile( "water.X" );
 	waterMesh->createTexture( "wave0.dds" );
@@ -416,9 +429,13 @@ void Scene1::Render()
 	}
 	//loliParentNode->move( 0.002, 0, 0.002 );
 	
-	MyGameSceneBillboard::DrawAllBillboards();
+	//MyGameSceneBillboard::DrawAllBillboards();
 
-	
+	pDevice->SetTexture( 0, mirrorTexture->getTexture() );
+
+	testBoard1->draw( sceneMgr );
+
+	//sprites.render(sceneMgr);
 
 	pDevice->SetRenderState( D3DRS_ZENABLE, true );
 	pDevice->SetRenderState( D3DRS_ZWRITEENABLE, true );

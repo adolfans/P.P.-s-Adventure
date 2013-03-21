@@ -168,8 +168,6 @@ void MyGameSceneBillboard::DrawAllBillboards()
 		_transpose._42 = 0;
 		_transpose._43 = 0;
 		_transpose._44 = 1;
-		//D3DXMatrixMultiply( &worldMat, &scaleMat, &_transpose );
-		/*(*_itr)->getNode()->g*/
 		(*_itr)->getNode()->setRotateMatrix( _transpose );
 		//上面的工作直到下一帧才会应用
 		//下面的工作是获得上一帧的worldmat;

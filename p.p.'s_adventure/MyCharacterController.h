@@ -50,13 +50,13 @@ public:
 	void rotateX( float angle ) const;
 	void scale( float x, float y, float z ) const;
 	void bindAnimToMove( const char* aniName );
-	void playAnim( const string& aniName );
+	void playAnim( string& aniName );
 	bool ifCurrentAnimEnd() const{ return pCharMesh->ifAnimEnded()&&!animQueue.size(); }
 	D3DVECTOR getPosition();
 	void changeDirection( float angle ) const
 	{	this->pCharEntity->getNode()->setRotationAngleY( angle );}
 	void update();
 
-	void addAnimToQueue( const string& animName );
+	void addAnimToQueue( string& animName );
 };
 

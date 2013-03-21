@@ -5,6 +5,7 @@
 using std::runtime_error;
 
 MyGameMusic::MyGameMusic( string& fileName )
+	:defaultVolume( 0.125 )
 {
 	sample = Mix_LoadWAV( fileName.c_str() );
 	if(!sample) {
@@ -13,6 +14,8 @@ MyGameMusic::MyGameMusic( string& fileName )
 	}
 
 	Mix_PlayChannel(-1, sample, 1);
+
+	Mix_VolumeChunk( sample, static_cast<int>(defaultVolume*MIX_MAX_VOLUME));
 }
 
 

@@ -40,7 +40,7 @@ MyGameSceneManager::MyGameSceneManager(void)
 	
 	root = new MyGameSceneNode( "root" );
 
-	root->scale( 0.003, 0.003f, 0.003f );
+	root->scale( 0.003f, 0.003f, 0.003f );
 }
 
 
@@ -117,7 +117,7 @@ void MyGameSceneManager::setParallelMainLight( MyGameCamera* cam )
 	this->lightViewProjMat = cam->getViewMatrix( ) * lightProjMat;
 }
 
-D3DXMATRIX& MyGameSceneManager::getLightViewProjMat()
+const D3DXMATRIX& MyGameSceneManager::getLightViewProjMat()
 {
 	lightViewProjMat = lightCamera->getViewMatrix( ) * lightProjMat;
 	return lightViewProjMat;

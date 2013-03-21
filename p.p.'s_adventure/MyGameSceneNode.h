@@ -27,11 +27,11 @@ public:
 
 	virtual void SetLocalMatrix( D3DXMATRIX& mat ){ localMatrix = mat; }
 
-	virtual D3DXMATRIX getCombinedMatrix(){ return combinedMatrix; }
+	virtual const D3DXMATRIX& getCombinedMatrix(){ return combinedMatrix; }
 	
 	
 	
-	virtual void ComputeCombinedMatrix(D3DXMATRIX& parentMat);
+	virtual void ComputeCombinedMatrix( const D3DXMATRIX& parentMat );
 	
 	virtual void move( float x, float y, float z );
 	virtual void scale( float x, float y, float z );

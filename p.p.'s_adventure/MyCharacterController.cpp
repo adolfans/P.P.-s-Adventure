@@ -107,7 +107,7 @@ void MyCharacterController::bindAnimToMove( const char* aniName )
 	moveAni = aniName;
 }
 
-void MyCharacterController::playAnim( const string& aniName )
+void MyCharacterController::playAnim( string& aniName )
 {
 	if( !animating )
 	{
@@ -137,7 +137,7 @@ void MyCharacterController::update()
 	}
 }
 
-void MyCharacterController::addAnimToQueue( const string& animName )
+void MyCharacterController::addAnimToQueue( string& animName )
 {
 	animQueue.push( animName );
 }

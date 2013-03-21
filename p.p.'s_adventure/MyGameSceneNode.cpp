@@ -30,7 +30,7 @@ MyGameSceneNode::~MyGameSceneNode(void)
 {
 }
 
-void MyGameSceneNode::ComputeCombinedMatrix(D3DXMATRIX& parentMat)
+void MyGameSceneNode::ComputeCombinedMatrix( const D3DXMATRIX& parentMat )
 {
 	this->combinedMatrix = this->localMatrix * parentMat;
 

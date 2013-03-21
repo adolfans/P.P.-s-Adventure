@@ -99,7 +99,7 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 }
 
 float4 ps_main(float2 texcoord: TEXCOORD0, float3 lightVec: TEXCOORD1,float2 shadowMapCoord: TEXCOORD2, float3 normal: NORMAL0, float3 viewDirection: TEXCOORD4, 
-				float2 screenPos : VPOS, float2 scrnTexCoord: TEXCOORD5) : COLOR0
+				float2 screenPos : VPOS/*, float2 scrnTexCoord: TEXCOORD5*/) : COLOR0
 {
 	//float4 shadowMapPix = tex2D( ShadowTex, shadowMapCoord );
 	//浮点的精度导致某些本该相等的shadowMapPix和lightVec大小有差距
@@ -111,9 +111,9 @@ float4 ps_main(float2 texcoord: TEXCOORD0, float3 lightVec: TEXCOORD1,float2 sha
 	//return float4( diffuse*saturate( lightVec * normal )+color, 1.0 );
 	//float4 specularColor;
 	
-	// float2 scrnTexCoord = 0;
-	// scrnTexCoord.x = screenPos.x / 1024.0f;
-	// scrnTexCoord.y = screenPos.y / 768.0f;
+	float2 scrnTexCoord = 0;
+	scrnTexCoord.x = screenPos.x / 1024.0f;
+	scrnTexCoord.y = screenPos.y / 768.0f;
 	
 	float2 coord1 = texcoord;
 	coord1 +=waterspeed;
@@ -144,7 +144,7 @@ float4 ps_main(float2 texcoord: TEXCOORD0, float3 lightVec: TEXCOORD1,float2 sha
    
 	//float4 fvTotalAmbient   = fvAmbient * fvBaseColor; 
 	//float4 fvTotalDiffuse   = fvDiffuse * fNDotL * fvBaseColor; 
-	float3 fvTotalSpecular  =  pow( fRDotV, 10.0f) * specular;
+	float3 fvTotalSpecular  =  pow( fRDotV, 30.0f) * specular;
 	
 	// float2 shadowmap= shadowMapCoord;
 	// float4 shadowMapPix = tex2D( ShadowTex, shadowmap );
@@ -159,7 +159,7 @@ float4 ps_main(float2 texcoord: TEXCOORD0, float3 lightVec: TEXCOORD1,float2 sha
 
 	//return float4( fvTotalSpecular, 1.0f );
 	
-	return tex2D( reflectionSampler, scrnTexCoord) * 0.3
+	return tex2D( reflectionSampler, scrnTexCoord+ 0.01* mapNormal) * 0.3
 	+float4( diffuse*saturate(dot( normalize(lightVec), realNormal )), 0.5f ) * 0.2 
 	+ color + float4( diffuse, 1.0f ) * 0.5
 	+ float4( fvTotalSpecular, 1.0f );

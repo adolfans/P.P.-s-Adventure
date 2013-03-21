@@ -85,10 +85,10 @@ public:
 	/*static*/ const D3DXMATRIX& getViewMat();//{ return vMat; }
 	D3DVECTOR getCameraPosition();
 	const D3DXVECTOR3& getCameraVector() const;
-	/*static*/ D3DXMATRIX& getProjMat(){ return pMat;}
-	/*static*/ D3DXMATRIX  getViewProjCombinedMat();
+	const D3DXMATRIX& getProjMat(){ return pMat;}
+	/*static*/ D3DXMATRIX getViewProjCombinedMat();
 
-	/*static*/ D3DXMATRIX&  getLightViewProjMat();
+	/*static*/const D3DXMATRIX&  getLightViewProjMat();
 
 	PxScene*		getPhysXScene() { return phxScene; }
 
