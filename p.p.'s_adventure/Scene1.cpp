@@ -109,7 +109,7 @@ Scene1::Scene1(void):
 
 	//BillboardSet
 
-	testBoard1 = new MyGameSceneBillboardSet( 2 , "feena1.png");
+	/*testBoard1 = new MyGameSceneBillboardSet( 2 , "danmu.png");
 	MyGameSceneNode* testBoard1Node = sceneMgr->CreateSceneNode( "testBoard1Node" );
 	testBoard1Node->scale( 3000.0f, 3000.0f, 1.0f );
 	MyGameSceneNode* testBoard1Node2 = sceneMgr->CreateSceneNode( "testBoard1Node2" );
@@ -119,7 +119,7 @@ Scene1::Scene1(void):
 	testBoard1->addEntity( testBoard1Node2 );
 
 	sceneRoot->AddChild( testBoard1Node );
-	sceneRoot->AddChild( testBoard1Node2 );
+	sceneRoot->AddChild( testBoard1Node2 );*/
 
 	MyGameMesh* waterMesh = MyGameMeshManager::createMyGameMesh( MyGameMeshManager::MESH );
 	waterMesh->loadMeshFromXFile( "water.X" );
@@ -280,6 +280,16 @@ Scene1::Scene1(void):
 	waterEffect->attachTextureToName( "reflectionTexture", this->mirrorTexture->getTexture()/*texture*/ );
 	//waterEffect->attachTextureToName( "reflectionTexture", texture );
 
+
+	testTransmitter = new MyBarrageTransmitter;
+
+	testTransmitter->setImage( "danmu.png" );
+	testTransmitter->setLifeCircle( 1000.0f );
+	testTransmitter->setMaxNum( 10 );
+	testTransmitter->setPosition( 1000.0f, 0.0f, 1000.0f );
+	testTransmitter->setSize( 500.0f, 500.0f );
+	testTransmitter->generate( sceneMgr );
+
 }
 
 void Scene1::Update( MSG msg )
@@ -433,7 +443,9 @@ void Scene1::Render()
 
 	pDevice->SetTexture( 0, mirrorTexture->getTexture() );
 
-	testBoard1->draw( sceneMgr );
+	//testBoard1->draw( sceneMgr );
+
+	testTransmitter->draw( myTimestep );
 
 	//sprites.render(sceneMgr);
 

@@ -13,7 +13,7 @@ MyGameSceneBillboardSet::billboardVertex MyGameSceneBillboardSet::vertices[MyGam
 	{-1.0f,-1.0f, 0.0f, 0xFFFFFFFF, 0.0f, 1.0f},
 	{ 1.0f, 1.0f, 0.0f, 0xFFFFFFFF, 1.0f, 0.0f},
 	{ 1.0f,-1.0f, 0.0f, 0xFFFFFFFF, 1.0f, 1.0f}*/
-	{-3.0f,-1.0f, 0.0f, 0xFFFFFFFF,-1.0f, 1.0f},
+	{-3.0f,-1.0f, 0.0f, 0xFFFFFFFF,-1.0f, 1.0f},	//使用一个等腰直角三角形来绘制billboard，比前者减少了计算量
 	{ 0.0f, 1.5f, 0.0f, 0xFFFFFFFF, 0.5f,-0.5f},
 	{ 3.0f,-1.0f, 0.0f, 0xFFFFFFFF, 2.0f, 1.0f}
 };
@@ -91,8 +91,21 @@ void MyGameSceneBillboardSet::draw( MyGameSceneManager* sceneMgr )
 		++ itr )
 	{
 		D3DXMATRIX com = (*itr)->getCombinedMatrix();
-		D3DXMATRIX finalMat = com * viewMat * projMat;
-		(*itr)->setRotateMatrix( rotationMat );//←是否要移到别处？
+		//只需要combined matrix中的坐标信息
+		float x = com._41;
+		float y = com._42;
+		float z = com._43;
+		//com._41 = 0; com._42 = 0; com._43 = 0;
+		//com *= rotationMat;
+		//com._41 = x; com._42 = y; com._43 = z;
+		
+		D3DXMATRIX trans = rotationMat;
+		trans._41 = x;
+		trans._42 = y;
+		trans._43 = z;
+
+		D3DXMATRIX finalMat = /*com*/ trans * viewMat * projMat;
+		//(*itr)->setRotateMatrix( rotationMat );//←是否要移到别处？这种方法大错特错，完全没有考虑到父坐标系也在旋转的情况
 		
 		MyGameSceneBillboardSet::billboardVertex transformedVertices[verticesNumPerRect];
 		for( int i = 0; i != verticesNumPerRect; ++ i )

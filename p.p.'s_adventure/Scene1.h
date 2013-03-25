@@ -14,6 +14,7 @@ using namespace CEGUI;
 #include "MyRenderTargetTexture.h"
 #include "MyGamePointSprites.h"
 #include "MyGameSceneBillboardSet.h"
+#include "MyBarrageTransmitter.h"
 class Scene1
 {
 private:
@@ -23,7 +24,7 @@ private:
 	D3DXMATRIX idMat;
 	MyGame3DEffect* pGenShadowMapEffect;
 	MyGameSceneBillboard* testBoard;
-	MyGameSceneBillboardSet* testBoard1;
+	//MyGameSceneBillboardSet* testBoard1;
 	SkinnedMesh* loli;
 	MyGameSceneEntity* loliEnt;
 	//MyGame3DEffect* pLoliEffect;
@@ -65,6 +66,7 @@ private:
 
 	MyRenderTargetTexture*	mirrorTexture;
 	MyRenderTargetTexture*	shadowMap;
+	MyBarrageTransmitter*	testTransmitter;
 public:
 	Scene1(void);
 	virtual ~Scene1(void);

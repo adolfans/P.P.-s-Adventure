@@ -116,6 +116,7 @@ copy mesh.fx ..\Debug</Command>
     <None Include="transform.fx" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\p.p.%27s_adventure\MyBarrageTransmitter.h" />
     <ClInclude Include="..\p.p.%27s_adventure\MyCharacterController.h" />
     <ClInclude Include="..\p.p.%27s_adventure\MyGameCamera.h" />
     <ClInclude Include="..\p.p.%27s_adventure\MyGameMusic.h" />
@@ -162,6 +163,7 @@ copy mesh.fx ..\Debug</Command>
     <ClInclude Include="testLoadObjFile.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\p.p.%27s_adventure\MyBarrageTransmitter.cpp" />
     <ClCompile Include="..\p.p.%27s_adventure\MyCharacterController.cpp" />
     <ClCompile Include="..\p.p.%27s_adventure\MyGameCamera.cpp" />
     <ClCompile Include="..\p.p.%27s_adventure\MyGameMusic.cpp" />
