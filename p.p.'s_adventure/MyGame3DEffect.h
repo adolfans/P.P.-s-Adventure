@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <d3dx9.h>
 #include <map>
 using std::map;
@@ -34,7 +34,7 @@ private:
 	D3DXHANDLE hParallelLightPos;
 	D3DXHANDLE hViewMatrix;
 	D3DXHANDLE hWorldMatrix;
-	D3DXHANDLE hTexture[6];		//´ú±íÁùÖØÎÆÀí
+	D3DXHANDLE hTexture[6];		//ä»£è¡¨å…­é‡çº¹ç†
 	D3DXHANDLE hViewProjMatrix;
 
 	map< D3DXHANDLE, IDirect3DTexture9* >	textureList;

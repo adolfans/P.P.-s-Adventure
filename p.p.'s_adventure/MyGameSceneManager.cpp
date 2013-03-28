@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "MyGameSceneManager.h"
 #include "MyGameCamera.h"
 #include <d3dx9math.h>
@@ -36,7 +36,7 @@ MyGameSceneManager::MyGameSceneManager(void)
 	
 	float h = (float)MyGame3DDevice::GetHeight();
 	float w = (float)MyGame3DDevice::GetWidth();
-	D3DXMatrixPerspectiveFovLH( &pMat, D3DX_PI*0.2f, w/h, 5.0f, 100.0f );//×îºóÒ»¸öÒ»¿ªÊ¼ÊÇ2000= =||
+	D3DXMatrixPerspectiveFovLH( &pMat, D3DX_PI*0.2f, w/h, 5.0f, 100.0f );//æœ€åŽä¸€ä¸ªä¸€å¼€å§‹æ˜¯2000= =||
 	
 	root = new MyGameSceneNode( "root" );
 
@@ -162,8 +162,8 @@ void getNodeFromFbxNode( MyGameScene::MyGameSceneManager* sceneMgr, FbxNode* nod
 
 		if( node->GetNodeAttributeByIndex( i )->GetAttributeType() == FbxNodeAttribute::eMesh )
 		{
-				//Èç¹ûÕâ¸ö½ÚµãµÄattributeÊÇmeshµÄ»°¾Í´´½¨meshºÍentity£¬²¢ÇÒ°ÑËü°ó¶¨µ½½Úµã
-			//TODO: ÓÐ¿ÉÄÜ´´½¨ÖØ¸´µÄmesh
+				//å¦‚æžœè¿™ä¸ªèŠ‚ç‚¹çš„attributeæ˜¯meshçš„è¯å°±åˆ›å»ºmeshå’Œentityï¼Œå¹¶ä¸”æŠŠå®ƒç»‘å®šåˆ°èŠ‚ç‚¹
+			//TODO: æœ‰å¯èƒ½åˆ›å»ºé‡å¤çš„mesh
 			MyGameMesh* mesh = MyGameMeshManager::createMyGameMesh( MyGameMeshManager::MESH );
 			mesh->loadMeshFromFbxNodeAttribute( node->GetNodeAttributeByIndex( i ) );
 			stringstream ss;

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "SkinnedMesh.h"
 #include "MyGame3DDevice.h"
 #include "MyGameSceneManager.h"
@@ -86,11 +86,11 @@ class AllocMeshHierarchy : public ID3DXAllocateHierarchy
 		HRESULT STDMETHODCALLTYPE DestroyFrame(
 								THIS_ D3DXFRAME* pFrameToFree)
 		{
-			//´Ë´¦²»×÷ÊÍ·Å²Ù×÷£¬¸ÄÎªÓÉMyGameSceneNode×÷ÊÍ·Å²Ù×÷
+			//æ­¤å¤„ä¸ä½œé‡Šæ”¾æ“ä½œï¼Œæ”¹ä¸ºç”±MyGameSceneNodeä½œé‡Šæ”¾æ“ä½œ
 			//MyGameBoneNode* pFrame= static_cast<MyGameBoneNode*>(pFrameToFree);
 			//delete pFrame;
-			//ÓÉÓÚMyGameSceneNodeËù´æ´¢µÄnode²»°üÀ¨nameÎª0£¬»òÕßÎª¿Õ×Ö·û´®µÄ£¬ËùÒÔ
-			//´Ë´¦½öÊÍ·ÅÄÇĞ©½Úµã
+			//ç”±äºMyGameSceneNodeæ‰€å­˜å‚¨çš„nodeä¸åŒ…æ‹¬nameä¸º0ï¼Œæˆ–è€…ä¸ºç©ºå­—ç¬¦ä¸²çš„ï¼Œæ‰€ä»¥
+			//æ­¤å¤„ä»…é‡Šæ”¾é‚£äº›èŠ‚ç‚¹
 			if( !pFrameToFree->Name ||  strlen(pFrameToFree->Name) < 1 )
 			{	MyGameBoneNode* pFrame= static_cast<MyGameBoneNode*>(pFrameToFree);
 				//delete pFrame;
@@ -192,7 +192,7 @@ void SkinnedMesh::loadFromX(MyGameSceneManager* sMgr)
 
 	numBones = pSkinInfo->GetNumBones();
 	
-	//pSkinInfo»ñÈ¡offset Matrix
+	//pSkinInfoè·å–offset Matrix
 	for( unsigned int i = 0; i < numBones; ++ i )
 	{
 		const char* boneName = pSkinInfo->GetBoneName( i );
@@ -202,7 +202,7 @@ void SkinnedMesh::loadFromX(MyGameSceneManager* sMgr)
 		{
 			MyGameBoneNode* bone = dynamic_cast<MyGameBoneNode*>(MyGameSceneNode::getNodeByName(boneName) );
 			if( !bone )
-				throw runtime_error( "²»ÄÜ×ª»¯ÎªMyGameBoneNode*ÀàĞÍ~" );
+				throw runtime_error( "ä¸èƒ½è½¬åŒ–ä¸ºMyGameBoneNode*ç±»å‹~" );
 
 			bone->setOffsetMatrix( *pSkinInfo->GetBoneOffsetMatrix(i) );
 		}
@@ -244,7 +244,7 @@ void SkinnedMesh::getAnimation( vector<string> &animations )
 
 void SkinnedMesh::setAnimation( const string &name, bool loop)
 {
-	if( loop && currentAnim == name )	// Èç¹ûÕıÔÚÑ­»·²¢ÇÒÕıÔÚ²¥·ÅµÄ¶¯»­¾ÍÊÇµ±Ç°ÏëÒª²¥·ÅµÄ¶¯»­£¬ÔòÖ±½Ó·µ»Ø
+	if( loop && currentAnim == name )	// å¦‚æœæ­£åœ¨å¾ªç¯å¹¶ä¸”æ­£åœ¨æ’­æ”¾çš„åŠ¨ç”»å°±æ˜¯å½“å‰æƒ³è¦æ’­æ”¾çš„åŠ¨ç”»ï¼Œåˆ™ç›´æ¥è¿”å›
 		return;
 	ID3DXAnimationSet *anim = 0;
 	pAnimCtrller->GetAnimationSetByName( name.c_str(), &anim );
@@ -256,7 +256,7 @@ void SkinnedMesh::setAnimation( const string &name, bool loop)
 	anim->Release();
 	currentAnim = name;
 	pAnimCtrller->ResetTime();
-	this->animLoop = loop;//ÉèÖÃÊÇ·ñÑ­»·
+	this->animLoop = loop;//è®¾ç½®æ˜¯å¦å¾ªç¯
 }
 
 void SkinnedMesh::buildSkinnedMesh( ID3DXMesh* mesh )
@@ -351,7 +351,7 @@ void SkinnedMesh::frameMove( /*float deltaTime*/ /*,
 bool SkinnedMesh::ifAnimEnded()
 {
 	//float time = pAnimCtrller->GetTime();
-	//Èç¹ûÊÇÔÚÑ­»·²¥·Å£¬ÔòÓÀÔ¶·µ»Øfalse
+	//å¦‚æœæ˜¯åœ¨å¾ªç¯æ’­æ”¾ï¼Œåˆ™æ°¸è¿œè¿”å›false
 	if( animLoop )
 		return false;
 	if( currentAnimDurationTime - pAnimCtrller->GetTime() < 0.05 )

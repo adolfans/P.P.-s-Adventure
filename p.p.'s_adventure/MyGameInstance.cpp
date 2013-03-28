@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "MyGameInstance.h"
 #include "MyGameFunctions.h"
 #include <time.h>
@@ -216,7 +216,7 @@ void MyGameInstance::UpdateLevel( MyGameLevel* level, MSG msg )
 	//DRAW UI
 	CEGUI::System::getSingleton().renderGUI();
 
-	//Í£Ö¹»æÖÆ
+	//åœæ­¢ç»˜åˆ¶
 	pD3D9InstanceDevice->EndScene();
 	pD3D9InstanceDevice->Present( 0, 0, 0, 0 );
 }
@@ -241,7 +241,7 @@ MyGameInstance::~MyGameInstance(void)
 	//MyGameUISprite::DestroyAllSprites();
 	MyGameMusic::ExitMusicSystem();
 	CEGUI::Direct3D9Renderer::destroySystem(		);
-	//HR( D3DXSaveTextureToFile( L"‡å.png",D3DXIFF_PNG,pPass1RenderTarget, NULL ) );
+	//HR( D3DXSaveTextureToFile( L"å›§.png",D3DXIFF_PNG,pPass1RenderTarget, NULL ) );
 	//this->pBgTexture->Release();
 	//this->pPass1RenderTarget->Release();
 	//this->pPass1RenderTargetSurface->Release();
@@ -260,7 +260,7 @@ MyGameInstance::~MyGameInstance(void)
 
 MyGameInstance* MyGameInstance::GetMyGameInstance(HINSTANCE _hInstance, int _nCmdShow)
 {
-	//::MessageBoxA(0,"‡å£¬GetMyGameInstance¿ªÊ¼µ÷ÓÃ",0,0);
+	//::MessageBoxA(0,"å›§ï¼ŒGetMyGameInstanceå¼€å§‹è°ƒç”¨",0,0);
 	if(pMyGameInstance==NULL)
 	{
 		pMyGameInstance = new MyGameInstance;
@@ -324,8 +324,8 @@ void MyGameInstance::InitGame()
 //	pMyDevice->EndRender();
 //*/
 //	IDirect3DDevice9* pD3D9InstanceDevice = this->pMyDevice->GetDevice();
-//	//Çå³ýÆÁÄ»ºÍzbuffer
-//	//¿ªÊ¼»æÖÆ
+//	//æ¸…é™¤å±å¹•å’Œzbuffer
+//	//å¼€å§‹ç»˜åˆ¶
 //	//pD3D9InstanceDevice->SetRenderState( D3DRS_FILLMODE, D3DFILL_WIREFRAME );
 //	/*
 //	pD3D9InstanceDevice->SetRenderState( D3DRS_CULLMODE, D3DCULL_NONE );
@@ -412,7 +412,7 @@ void MyGameInstance::InitGame()
 //	//DRAW UI
 //	CEGUI::System::getSingleton().renderGUI();
 //
-//	//Í£Ö¹»æÖÆ
+//	//åœæ­¢ç»˜åˆ¶
 //	pD3D9InstanceDevice->EndScene();
 //	pD3D9InstanceDevice->Present( 0, 0, 0, 0 );
 //	return S_OK;

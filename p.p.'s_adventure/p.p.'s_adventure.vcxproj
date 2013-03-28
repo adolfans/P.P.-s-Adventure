@@ -119,6 +119,7 @@ copy mesh.fx ..\Debug</Command>
     <ClInclude Include="..\p.p.%27s_adventure\MyBarrageTransmitter.h" />
     <ClInclude Include="..\p.p.%27s_adventure\MyCharacterController.h" />
     <ClInclude Include="..\p.p.%27s_adventure\MyGameCamera.h" />
+    <ClInclude Include="..\p.p.%27s_adventure\MyGameFbxSceneLoader.h" />
     <ClInclude Include="..\p.p.%27s_adventure\MyGameMusic.h" />
     <ClInclude Include="..\p.p.%27s_adventure\MyGamePointSprites.h" />
     <ClInclude Include="..\p.p.%27s_adventure\MyGameSceneBillboardSet.h" />
@@ -166,6 +167,7 @@ copy mesh.fx ..\Debug</Command>
     <ClCompile Include="..\p.p.%27s_adventure\MyBarrageTransmitter.cpp" />
     <ClCompile Include="..\p.p.%27s_adventure\MyCharacterController.cpp" />
     <ClCompile Include="..\p.p.%27s_adventure\MyGameCamera.cpp" />
+    <ClCompile Include="..\p.p.%27s_adventure\MyGameFbxSceneLoader.cpp" />
     <ClCompile Include="..\p.p.%27s_adventure\MyGameMusic.cpp" />
     <ClCompile Include="..\p.p.%27s_adventure\MyGamePointSprites.cpp" />
     <ClCompile Include="..\p.p.%27s_adventure\MyGameSceneBillboardSet.cpp" />

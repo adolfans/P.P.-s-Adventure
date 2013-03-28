@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include <d3dx9.h>
 
@@ -9,7 +9,7 @@
 #include "SkinnedMesh.h"
 #include "MyGame3DDevice.h"
 
-class MyGameCamera;		//CameraÉùÃ÷£¬ÕâÑù¾Í²»±ØÒÀÀµMyGameCameraµÄ¶¨ÒåÁË¡£
+class MyGameCamera;		//Cameraå£°æ˜ï¼Œè¿™æ ·å°±ä¸å¿…ä¾èµ–MyGameCameraçš„å®šä¹‰äº†ã€‚
 
 namespace MyGameScene{
 class MyGameSceneManager
@@ -120,8 +120,6 @@ public:
 };
 }
 
-void getNodeFromFbxNode( MyGameScene::MyGameSceneManager* sceneMgr, FbxNode* node, MyGameSceneNode* parentSceneNode, MyGame3DEffect* effect )
-;
+void getNodeFromFbxNode( MyGameScene::MyGameSceneManager* sceneMgr, FbxNode* node, MyGameSceneNode* parentSceneNode, MyGame3DEffect* effect );
 
-void loadSceneFromFbx( MyGameScene::MyGameSceneManager* sceneMgr, const char* fileName, MyGameSceneNode* node, MyGame3DEffect* effect )
-;
+void loadSceneFromFbx( MyGameScene::MyGameSceneManager* sceneMgr, const char* fileName, MyGameSceneNode* node, MyGame3DEffect* effect );

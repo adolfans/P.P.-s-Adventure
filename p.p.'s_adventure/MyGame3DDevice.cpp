@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "Resource.h"
 
 #include <exception>
@@ -190,7 +190,7 @@ bool MyGame3DDevice::InitD3DDevice9()
 
 	//d3d9 = 0;
 
-	HR( pD3D9InstanceDevice->GetRenderTarget( 0, &screenSurface ) );//»ñÈ¡µ±Ç°µÄÏÔÊ¾±íÃæ
+	HR( pD3D9InstanceDevice->GetRenderTarget( 0, &screenSurface ) );//èŽ·å–å½“å‰çš„æ˜¾ç¤ºè¡¨é¢
 
 
 	if(FAILED(hr))
@@ -414,7 +414,7 @@ void MyGame3DDevice::DestroyVertexBuffer( int _bufferKey )
 
 	//pMyGameDevice->myVertexBufferList[ _bufferKey ].vertexBuffer->Release();
 
-	delete (pMyGameDevice->myVertexBufferList[ _bufferKey ]);//ÒòÎªÊÇ¶¯Ì¬·ÖÅäµÄËùÒÔÒªÇå³ý¡­¡­Ã´
+	delete (pMyGameDevice->myVertexBufferList[ _bufferKey ]);//å› ä¸ºæ˜¯åŠ¨æ€åˆ†é…çš„æ‰€ä»¥è¦æ¸…é™¤â€¦â€¦ä¹ˆ
 
 	pMyGameDevice->myVertexBufferList.erase( _bufferKey );
 }

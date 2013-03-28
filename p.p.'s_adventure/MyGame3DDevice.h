@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "MyGameFunctions.h"
 #include "MyGame3DEffect.h"
 

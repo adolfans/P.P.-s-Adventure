@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "MyGame3DDevice.h"
 class MyGameGrid
 {

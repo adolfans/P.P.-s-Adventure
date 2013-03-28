@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "MyPlayerRole.h"
 
 #include <bitset>
@@ -13,7 +13,7 @@ MyPlayerRole::MyPlayerRole(PxScene* pScene,
 	con = new MyCharacterController( pScene, pManager, height, pMesh, pEnt );
 	stepLength = 20.0f;
 	lastAttackTime = static_cast<float>(clock())/1000.0f;
-	attack = 0;//0±íÊ¾²»¹¥»÷£¬1±íÊ¾µÚÒ»¸ö¹¥»÷½øĞĞÖĞ£¬2±íÊ¾µÚ¶ş¸ö¡­¡­3±íÊ¾µÚÈı¸ö¡­¡­
+	attack = 0;//0è¡¨ç¤ºä¸æ”»å‡»ï¼Œ1è¡¨ç¤ºç¬¬ä¸€ä¸ªæ”»å‡»è¿›è¡Œä¸­ï¼Œ2è¡¨ç¤ºç¬¬äºŒä¸ªâ€¦â€¦3è¡¨ç¤ºç¬¬ä¸‰ä¸ªâ€¦â€¦
 }
 
 
@@ -26,13 +26,13 @@ void MyPlayerRole::update( MSG msg )
 {
 	float myTimestep = 1.0f/60.0f; 
 	PxVec3 moveVec( 0.0f, 0.0f, 0.0f );
-	if(msg.message == WM_KEYDOWN)//Èç¹ûÓĞ¼ü°´ÏÂ
+	if(msg.message == WM_KEYDOWN)//å¦‚æœæœ‰é”®æŒ‰ä¸‹
 	{
 		if( msg.wParam == 'Z')
 		{
 			long param = msg.lParam;
 			bitset<sizeof(long)*8> b(param);
-			if( !b[30] )//Èç¹ûµÚ30Î»Îª0
+			if( !b[30] )//å¦‚æœç¬¬30ä½ä¸º0
 			{
 				if( this->attack == 0 )
 				{
@@ -41,7 +41,7 @@ void MyPlayerRole::update( MSG msg )
 				}else if( this->attack == 1 )
 				{
 					con->addAnimToQueue( string("attack2") );
-					this->attack = 2;		//±íÊ¾ÒÑ¾­½«attack2¼ÓÈë¶¯»­¶ÓÁĞ£¬µ«²¢²»±íÊ¾ÒÑ¾­¿ªÊ¼²¥·ÅÁË
+					this->attack = 2;		//è¡¨ç¤ºå·²ç»å°†attack2åŠ å…¥åŠ¨ç”»é˜Ÿåˆ—ï¼Œä½†å¹¶ä¸è¡¨ç¤ºå·²ç»å¼€å§‹æ’­æ”¾äº†
 				}else if( attack == 2 )
 				{
 					//if( con->ifCurrentAnimEnd() )

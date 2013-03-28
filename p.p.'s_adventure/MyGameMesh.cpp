@@ -392,7 +392,7 @@ void MyGameMesh::loadMeshFromFbxNodeAttribute( FbxNodeAttribute* attr )
 			D3DDECL_END()
 		};
 
-		::D3DXCreateMesh( numFaces, numVertices, D3DXMESH_MANAGED, decl, this->pDevice, &this->pDXMesh );
+		HR(D3DXCreateMesh( numFaces, numVertices, D3DXMESH_MANAGED, decl, this->pDevice, &this->pDXMesh ));
 
 		//FbxVector4* vertexBuffer = 0;
 
@@ -538,8 +538,8 @@ void MyGameMesh::loadMeshFromFbxNodeAttribute( FbxNodeAttribute* attr )
 IDirect3DTexture9* MyGameMesh::createTextureFromFile( const char* fileName )
 {
 	IDirect3DTexture9* texture;
-	D3DXCreateTextureFromFileA( this->pDevice,
+	HR(D3DXCreateTextureFromFileA( this->pDevice,
 								fileName, 
-								&texture );
+								&texture ));
 	return texture;
 }

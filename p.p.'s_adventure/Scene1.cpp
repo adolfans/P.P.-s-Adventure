@@ -12,6 +12,7 @@ using std::runtime_error;
 #include <iostream>
 #include <math.h>
 #include "MyGameInstance.h"
+#include "MyGameFbxSceneLoader.h"
 using std::cerr;
 using std::endl;
 #ifdef free
@@ -206,7 +207,20 @@ Scene1::Scene1(void):
 	MyGameSceneEntity* teapotEnt= sceneMgr->CreateSceneEntity( teapotMesh, "testTeapot" );
 	//teapotNode->attachEntity( teapotEnt );
 	//teapotNode->scale( 10.0f, 10.0f, 10.0f );
-	::loadSceneFromFbx( sceneMgr, "myteapot.FBX", teapotNode, pPlatformEffect );
+	//::loadSceneFromFbx( sceneMgr, "testPalmTree.FBX", teapotNode, pPlatformEffect );
+	
+	
+	
+	vector< MyGameSceneEntity* > entityList;
+	MyGameFbxSceneLoader::loadSceneFromFbx( sceneMgr, "testPalmTree.FBX", teapotNode, entityList );
+	for( auto itr = entityList.begin(); itr != entityList.end(); ++ itr )
+		pPlatformEffect->AddEntity( *itr );
+
+	
+
+	//pPlatformEffet->AddEntityFromNodes( teapotNode );//类似的功能？
+	//需要遍历teapotNode及其子节点中所有的entity
+
 	pPlatformEffect->AddEntity( teapotEnt );
 	pGenShadowMapEffect->AddEntity( teapotEnt );
 	
@@ -369,6 +383,7 @@ Scene1::~Scene1(void)
 	delete waterEffect;
 	delete mirrorEffect;
 	delete shadowMap;
+	delete testTransmitter;
 	//delete pLoliEffect;
 	MyGameMeshManager::destroyAllMeshes();
 	MyGameSceneNode::destroyAllNodes();

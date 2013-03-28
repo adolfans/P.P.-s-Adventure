@@ -1,4 +1,4 @@
-//ÒÑ·ÏÆú£¬²»ÔÙÊ¹ÓÃ£¬Ìæ»»½â¾ö·½°¸ÎªMyRenderTargetTexture
+ï»¿//å·²åºŸå¼ƒï¼Œä¸å†ä½¿ç”¨ï¼Œæ›¿æ¢è§£å†³æ–¹æ¡ˆä¸ºMyRenderTargetTexture
 #pragma once
 #include <d3dx9.h>
 class MyShadowMap

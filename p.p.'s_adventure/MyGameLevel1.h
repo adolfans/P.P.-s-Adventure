@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "mygamelevel.h"
 #include "Scene1.h"
 class MyGameLevel1 :

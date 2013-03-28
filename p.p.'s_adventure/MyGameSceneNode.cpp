@@ -1,10 +1,10 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "MyGameSceneNode.h"
 #include "MyGameBoneNode.h"
 #include "MyGameSceneEntity.h"
 #include <exception>
 using std::runtime_error;
-//Ó¦ÓÃ¾ØÕóµÄË³ĞòÊÇ£ºÏÈËõ·Å£¬ÔÙĞı×ª£¬ÔÚÆ½ÒÆ
+//åº”ç”¨çŸ©é˜µçš„é¡ºåºæ˜¯ï¼šå…ˆç¼©æ”¾ï¼Œå†æ—‹è½¬ï¼Œåœ¨å¹³ç§»
 namespace MyGameScene{
 	map<string, MyGameSceneNode*> MyGameSceneNode::nodeMap;
 
@@ -19,7 +19,7 @@ MyGameNode( name )
 	if( name && strlen(name) >= 1 )
 	{
 		if( nodeMap.count( name ) )
-			throw runtime_error("ÒÑ´æÔÚÍ¬ÃûµÄ½Úµã:"+this->getName() +"\nÎŞ·¨Ìí¼Ó£¡");
+			throw runtime_error("å·²å­˜åœ¨åŒåçš„èŠ‚ç‚¹:"+this->getName() +"\næ— æ³•æ·»åŠ ï¼");
 		else
 			nodeMap[name] = this;
 	}
@@ -46,12 +46,12 @@ MyGameSceneNode* MyGameSceneNode::getNodeByName( const char* name )
 	if( name && strlen( name ) > 1 )
 	{
 		if( !nodeMap.count( name ) )
-			throw runtime_error( "²»´æÔÚ¸Ã½Úµã:"+ string(name) );
+			throw runtime_error( "ä¸å­˜åœ¨è¯¥èŠ‚ç‚¹:"+ string(name) );
 		else
 			return nodeMap[name];
 	}else
 	{
-		throw runtime_error( "½ÚµãÃû²»ÕıÈ·£¡" );
+		throw runtime_error( "èŠ‚ç‚¹åä¸æ­£ç¡®ï¼" );
 	}
 }
 
@@ -116,9 +116,9 @@ void MyGameSceneNode::destroyAllNodes( )
 	{
 		MyGameSceneNode* pToDel = _itr->second;
 		//MyGameBoneNode* node = dynamic_cast<MyGameBoneNode*>(pToDel);
-		//if( node )//Èç¹ûÕâ»õÊÇ¸öMyGameBoneNode*ÀàĞÍ
+		//if( node )//å¦‚æœè¿™è´§æ˜¯ä¸ªMyGameBoneNode*ç±»å‹
 		//{
-		//	//ÅĞ¶ÏÊÇ·ñ¡­¡­
+		//	//åˆ¤æ–­æ˜¯å¦â€¦â€¦
 		//	if( node->getIfMngdByDXAllocHrc() ){}
 		//	else
 		//		delete node;

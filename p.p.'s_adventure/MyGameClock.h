@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 /*********************
 automatically update the variable on time
 after you set up frequency
