@@ -183,6 +183,12 @@
     <ClInclude Include="..\p.p.%27s_adventure\MyGameFbxSceneLoader.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="..\p.p.%27s_adventure\MyGamePhysxScene.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\p.p.%27s_adventure\MyGameHelperGraphics.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -303,6 +309,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="..\p.p.%27s_adventure\MyGameFbxSceneLoader.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\p.p.%27s_adventure\MyGamePhysxScene.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\p.p.%27s_adventure\MyGameHelperGraphics.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

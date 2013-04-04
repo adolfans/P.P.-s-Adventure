@@ -218,7 +218,11 @@ void MyGameInstance::UpdateLevel( MyGameLevel* level, MSG msg )
 
 	//停止绘制
 	pD3D9InstanceDevice->EndScene();
-	pD3D9InstanceDevice->Present( 0, 0, 0, 0 );
+ 	//HR(pD3D9InstanceDevice->Present( 0, 0, 0, 0 ));
+
+	
+	if( FAILED( pD3D9InstanceDevice->Present( 0, 0, 0, 0 ) ) )
+		throw runtime_error( "Oh, 设备丢失……" );
 }
 
 

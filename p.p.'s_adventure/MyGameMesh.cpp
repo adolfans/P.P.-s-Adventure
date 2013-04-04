@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "SkinnedMesh.h"
 #include "MyGameMesh.h"
 #include "MyGameSceneManager.h"
@@ -36,7 +36,7 @@ MyGameMesh::~MyGameMesh(void)
 void MyGameMesh::loadMeshFromXFile( const char* fileName )
 {
 	if( pDXMesh )
-		throw runtime_error( "´ËEntityÒÑ¾­¼ÓÔØÁËXFile" );
+		throw runtime_error( "æ­¤Entityå·²ç»åŠ è½½äº†XFile" );
 	pDevice = ::MyGame3DDevice::GetSingleton()->GetDevice();
 	
 	ID3DXBuffer* mtrlBuffer = 0;
@@ -110,7 +110,7 @@ void MyGameMesh::createPlaneXZ( float width, float height )
 		D3DDECL_END()
 	};
 
-	D3DXCreateMesh( 2, 6, D3DXMESH_MANAGED/* | D3DXMESH_32BIT¼ÓÉÏÕâ¸ö²ÎÊı»áµ¼ÖÂÒ»Ğ©Ææ¹ÖµÄÎÊÌâ*/, decl, pDevice, &this->pDXMesh );
+	D3DXCreateMesh( 2, 6, D3DXMESH_MANAGED/* | D3DXMESH_32BITåŠ ä¸Šè¿™ä¸ªå‚æ•°ä¼šå¯¼è‡´ä¸€äº›å¥‡æ€ªçš„é—®é¢˜*/, decl, pDevice, &this->pDXMesh );
 
 	void* pdata;
 
@@ -140,7 +140,8 @@ void MyGameMesh::createPlaneXZ( float width, float height )
 
 	pDXMesh->UnlockAttributeBuffer();
 
-
+	
+	this->generateBoundingBox();
 }
 
 void MyGameMesh::render( MyGame3DEffect* pEffect )
@@ -175,10 +176,10 @@ void MyGameMesh::createTexture( const char* fileName, unsigned int num )
 	mtrl.Diffuse.b = 0.0f;
 	mtrl.Diffuse.a = 1.0f;
 	
-	if ( Textures.size() > num )	//Èç¹ûÆäÖĞÓĞ±àºÅÎªnumµÄ²ÄÖÊ
+	if ( Textures.size() > num )	//å¦‚æœå…¶ä¸­æœ‰ç¼–å·ä¸ºnumçš„æè´¨
 	{
 		IRelease(Textures[num]);
-		//Mtrls[num] = mtrl;		//Èç¹û²ÄÖÊÖĞÓĞĞÅÏ¢µÄ»°£¬¾Í²»Ìæ»»ÁË
+		//Mtrls[num] = mtrl;		//å¦‚æœæè´¨ä¸­æœ‰ä¿¡æ¯çš„è¯ï¼Œå°±ä¸æ›¿æ¢äº†
 		Textures[num] = texture;
 	}else{
 		Mtrls.push_back( mtrl );
@@ -210,9 +211,9 @@ struct bmpHeader{
 };
 void MyGameMesh::createGridFromBmp( const char* fileName )
 {
-	//TODO: Õâ»õÊÇÍê³É»¹ÊÇ·ÏÆú£¬ÕâÊÇÒ»¸öÎÊÌâ
+	//TODO: è¿™è´§æ˜¯å®Œæˆè¿˜æ˜¯åºŸå¼ƒï¼Œè¿™æ˜¯ä¸€ä¸ªé—®é¢˜
 	FILE* pFile = fopen( fileName, "rb" );
-	char bm[] = "  \n";	//3¸ö
+	char bm[] = "  \n";	//3ä¸ª
 	fread( bm, 1, 2, pFile );
 	struct bmpHeader header;
 
@@ -238,14 +239,14 @@ MyGameMesh* MyGameMeshManager::createMyGameMesh( meshType type )
 		pNewMesh = new MyGameMesh;
 	}
 	if( !pNewMesh )
-		throw runtime_error("´´½¨meshÊ§°Ü" );
+		throw runtime_error("åˆ›å»ºmeshå¤±è´¥" );
 	meshVec.push_back( pNewMesh );
 	return pNewMesh;
 }
 
 void MyGameMeshManager::destroyAllMeshes()
 {
-	for( auto _itr = meshVec.begin();		//²âÊÔauto
+	for( auto _itr = meshVec.begin();		//æµ‹è¯•auto
 		_itr != meshVec.end();
 		++ _itr )
 		delete (*_itr);
@@ -263,7 +264,7 @@ physx::PxTriangleMesh* MyGameMesh::generatePxTriangleMesh(  )
 	
 	float* srcVertices;
 	newMesh->LockVertexBuffer( 0, (void**)&srcVertices );
-	float* vertices = new float[ newMesh->GetNumVertices()*3 ];//Ò»¸öµãÓĞx, y, zÈı¸öÊıÖµ£¬ËùÒÔ³ËÒÔÈı
+	float* vertices = new float[ newMesh->GetNumVertices()*3 ];//ä¸€ä¸ªç‚¹æœ‰x, y, zä¸‰ä¸ªæ•°å€¼ï¼Œæ‰€ä»¥ä¹˜ä»¥ä¸‰
 	memcpy( vertices, srcVertices, sizeof(float)* newMesh->GetNumVertices()*3 );
 	newMesh->UnlockVertexBuffer();
 
@@ -271,7 +272,7 @@ physx::PxTriangleMesh* MyGameMesh::generatePxTriangleMesh(  )
 	meshDesc.points.stride = sizeof(float)*3;
 	meshDesc.points.data	= vertices;
 
-	unsigned int* destIndices = new unsigned int[ newMesh->GetNumFaces() * 3 ];//Ò»¸öÃæÓĞÈı¸öµã£¬ËùÒÔ³ËÒÔÈı
+	unsigned int* destIndices = new unsigned int[ newMesh->GetNumFaces() * 3 ];//ä¸€ä¸ªé¢æœ‰ä¸‰ä¸ªç‚¹ï¼Œæ‰€ä»¥ä¹˜ä»¥ä¸‰
 	unsigned int* srcIndices;
 	newMesh->LockIndexBuffer( 0, (void**)&srcIndices );
 	memcpy( destIndices, srcIndices, sizeof( unsigned int ) * newMesh->GetNumFaces() * 3 );
@@ -315,7 +316,7 @@ FbxNodeAttribute* findNode( FbxNode* node )
 	{
 		if( node->GetNodeAttributeByIndex( i )->GetAttributeType() == FbxNodeAttribute::eMesh )
 		{
-			return node->GetNodeAttributeByIndex( i );	//Èç¹ûÕâ¸ö½ÚµãµÄattributeÊÇmeshµÄ»°¾Í·µ»Ø
+			return node->GetNodeAttributeByIndex( i );	//å¦‚æœè¿™ä¸ªèŠ‚ç‚¹çš„attributeæ˜¯meshçš„è¯å°±è¿”å›
 		}
 	}
 	for( int i = 0; i != node->GetChildCount(); ++ i )
@@ -359,7 +360,7 @@ void MyGameMesh::loadMeshFromFbxFile( const char* fileName )
 
 	FbxGeometryConverter converter(fbxMgr );
 
-	converter.TriangulateInPlace( rootNode );//½«½ÚµãÈı½Ç»¯
+	converter.TriangulateInPlace( rootNode );//å°†èŠ‚ç‚¹ä¸‰è§’åŒ–
 	
 	FbxNodeAttribute* attr = findNode( rootNode );
 	
@@ -370,6 +371,8 @@ void MyGameMesh::loadMeshFromFbxFile( const char* fileName )
 	fbxScene->Destroy();
 	fbxMgr->Destroy();
 	
+	this->generateBoundingBox();
+	
 }
 
 void MyGameMesh::loadMeshFromFbxNodeAttribute( FbxNodeAttribute* attr )
@@ -377,7 +380,7 @@ void MyGameMesh::loadMeshFromFbxNodeAttribute( FbxNodeAttribute* attr )
 	FbxMesh* mesh = (FbxMesh*)attr;
 
 	//mesh->get
-	//´´½¨ID3DXMesh½Ó¿Ú
+	//åˆ›å»ºID3DXMeshæ¥å£
 	{
 		DWORD numVertices = mesh->GetPolygonVertexCount();//mesh->GetControlPointsCount();
 		DWORD numFaces =	mesh->GetPolygonVertexCount()/3;
@@ -412,9 +415,9 @@ void MyGameMesh::loadMeshFromFbxNodeAttribute( FbxNodeAttribute* attr )
 		this->pDXMesh->LockVertexBuffer( 0, (void**)&vertexBuffer );
 
 		int* vert = mesh->GetPolygonVertices();
-		for( unsigned int i = 0; i != mesh->GetPolygonVertexCount(); ++ i )	//ÏÖÔÚÊÇÒ»¸öindex¶ÔÓ¦Ò»¸övertexµÄÇé¿ö
+		for( unsigned int i = 0; i != mesh->GetPolygonVertexCount(); ++ i )	//ç°åœ¨æ˜¯ä¸€ä¸ªindexå¯¹åº”ä¸€ä¸ªvertexçš„æƒ…å†µ
 		{
-			//ÕâÀïËÆºõ¿ÉÒÔ¾ö¶¨ÎïÌåµÄzÖáyÖá·­×ªµÄÎÊÌâ
+			//è¿™é‡Œä¼¼ä¹å¯ä»¥å†³å®šç‰©ä½“çš„zè½´yè½´ç¿»è½¬çš„é—®é¢˜
 			vertexBuffer[i].x = mesh->GetControlPointAt( vert[i] ).mData[0];
 			vertexBuffer[i].y = mesh->GetControlPointAt( vert[i] ).mData[2];
 			vertexBuffer[i].z = mesh->GetControlPointAt( vert[i] ).mData[1];
@@ -497,15 +500,15 @@ void MyGameMesh::loadMeshFromFbxNodeAttribute( FbxNodeAttribute* attr )
 
 	}else
 	{
-		throw runtime_error( "mesh²»°üº¬²ÄÖÊĞÅÏ¢£¡");
+		throw runtime_error( "meshä¸åŒ…å«æè´¨ä¿¡æ¯ï¼");
 	}
 	
 	this->Mtrls.push_back( mtrl );
 	
 	FbxProperty prop = mat->FindProperty( FbxSurfaceMaterial::sDiffuse );
 
-	if( prop.GetSrcObjectCount( FbxLayeredTexture::ClassId ) > 0 )		//ÔİÇÒÖ»¶ÁÈ¡Ò»¸öÌùÍ¼
-	{	//Î£ÏÕ£¡Î´ÊµÏÖ£¡
+	if( prop.GetSrcObjectCount( FbxLayeredTexture::ClassId ) > 0 )		//æš‚ä¸”åªè¯»å–ä¸€ä¸ªè´´å›¾
+	{	//å±é™©ï¼æœªå®ç°ï¼
 		//prop.
 		FbxLayeredTexture *lLayeredTexture = FbxCast <FbxLayeredTexture>(prop.GetSrcObject(FbxLayeredTexture::ClassId));
         int lNbTextures = lLayeredTexture->GetSrcObjectCount(FbxTexture::ClassId);
@@ -517,14 +520,14 @@ void MyGameMesh::loadMeshFromFbxNodeAttribute( FbxNodeAttribute* attr )
 		//MessageBoxA( 0, fileTexture->GetFileName(), 0, 0 );
 		Textures.push_back(createTextureFromFile( fileTexture->GetFileName() ));
 	}else if( prop.GetSrcObjectCount( FbxProceduralTexture::ClassId ) > 0 )
-	{//Î£ÏÕ£¡Î´ÊµÏÖ£¡
+	{//å±é™©ï¼æœªå®ç°ï¼
 		FbxProceduralTexture *lLayeredTexture = FbxCast <FbxProceduralTexture>(prop.GetSrcObject(FbxProceduralTexture::ClassId));
         int lNbTextures = lLayeredTexture->GetSrcObjectCount(FbxTexture::ClassId);
 		FbxTexture* fbxTex = static_cast< FbxTexture* >(lLayeredTexture->GetSrcObject(FbxTexture::ClassId));
 		MessageBoxA( 0, fbxTex->GetName(), 0, 0 );
 
 	}else if( prop.GetSrcObjectCount( FbxTexture::ClassId ) > 0 )
-	{//Î£ÏÕ£¡Î´ÊµÏÖ£¡
+	{//å±é™©ï¼æœªå®ç°ï¼
 		FbxTexture *lLayeredTexture = FbxCast <FbxTexture>(prop.GetSrcObject(FbxTexture::ClassId));
         int lNbTextures = lLayeredTexture->GetSrcObjectCount(FbxTexture::ClassId);
 		FbxTexture* fbxTex = static_cast< FbxTexture* >(lLayeredTexture->GetSrcObject(FbxTexture::ClassId));
@@ -533,6 +536,9 @@ void MyGameMesh::loadMeshFromFbxNodeAttribute( FbxNodeAttribute* attr )
 		Textures.push_back( 0 );
 
 	mesh->Destroy();
+
+	
+	this->generateBoundingBox();
 }
 
 IDirect3DTexture9* MyGameMesh::createTextureFromFile( const char* fileName )

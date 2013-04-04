@@ -1,5 +1,5 @@
-////////////////////////
-//Òª»­Mesh£¬ÇëÓÃEntity
+ï»¿////////////////////////
+//è¦ç”»Meshï¼Œè¯·ç”¨Entity
 ////////////////////////
 
 #pragma once
@@ -18,8 +18,6 @@ using std::vector;
 #endif
 #include <PxPhysicsAPI.h>
 using namespace physx;
-//using namespace PxToolkit;
-
 
 class MyGameMeshManager;
 class MyGameMesh
@@ -38,7 +36,7 @@ private:
 	//IDirect3DIndexBuffer9*	pIndicesBuffer;
 	//IDirect3DTexture9* tex;
 
-	IDirect3DTexture9* extraTexture; //ÁÙÊ±µÄ¶îÍâÌùÍ¼£¬ÓÃÓÚ¶àÖØÎÆÀíÖĞµÄ±àºÅ1µÄÄÇÒ»²ã
+	IDirect3DTexture9* extraTexture; //ä¸´æ—¶çš„é¢å¤–è´´å›¾ï¼Œç”¨äºå¤šé‡çº¹ç†ä¸­çš„ç¼–å·1çš„é‚£ä¸€å±‚
 	D3DXVECTOR3 minPoint, maxPoint;//bounding box
 
 	IDirect3DDevice9* pDevice;
@@ -89,8 +87,7 @@ public:
 	virtual void createPlaneXZ( float width, float height  );
 	virtual void createTexture( const char* fileName, unsigned int num = 0 );
 	virtual void createExtraTexture( const char* fileName );
-	virtual void createGridFromBmp( const char* fileName );
-	physx::PxTriangleMesh* generatePxTriangleMesh();
+    virtual void createGridFromBmp( const char* fileName );
 	MyGameSceneNode* getNode();
 	//virtual void Draw();
 
@@ -107,6 +104,28 @@ public:
 
 	virtual void prepare();
 
+	physx::PxTriangleMesh* generatePxTriangleMesh(  );
+
+	bool	intersectTest( const D3DXVECTOR3& rayPos, const D3DXVECTOR3& rayDir, float& dist )
+	{
+		BOOL hit;
+		HR( D3DXIntersect(pDXMesh,
+							&rayPos,
+							&rayDir,
+							&hit,
+							NULL,
+							NULL,
+							NULL,
+							&dist,
+							NULL,
+							NULL ) );
+
+		if( hit )
+			return true;
+		else
+			return false;
+
+	}
 	//static MyGameMesh* createMyGameMesh( meshType type );
 
 };

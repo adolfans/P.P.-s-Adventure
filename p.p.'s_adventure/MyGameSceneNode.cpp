@@ -137,4 +137,11 @@ void MyGameSceneNode::destroyAllNodes( )
 		
 		localMatrix = scaleMat*rotateMat*posMat;
 	}
+
+	void MyGameSceneNode::getPosition( float& x, float& y, float& z )
+	{
+		x = this->posMat._41;
+		y = this->posMat._42;
+		z = this->posMat._43;
+	}
 }

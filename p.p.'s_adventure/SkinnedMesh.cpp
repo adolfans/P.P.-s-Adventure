@@ -271,7 +271,7 @@ void SkinnedMesh::buildSkinnedMesh( ID3DXMesh* mesh )
 
 	HR( pSkinInfo->ConvertToIndexedBlendedMesh( 
 				mesh,
-				D3DXMESH_MANAGED | D3DXMESH_WRITEONLY,
+				D3DXMESH_MANAGED/* | D3DXMESH_WRITEONLY*/,
 				SkinnedMesh::MAX_NUM_BONES_SUPPORTED,
 				0,
 				0,
@@ -287,6 +287,8 @@ void SkinnedMesh::buildSkinnedMesh( ID3DXMesh* mesh )
 	D3DXMESHCONTAINER* meshContainer = f->pMeshContainer;
 	
 	this->setID3DXMesh( pSkinnedMesh );
+
+	this->generateBoundingBox();
 
 	for( unsigned int i = 0; i < meshContainer->NumMaterials; ++ i )
 	{

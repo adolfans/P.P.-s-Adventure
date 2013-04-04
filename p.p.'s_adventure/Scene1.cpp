@@ -13,6 +13,7 @@ using std::runtime_error;
 #include <math.h>
 #include "MyGameInstance.h"
 #include "MyGameFbxSceneLoader.h"
+#include "MyGameHelperGraphics.h"
 using std::cerr;
 using std::endl;
 #ifdef free
@@ -168,7 +169,7 @@ Scene1::Scene1(void):
 
 	MyGameMesh* ground = MyGameMeshManager::createMyGameMesh( MyGameMeshManager::MESH );
 	ground->loadMeshFromXFile( "ground.X" );
-	MyGameSceneEntity* ballEnt = sceneMgr->CreateSceneEntity( ground, "ball" );
+	ballEnt = sceneMgr->CreateSceneEntity( ground, "ball" );
 	pGenShadowMapEffect->AddEntity( ballEnt );
 	pPlatformEffect->AddEntity( ballEnt );
 	sceneRoot->attachEntity( ballEnt );
@@ -198,31 +199,35 @@ Scene1::Scene1(void):
 	pGenShadowMapEffect->AddEntity( boxEnt );
 
 
-
 	MyGameSceneNode* teapotNode = sceneMgr->CreateSceneNode( "teapotNode" );
 	sceneRoot->AddChild(teapotNode);
 	MyGameMesh* teapotMesh = MyGameMeshManager::createMyGameMesh( MyGameMeshManager::MESH );
-	teapotMesh->loadMeshFromXFile( "testTeapot.X" );
-	//teapotMesh->loadMeshFromFbxFile( "myteapot.FBX" );
+	//teapotMesh->loadMeshFromXFile( "testTeapot.X" );
+	teapotMesh->loadMeshFromFbxFile( "myteapot.FBX" );
 	MyGameSceneEntity* teapotEnt= sceneMgr->CreateSceneEntity( teapotMesh, "testTeapot" );
-	//teapotNode->attachEntity( teapotEnt );
+	//teapotNode->AddChild( teapotEnt->getNode());
+	pPlatformEffect->AddEntity( teapotEnt );
+	pGenShadowMapEffect->AddEntity( teapotEnt );
+	teapotNode->attachEntity( teapotEnt );
+	teapotEnt->getNode()->scale( 10, 10, 10 );
+	
+	teapotEnt->getNode()->rotateY( D3DX_PI * 0.25 );
+
 	//teapotNode->scale( 10.0f, 10.0f, 10.0f );
 	//::loadSceneFromFbx( sceneMgr, "testPalmTree.FBX", teapotNode, pPlatformEffect );
 	
 	
 	
-	vector< MyGameSceneEntity* > entityList;
-	MyGameFbxSceneLoader::loadSceneFromFbx( sceneMgr, "testPalmTree.FBX", teapotNode, entityList );
-	for( auto itr = entityList.begin(); itr != entityList.end(); ++ itr )
-		pPlatformEffect->AddEntity( *itr );
+	//vector< MyGameSceneEntity* > entityList;
+	//MyGameFbxSceneLoader::loadSceneFromFbx( sceneMgr, "testPalmTree.FBX", teapotNode, entityList );
+	//for( auto itr = entityList.begin(); itr != entityList.end(); ++ itr )
+	//	pPlatformEffect->AddEntity( *itr );
 
 	
 
 	//pPlatformEffet->AddEntityFromNodes( teapotNode );//类似的功能？
 	//需要遍历teapotNode及其子节点中所有的entity
 
-	pPlatformEffect->AddEntity( teapotEnt );
-	pGenShadowMapEffect->AddEntity( teapotEnt );
 	
 	
 	mirrorEffect = new MyGame3DEffect( "mirror.fx" );
@@ -237,7 +242,9 @@ Scene1::Scene1(void):
 	
 	PxPhysics* gPhysicsSDK = MyGame3DDevice::GetSingleton()->getPhysX();
 
-	PxScene* gScene = this->sceneMgr->getPhysXScene();
+	physxScene = new MyGamePhysxScene( 1000 );
+
+	PxScene* gScene = physxScene->getPhysXScene();
 
 	PxMaterial* mMaterial = gPhysicsSDK->createMaterial(0.5,0.5,0.5);
 
@@ -289,11 +296,10 @@ Scene1::Scene1(void):
 
 	PxControllerManager* manager = MyGame3DDevice::GetSingleton()->getPhysXControllerManager();
 	role1 = new MyPlayerRole( gScene, manager, 1500.0f, this->loli, loliEnt );
-	IDirect3DTexture9* texture;
-	D3DXCreateTextureFromFileA( pDevice, "grid.jpg", &texture );
-	waterEffect->attachTextureToName( "reflectionTexture", this->mirrorTexture->getTexture()/*texture*/ );
-	//waterEffect->attachTextureToName( "reflectionTexture", texture );
 
+	MyGameHelperGraphics::enableBox( loliEnt );
+
+	waterEffect->attachTextureToName( "reflectionTexture", this->mirrorTexture->getTexture()/*texture*/ );
 
 	testTransmitter = new MyBarrageTransmitter;
 
@@ -304,10 +310,14 @@ Scene1::Scene1(void):
 	testTransmitter->setSize( 500.0f, 500.0f );
 	testTransmitter->generate( sceneMgr );
 
+
+	MyGameHelperGraphics::initialize();
+
+	
 }
 
 void Scene1::Update( MSG msg )
-{
+{ 
 	static unsigned int lastTime = clock();
 	unsigned int currentTime = clock();
 	static int frames;
@@ -324,7 +334,7 @@ void Scene1::Update( MSG msg )
 		frames = 0;
 	}
 
-	PxScene* gScene = this->sceneMgr->getPhysXScene();
+	PxScene* gScene = physxScene->getPhysXScene();
 
 	//PxVec3 moveVec( 0.0f, 0.0f, 0.0f );
 
@@ -335,6 +345,51 @@ void Scene1::Update( MSG msg )
 		else if( msg.wParam == 'D' )
 			cam->rotate( D3DX_PI * -0.0125 );
 
+	}else if( msg.message == WM_LBUTTONDOWN )
+	{
+		
+		const D3DXMATRIX& projMat = sceneMgr->getViewProjCombinedMat();
+
+		D3DXMATRIX inversedMat;
+
+		D3DXMatrixInverse( &inversedMat, NULL, &projMat );
+
+		POINT cursorPosition;
+
+		GetCursorPos(&cursorPosition);
+
+		
+
+
+		float _x = (float)cursorPosition.x/(float)MyGame3DDevice::GetWidth() * 2  - 1;
+		float _y = (float)cursorPosition.y/(float)MyGame3DDevice::GetHeight() * -2 + 1;
+		float _z = 0.0f;
+
+		float _ix = _x * inversedMat._11 + _y * inversedMat._21 + _z * inversedMat._31 + 1.0 * inversedMat._41;
+		float _iy = _x * inversedMat._12 + _y * inversedMat._22 + _z * inversedMat._32 + 1.0 * inversedMat._42;
+		float _iz = _x * inversedMat._13 + _y * inversedMat._23 + _z * inversedMat._33 + 1.0 * inversedMat._43;
+		float _iw = _x * inversedMat._14 + _y * inversedMat._24 + _z * inversedMat._34 + 1.0 * inversedMat._44;
+
+		_ix /= _iw;
+		_iy /= _iw;
+		_iz /= _iw;
+
+		//this->sprites.setPosition( _ix, _iy, _iz );
+		this->sprites.setPosition( _x, _y, _z );
+
+		D3DXVECTOR3 target( _ix, _iy, _iz );
+
+		D3DXVECTOR3	pos( 0.0f, 0.0f, 0.0f );
+
+		pos = cam->getPosition();
+
+
+		D3DXVECTOR3 dir = target - pos;
+
+		float dist;
+
+		//if( ballEnt/*boxEnt*/->intersectTest( pos, dir, dist ) )
+			//::MessageBoxA( 0, "OH", 0, 0 );
 	}
 
 	role1->update( msg );
@@ -369,6 +424,8 @@ void Scene1::Update( MSG msg )
 	}
 
 	delete[] shapes;
+
+	MyGameHelperGraphics::activeAxis( 1 );
 }
 
 Scene1::~Scene1(void)
@@ -392,8 +449,11 @@ Scene1::~Scene1(void)
 	sceneMgr->destroyAllCameras();
 	sceneMgr->destroyAllEntities();
 	
+	delete physxScene;
+
 	delete this->sceneMgr;
 	delete mirrorTexture;
+	MyGameHelperGraphics::cleanup();
 }
 
 void Scene1::Render()
@@ -402,6 +462,8 @@ void Scene1::Render()
 	IDirect3DDevice9* pDevice = MyGame3DDevice::GetSingleton()->GetDevice();
 	
 	
+	pDevice->SetRenderState( D3DRS_ALPHABLENDENABLE, false );
+
 	float waterSpeed = waterSpeedController->getScrollPosition();
 
 	static D3DXVECTOR2 vec(0.0f, 0.0f);
@@ -445,28 +507,34 @@ void Scene1::Render()
 
 		MyGame3DDevice::GetSingleton()->restoreScreenRenderTarget();
 	}
-	pDevice->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0x00FFFFFF, 1.0f, 0);
+	pDevice->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0xFFFFFFFF, 1.0f, 0);
+	
+	
+
+	MyGameHelperGraphics::draw( this->sceneMgr );
 	
 	{
 		//pLoliEffect->RenderAllEntities( this->sceneMgr );
 		pPlatformEffect->RenderAllEntities(this->sceneMgr);
 		waterEffect->RenderAllEntities( this->sceneMgr );
 	}
-	//loliParentNode->move( 0.002, 0, 0.002 );
-	
 	//MyGameSceneBillboard::DrawAllBillboards();
+	
+	//pDevice->SetRenderState( D3DRS_ALPHABLENDENABLE, true );
 
-	pDevice->SetTexture( 0, mirrorTexture->getTexture() );
+	//pDevice->SetTexture( 0, mirrorTexture->getTexture() );
 
 	//testBoard1->draw( sceneMgr );
 
-	testTransmitter->draw( myTimestep );
+	//testTransmitter->draw( myTimestep );
 
 	//sprites.render(sceneMgr);
 
+	MyGameHelperGraphics::drawAxisText();
+
 	pDevice->SetRenderState( D3DRS_ZENABLE, true );
 	pDevice->SetRenderState( D3DRS_ZWRITEENABLE, true );
-
+	
 }
 
 bool Scene1::OnShadowChanged( const CEGUI::EventArgs& e )

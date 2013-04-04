@@ -7,6 +7,7 @@
     <LibraryPath>$(FBXSDK)\lib\vs2010\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup>
+    <Link />
     <Link>
       <AdditionalDependencies>wininet.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>

@@ -10,30 +10,6 @@ namespace MyGameScene{
 MyGameSceneManager::MyGameSceneManager(void)
 	:unit(Millimeter)
 {
-	//Create the scene
-	PxPhysics* pxPhysics = MyGame3DDevice::GetSingleton()->getPhysX();
-	PxSceneDesc sceneDesc(pxPhysics->getTolerancesScale());
-	
-	sceneDesc.gravity=PxVec3(0.0f, -9.8f, 0.0f)*(physx::PxReal)unit;
-
-	if(!sceneDesc.cpuDispatcher) {
-		mCpuDispatcher = PxDefaultCpuDispatcherCreate(1);
-		if(!mCpuDispatcher)
-		   throw runtime_error( "PxDefaultCpuDispatcherCreate failed!" );
-		sceneDesc.cpuDispatcher = mCpuDispatcher;
-	}
-	if(!sceneDesc.filterShader)
-		sceneDesc.filterShader  = PxDefaultSimulationFilterShader;
-
-	 
-	
-	phxScene = pxPhysics->createScene(sceneDesc);
-	if (!phxScene)
-		runtime_error( "createScene failed!" );
-
-	phxScene->setVisualizationParameter(PxVisualizationParameter::eSCALE,				 1.0);
-	phxScene->setVisualizationParameter(PxVisualizationParameter::eCOLLISION_SHAPES,	1.0f);
-	
 	float h = (float)MyGame3DDevice::GetHeight();
 	float w = (float)MyGame3DDevice::GetWidth();
 	D3DXMatrixPerspectiveFovLH( &pMat, D3DX_PI*0.2f, w/h, 5.0f, 100.0f );//最后一个一开始是2000= =||
@@ -46,8 +22,8 @@ MyGameSceneManager::MyGameSceneManager(void)
 
 MyGameSceneManager::~MyGameSceneManager(void)
 {
-	mCpuDispatcher->release();
-	phxScene->release();
+	//mCpuDispatcher->release();
+	//phxScene->release();
 }
 D3DXMATRIX MyGameSceneManager::getViewProjCombinedMat()
 {

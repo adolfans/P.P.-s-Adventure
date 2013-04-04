@@ -1,12 +1,12 @@
-//////////////////////////
-//Ò»¸öMesh¶ÔÓ¦¶à¸öEntity
-//Ò»¸öEntityÖ»ÓÐÒ»¸ömesh
-//Ëµ°×ÁËEntityÖ»ÊÇmeshµÄÊµÀý
-//meshÃ»ÓÐEntity¾ÍºÁÎÞÒâÒå
-//Ö»ÓÐEntity²ÅÄÜ°Ñmesh»æÖÆ³öÀ´
-//»°ËµÎÒÔÚÕâÀïÐ´Ê²Ã´°¡»ìµ°¡£
-//Ò»¸öEntity¶ÔÓ¦Ò»¸önode
-//Ò»¸öEffectÀïÃæ±£´æÒ»¸öEntity List
+ï»¿//////////////////////////
+//ä¸€ä¸ªMeshå¯¹åº”å¤šä¸ªEntity
+//ä¸€ä¸ªEntityåªæœ‰ä¸€ä¸ªmesh
+//è¯´ç™½äº†Entityåªæ˜¯meshçš„å®žä¾‹
+//meshæ²¡æœ‰Entityå°±æ¯«æ— æ„ä¹‰
+//åªæœ‰Entityæ‰èƒ½æŠŠmeshç»˜åˆ¶å‡ºæ¥
+//è¯è¯´æˆ‘åœ¨è¿™é‡Œå†™ä»€ä¹ˆå•Šæ··è›‹ã€‚
+//ä¸€ä¸ªEntityå¯¹åº”ä¸€ä¸ªnode
+//ä¸€ä¸ªEffecté‡Œé¢ä¿å­˜ä¸€ä¸ªEntity List
 //////////////////////////
 
 #pragma once
@@ -30,5 +30,10 @@ namespace MyGameScene{
 		void render( MyGame3DEffect* _pEffect );
 		MyGameSceneNode* getNode();
 		void prepare();
+		bool intersectTest( const D3DXVECTOR3& rayPos, const D3DXVECTOR3& rayDir, float& dist );
+		void getBoundingBox( D3DXVECTOR3& _minPoint, D3DXVECTOR3& _maxPoint )
+		{
+			this->pMesh->getBoundingBox( _minPoint, _maxPoint );
+		}
 	};
 }

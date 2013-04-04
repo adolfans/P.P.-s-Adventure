@@ -47,12 +47,22 @@ VS_OUTPUT vertex_shader( float4 pos :POSITION0,
 	return output;
 }
 
-float4 ps_main(float3 lightVec: TEXCOORD0) : COLOR0
+struct PS_OUTPUT
+{
+	float4 c0 : COLOR0;
+	float4 c1 : COLOR1;
+};
+
+PS_OUTPUT ps_main(float3 lightVec: TEXCOORD0) //: COLOR0
 {   
 	//return float4(0,0,0,1.0f);
    //return tex2D( S0, tex );
    //return length( lightVec );
-   return float4(lightVec, 1.0f );
+   //return float4(lightVec, 1.0f );
+   PS_OUTPUT output;
+   output.c0 = float4( lightVec, 1.0f );//float4( 1.0f, 1.0f, 1.0f, 1.0 );
+   output.c1 = float4( lightVec, 1.0f );
+   return output;
 }
 
 technique main

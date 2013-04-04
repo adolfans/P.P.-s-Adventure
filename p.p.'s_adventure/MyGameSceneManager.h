@@ -31,16 +31,13 @@ private:
 	vector< MyGameSceneEntity * > entityList;
 	vector< MyGameCamera* >		cameraList; 
 	UnitOfLength unit;
-	PxDefaultCpuDispatcher*		mCpuDispatcher;
-	PxScene*					phxScene;
 	MyGameCamera*				currentCamera;
 	MyGameSceneNode*			root;
-	//IDirect3DSurface9*			screenSurface;
 public:
 	MyGameSceneManager(void);
 	~MyGameSceneManager(void);
 
-	/*static*/ MyGameSceneNode* CreateSceneNode( const char* name )
+	MyGameSceneNode* CreateSceneNode( const char* name )
 	{ return new MyGameSceneNode( name ); }//Yooooooooooo~
 
 	MyGameSceneNode*	getRootNode()
@@ -90,7 +87,6 @@ public:
 
 	/*static*/const D3DXMATRIX&  getLightViewProjMat();
 
-	PxScene*		getPhysXScene() { return phxScene; }
 
 	UnitOfLength getUnitOfLength()
 	{	return this->unit; }
@@ -119,7 +115,3 @@ public:
 	}
 };
 }
-
-void getNodeFromFbxNode( MyGameScene::MyGameSceneManager* sceneMgr, FbxNode* node, MyGameSceneNode* parentSceneNode, MyGame3DEffect* effect );
-
-void loadSceneFromFbx( MyGameScene::MyGameSceneManager* sceneMgr, const char* fileName, MyGameSceneNode* node, MyGame3DEffect* effect );

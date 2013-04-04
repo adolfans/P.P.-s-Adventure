@@ -15,6 +15,7 @@ using namespace CEGUI;
 #include "MyGamePointSprites.h"
 #include "MyGameSceneBillboardSet.h"
 #include "MyBarrageTransmitter.h"
+#include "MyGamePhysxScene.h"
 class Scene1
 {
 private:
@@ -67,6 +68,11 @@ private:
 	MyRenderTargetTexture*	mirrorTexture;
 	MyRenderTargetTexture*	shadowMap;
 	MyBarrageTransmitter*	testTransmitter;
+
+
+	MyGamePhysxScene*		physxScene;
+
+	MyGameSceneEntity* ballEnt;
 public:
 	Scene1(void);
 	virtual ~Scene1(void);

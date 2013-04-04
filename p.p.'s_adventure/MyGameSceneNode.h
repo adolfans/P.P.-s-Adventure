@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <d3dx9.h>
 #include <map>
 using std::map;
@@ -10,13 +10,13 @@ class MyGameSceneNode :
 {
 	friend class MyGameSceneManager;
 private:
-	// MyGameEffect* effect; //Èç¹û×Ó½ÚµãÉèÖÃÁËeffect£¬ÄÇÃ´ÒÔ×Ó½ÚµãµÄeffectÎªÓÅÏÈ£¬¸¸½ÚµãµÄeffectÍêÈ«Ê§Ğ§
-	bool ifRenderShadow;			//ÊÇ·ñ»æÖÆÓ°×Ó¡£Èç¹û²»»æÖÆµÄ»°£¬ÔÚÉú³Éshadow mapµÄ½×¶Î¾Í²»»æÖÆÕâ¸ö½Úµã
+	// MyGameEffect* effect; //å¦‚æœå­èŠ‚ç‚¹è®¾ç½®äº†effectï¼Œé‚£ä¹ˆä»¥å­èŠ‚ç‚¹çš„effectä¸ºä¼˜å…ˆï¼Œçˆ¶èŠ‚ç‚¹çš„effectå®Œå…¨å¤±æ•ˆ
+	bool ifRenderShadow;			//æ˜¯å¦ç»˜åˆ¶å½±å­ã€‚å¦‚æœä¸ç»˜åˆ¶çš„è¯ï¼Œåœ¨ç”Ÿæˆshadow mapçš„é˜¶æ®µå°±ä¸ç»˜åˆ¶è¿™ä¸ªèŠ‚ç‚¹
 	D3DXMATRIX	localMatrix;
 	D3DXMATRIX	combinedMatrix;
 
-	D3DXMATRIX  rotateMat;		//ÏÈÓ¦ÓÃrotate£¬ÔÙÓ¦ÓÃscale£¬ÔÙÓ¦ÓÃpos£¬Ó¦ÓÃµ½localÖĞÈ¥
-	D3DXMATRIX  scaleMat;		//Ò²¾ÍÊÇrotateMat*scaleMat*posMat
+	D3DXMATRIX  rotateMat;		//å…ˆåº”ç”¨rotateï¼Œå†åº”ç”¨scaleï¼Œå†åº”ç”¨posï¼Œåº”ç”¨åˆ°localä¸­å»
+	D3DXMATRIX  scaleMat;		//ä¹Ÿå°±æ˜¯rotateMat*scaleMat*posMat
 	D3DXMATRIX  posMat;
 
 	static map< string, MyGameSceneNode* > nodeMap; 
@@ -40,6 +40,7 @@ public:
 	virtual void rotateZ( float angle );
 
 	virtual void setPosition( float x, float y, float z );
+	void getPosition( float &x, float &y, float &z );
 
 	virtual void setRotateMatrix( const D3DXMATRIX& rotatemat );
 
