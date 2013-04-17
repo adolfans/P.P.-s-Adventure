@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include <d3d9.h>
+#include "MyGame3DEffect.h"
 #include "MyGameScene.h"
 class MyGameHelperGraphics
 {
@@ -23,7 +24,8 @@ private:
 	static vertex							axisText[3];
 	static IDirect3DTexture9*				xTexture;
 	static IDirect3DTexture9*				yTexture;
-	static IDirect3DTexture9*				zTexture;
+    static IDirect3DTexture9*				zTexture;
+
 public:
 	MyGameHelperGraphics(void);
 	~MyGameHelperGraphics(void);

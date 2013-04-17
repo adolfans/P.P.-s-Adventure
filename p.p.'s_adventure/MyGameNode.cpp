@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "MyGameNode.h"
 #include <exception>
 using std::runtime_error;
@@ -22,13 +22,13 @@ void MyGameNode::AddChild( MyGameNode* child )
 	{
 		MyGameNode* currentChild = pFirstChildNode;
 		if( currentChild == child )
-			throw runtime_error( "Ê÷ÖĞÒÑÓĞ¸Ã½Úµã£¬²»ÄÜÖØ¸´²åÈë£¡£¡" );
-		while( currentChild->pSiblingNode )//Èç¹ûºóÃæÓĞĞÖµÜ
+			throw runtime_error( "æ ‘ä¸­å·²æœ‰è¯¥èŠ‚ç‚¹ï¼Œä¸èƒ½é‡å¤æ’å…¥ï¼ï¼" );
+		while( currentChild->pSiblingNode )//å¦‚æœåé¢æœ‰å…„å¼Ÿ
 		{
 			currentChild = currentChild->pSiblingNode;
 			if( currentChild == child )
-				throw runtime_error( "Ê÷ÖĞÒÑÓĞ¸Ã½Úµã£¬²»ÄÜÖØ¸´²åÈë£¡£¡" );
-		}//µ±ºóÃæÃ»ĞÖµÜµÄÊ±ºò
+				throw runtime_error( "æ ‘ä¸­å·²æœ‰è¯¥èŠ‚ç‚¹ï¼Œä¸èƒ½é‡å¤æ’å…¥ï¼ï¼" );
+		}//å½“åé¢æ²¡å…„å¼Ÿçš„æ—¶å€™
 		currentChild->pSiblingNode = child;
 	}
 }
@@ -50,11 +50,11 @@ void MyGameNode::BreakOutChildLink( MyGameNode* child )
 					pChild = pChild->pSiblingNode;
 			}
 			if( pChild->pSiblingNode == 0 )				
-				throw runtime_error( "½Úµã"+this->nodeName+"Ã»ÓĞÕâ¸ö×Ó½Úµã£¡£¡" );
+				throw runtime_error( "èŠ‚ç‚¹"+this->nodeName+"æ²¡æœ‰è¿™ä¸ªå­èŠ‚ç‚¹ï¼ï¼" );
 		}
 	}
 	else
 	{
-		throw runtime_error( "½Úµã"+this->nodeName+"Ã»ÓĞÕâ¸ö×Ó½Úµã£¡£¡" );
+		throw runtime_error( "èŠ‚ç‚¹"+this->nodeName+"æ²¡æœ‰è¿™ä¸ªå­èŠ‚ç‚¹ï¼ï¼" );
 	}
 }

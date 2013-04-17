@@ -54,6 +54,14 @@ public:
 		entityList.push_back( newEnt );
 		return newEnt;
 	}
+
+    MyGameSceneEntity* CreateSceneEntity( MyGameMesh* _pMesh, MyGameSceneNode* node)
+    {
+        MyGameSceneEntity* newEntity = new MyGameSceneEntity( _pMesh, "aaa", node, this  );
+        entityList.push_back( newEntity );
+        return newEntity;
+    }
+
 	void setMirrorReflectionMatrix( const D3DXMATRIX& mat )
 	{
 		mirrorReflectionMatrix = mat;

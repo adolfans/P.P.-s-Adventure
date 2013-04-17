@@ -166,7 +166,8 @@ void MyGameHelperGraphics::draw( MyGameScene::MyGameSceneManager* sceneMgr )
 		device->SetTransform( D3DTS_PROJECTION, &sceneMgr->getProjMat() );
 		device->SetTransform( D3DTS_VIEW, &sceneMgr->getViewMat() );
         device->SetRenderState( D3DRS_LIGHTING, false );
-		device->SetRenderState( D3DRS_SHADEMODE, D3DSHADE_FLAT );
+        //device->SetRenderState( D3DRS_SHADEMODE, D3DSHADE_GOURAUD );
+        device->SetTexture(0 ,  NULL);
         device->SetFVF( vertexFVF );
         device->SetRenderState( D3DRS_ALPHABLENDENABLE, 0 ); // 关闭blend
 	}
@@ -184,7 +185,7 @@ void MyGameHelperGraphics::draw( MyGameScene::MyGameSceneManager* sceneMgr )
 											( maxPoint.y + minPoint.y ) / 2.0f,
 											( maxPoint.z + minPoint.z ) / 2.0f );
 
-		D3DXMATRIX combinedTranslation = scaleMat * transMat * boxEntity->getNode()->getCombinedMatrix();
+        D3DXMATRIX combinedTranslation = scaleMat * transMat * boxEntity->getNode()->getCombinedMatrix();
 		device->SetTransform( D3DTS_WORLD, &combinedTranslation );
 		device->SetIndices( boxIndexBuffer );
 		device->SetStreamSource( 0, boxVertexBuffer, 0, sizeof(vertex) );
@@ -212,7 +213,7 @@ void MyGameHelperGraphics::draw( MyGameScene::MyGameSceneManager* sceneMgr )
 		{
 			if( i == 0 )
 			{
-				TranslateVector( 1.0, 0.0, 0.0, axisNode->getCombinedMatrix(), x[i], y[i], z[i] );//缩放并旋转
+				TranslateVector( 1.0, 0.0, 0.0, axisNode->getCombinedMatrix(), x[i], y[i], z[i] );
 			}else if( i == 1 )
 			{
 				TranslateVector( 0.0, 1.0, 0.0, axisNode->getCombinedMatrix(), x[i], y[i], z[i] );
@@ -224,7 +225,7 @@ void MyGameHelperGraphics::draw( MyGameScene::MyGameSceneManager* sceneMgr )
 
 			x[i] /=len;
 			y[i] /=len;
-			z[i] /=len;//得到了旋转以后的结果
+			z[i] /=len;
 			x[i] *=5.0f;
 			y[i] *=5.0f;
 			z[i] *=5.0f;
@@ -296,8 +297,10 @@ void MyGameHelperGraphics::disableAxis()
 
 void MyGameHelperGraphics::drawAxisText()
 {
+	
 	IDirect3DDevice9* device= MyGame3DDevice::GetSingleton()->GetDevice();
-
+	
+	
 	D3DXMATRIX idMat;
 	D3DXMatrixIdentity( &idMat );
 
@@ -305,21 +308,21 @@ void MyGameHelperGraphics::drawAxisText()
 	device->SetTransform( D3DTS_VIEW, &idMat );
 	device->SetTransform( D3DTS_WORLD, &idMat );
 
-	//设置blend状态
-	device->SetRenderState( D3DRS_ALPHABLENDENABLE, TRUE ); // 开启Blend
-	device->SetRenderState( D3DRS_SRCBLENDALPHA, D3DBLEND_INVDESTALPHA );
-	device->SetRenderState( D3DRS_SRCBLEND, D3DBLEND_SRCALPHA );
-	device->SetRenderState( D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA );
-	device->SetRenderState( D3DRS_DESTBLENDALPHA, D3DBLEND_ONE );
 
-	//设置点精灵状态
-	device->SetRenderState(D3DRS_POINTSPRITEENABLE, TRUE) ;
-	device->SetRenderState(D3DRS_POINTSCALEENABLE, true) ;
+    device->SetRenderState( D3DRS_ALPHABLENDENABLE, TRUE ); // 开启Blend
+    //device->SetRenderState( D3DRS_SEPARATEALPHABLENDENABLE, TRUE );
+    device->SetRenderState( D3DRS_SRCBLENDALPHA, D3DBLEND_INVDESTALPHA );
+    device->SetRenderState( D3DRS_SRCBLEND, D3DBLEND_SRCALPHA );
+    device->SetRenderState( D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA );
+    device->SetRenderState( D3DRS_DESTBLENDALPHA, D3DBLEND_ONE );
+
+    device->SetRenderState(D3DRS_POINTSPRITEENABLE, TRUE) ;
+    device->SetRenderState(D3DRS_POINTSCALEENABLE, true) ;
 	float pointSize = 0.025f;//000;
-	device->SetRenderState( D3DRS_POINTSIZE, *((DWORD*)&pointSize )); // 点大小
+    device->SetRenderState( D3DRS_POINTSIZE, *((DWORD*)&pointSize )); // 点大小
 
-	//禁用光照禁用z buffer
-	device->SetRenderState( D3DRS_LIGHTING, FALSE );
+
+    device->SetRenderState( D3DRS_LIGHTING, FALSE );
 	device->SetRenderState( D3DRS_ZENABLE, false );
 	device->SetRenderState( D3DRS_ZWRITEENABLE, false );
 
@@ -382,7 +385,7 @@ void MyGameHelperGraphics::activeAxis( int i )
 		destVertices[0].color = 0xFFFFFF00;
 		destVertices[1].color = 0xFFFFFF00;
 		break;
-	case 3://z
+	case 3:
 		destVertices[4].color = 0xFFFFFF00;
 		destVertices[5].color = 0xFFFFFF00;
 		break;

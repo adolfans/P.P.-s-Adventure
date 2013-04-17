@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "MyGameCamera.h"
 
 
@@ -8,7 +8,7 @@ MyGameCamera::MyGameCamera(float eyeX, float eyeY, float eyeZ,
 	position.x = eyeX;
 	position.y = eyeY;
 	position.z = eyeZ;
-	D3DXVECTOR3 eye( eyeX, eyeY, eyeZ );	//×îºóÒ»¸öÊýÒ»¿ªÊ¼ÊÇ-20= =||
+	D3DXVECTOR3 eye( eyeX, eyeY, eyeZ );	//æœ€åŽä¸€ä¸ªæ•°ä¸€å¼€å§‹æ˜¯-20= =||
 	//D3DXVECTOR3 eye( -40.0f, 10.0f, 10.0f );
 	// 0.0f 10.f, 40.0f
 	D3DXVECTOR3 target( targetX, targetY ,targetZ );
@@ -51,8 +51,8 @@ const D3DXMATRIX& MyGameCamera::getViewMatrix()
 
 void MyGameCamera::setPosition( float _x, float _y, float _z )
 {
-	//TODO: ÐèÒª¸ù¾Ýlooking vector¼ÆËãÏà»úÄ¿±êµãµÄÎ»ÖÃ£¬È»ºóÔÙÉú³Éview matrix
-	//Î´Íê³É×¢Òâ£¡
+	//TODO: éœ€è¦æ ¹æ®looking vectorè®¡ç®—ç›¸æœºç›®æ ‡ç‚¹çš„ä½ç½®ï¼Œç„¶åŽå†ç”Ÿæˆview matrix
+	//æœªå®Œæˆæ³¨æ„ï¼
 
 	this->position.x = _x;
 	position.y = _y;
@@ -61,7 +61,7 @@ void MyGameCamera::setPosition( float _x, float _y, float _z )
 
 void MyGameCamera::setTargetPosition( D3DXVECTOR3 target )
 {
-	//¸ù¾Ý±ÈÀý±ä»»£¬»ò½«¸ü¸Ä
+	//æ ¹æ®æ¯”ä¾‹å˜æ¢ï¼Œæˆ–å°†æ›´æ”¹
 	target = this->sceneMgr->sceneLengthToNormalLength( target );
 	this->position = target - lookingVector;
 	D3DXVECTOR3 up( 0.0f, 1.0f, 0.0f );

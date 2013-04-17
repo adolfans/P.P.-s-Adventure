@@ -146,7 +146,6 @@ void MyGameMesh::createPlaneXZ( float width, float height )
 
 void MyGameMesh::render( MyGame3DEffect* pEffect )
 {
-	IDirect3DDevice9* pDevice = MyGame3DDevice::GetSingleton()->GetDevice();
 	{
 		for( int i = 0; i < Mtrls.size(); i++ )
 		{
@@ -261,7 +260,7 @@ physx::PxTriangleMesh* MyGameMesh::generatePxTriangleMesh(  )
 	ID3DXMesh* newMesh;
 	IDirect3DDevice9* pDevice = MyGame3DDevice::GetSingleton()->GetDevice();
 	this->pDXMesh->CloneMeshFVF( D3DXMESH_32BIT|D3DXMESH_DYNAMIC, D3DFVF_XYZ, pDevice, &newMesh );
-	
+
 	float* srcVertices;
 	newMesh->LockVertexBuffer( 0, (void**)&srcVertices );
 	float* vertices = new float[ newMesh->GetNumVertices()*3 ];//一个点有x, y, z三个数值，所以乘以三
@@ -283,13 +282,13 @@ physx::PxTriangleMesh* MyGameMesh::generatePxTriangleMesh(  )
 	meshDesc.triangles.data = destIndices;
 
 	PxToolkit::MemoryOutputStream writeBuffer;
-	
+
 	MyGame3DDevice* pdevice = MyGame3DDevice::GetSingleton();
 	PxCooking* cooking = pdevice->getPhysXCooking();
 	PxPhysics* physics = pdevice->getPhysX();
 
 	bool status = (*cooking).cookTriangleMesh(meshDesc, writeBuffer);
-	
+
 	if(!status)
 		//return NULL;
 		throw runtime_error( "cooktriangleMesh failed" );

@@ -5,7 +5,7 @@
 #include "MyGameMesh.h"
 namespace MyGameScene{
 	MyGameSceneEntity::MyGameSceneEntity(MyGameMesh* _pMesh, const char* entName, MyGameSceneNode* node, MyGameSceneManager* sMgr )
-		:pNode( node ), sceneMgr( sMgr )
+        :pNode( node ), sceneMgr( sMgr ), visible( true )
 	{
 		//pNode = new MyGameSceneNode( entName );
 		pMesh = _pMesh;
@@ -19,6 +19,8 @@ namespace MyGameScene{
 	}
 	void MyGameSceneEntity::render( MyGame3DEffect* _pEffect )
 	{
+        if( !visible )
+            return;
 		_pEffect->setMatrixByName( pNode->getCombinedMatrix()* sceneMgr->getViewProjCombinedMat(),
 									MyGame3DEffect::WVPMATRIX );
 
@@ -36,13 +38,25 @@ namespace MyGameScene{
 		return pNode;
 	}
 
+    MyGameMesh*      MyGameSceneEntity::getMesh()
+    {
+        return pMesh;
+    }
+
 	void MyGameSceneEntity::prepare()
 	{
 		pMesh->prepare();
 	}
 
+    void MyGameSceneEntity::setVisible(bool _visible)
+    {
+        this->visible = _visible;
+    }
+
 	bool MyGameSceneEntity::intersectTest( const D3DXVECTOR3& rayPos, const D3DXVECTOR3& rayDir, float& dist )
 	{
+        if( !visible )
+            return false;   //物体不可见，直接返回false
 		D3DXMATRIX inversedMat;
 
 		D3DXMatrixInverse( &inversedMat, NULL, &pNode->getCombinedMatrix() );
@@ -64,6 +78,7 @@ namespace MyGameScene{
 		dir.z = rayDir.x * inversedMat._13 + rayDir.y * inversedMat._23 + rayDir.z * inversedMat._33 + 0.0 * inversedMat._43;
 		//float w = rayPos.x * inversedMat._14 + rayPos.y * inversedMat._24 + rayPos.z * inversedMat._34 + 1.0 * inversedMat._44;
 
+        D3DXVec3Normalize( &dir, &dir);
 
 		if( pMesh->intersectTest( pos, dir, dist ) ) 
 		{

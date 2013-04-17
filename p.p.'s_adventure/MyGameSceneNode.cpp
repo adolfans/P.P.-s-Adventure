@@ -9,7 +9,7 @@ namespace MyGameScene{
 	map<string, MyGameSceneNode*> MyGameSceneNode::nodeMap;
 
 MyGameSceneNode::MyGameSceneNode(const char* name):
-MyGameNode( name )
+    MyGameNode( name ), angleX(0), angleY(0), angleZ(0)
 {
 	D3DXMatrixIdentity( &localMatrix );
 	D3DXMatrixIdentity( &combinedMatrix );
@@ -74,6 +74,7 @@ void MyGameSceneNode::scale( float x, float y, float z )
 
 void MyGameSceneNode::rotateX( float angle )
 {
+    angleX = +angle;
 	D3DXMATRIX nscMat;
 	D3DXMatrixRotationX( &nscMat, angle );
 	rotateMat*=nscMat;
@@ -81,6 +82,7 @@ void MyGameSceneNode::rotateX( float angle )
 }
 void MyGameSceneNode::rotateY( float angle )
 {
+    angleY = +angle;
 	D3DXMATRIX nscMat;
 	D3DXMatrixRotationY( &nscMat, angle );
 	rotateMat*=nscMat;
@@ -88,6 +90,7 @@ void MyGameSceneNode::rotateY( float angle )
 }
 void MyGameSceneNode::rotateZ( float angle )
 {
+    angleZ = +angle;
 	D3DXMATRIX nscMat;
 	D3DXMatrixRotationZ( &nscMat, angle );
 	rotateMat*=nscMat;
@@ -102,6 +105,7 @@ void MyGameSceneNode::setRotateMatrix( const D3DXMATRIX& rotatemat )
 
 void MyGameSceneNode::setRotationAngleY( float angle )
 {
+    angleY = angle;
 	D3DXMATRIX nscMat;
 	D3DXMatrixRotationY( &nscMat, angle );
 	rotateMat = nscMat;
@@ -142,6 +146,28 @@ void MyGameSceneNode::destroyAllNodes( )
 	{
 		x = this->posMat._41;
 		y = this->posMat._42;
-		z = this->posMat._43;
+        z = this->posMat._43;
 	}
+
+    void MyGameSceneNode::getScale(float &x, float &y, float &z)
+    {
+        x = this->scaleMat._11;
+        y = this->scaleMat._22;
+        z = this->scaleMat._33;
+    }
+
+    void MyGameSceneNode::setScale(float x, float y, float z )
+    {
+        this->scaleMat._11 = x;
+        this->scaleMat._22 = y;
+        this->scaleMat._33 = z;
+        localMatrix = scaleMat*rotateMat*posMat;
+    }
+
+    void MyGameSceneNode::getRotation(float &angleX, float &angleY, float &angleZ)
+    {
+        angleX = this->angleX;
+        angleY = this->angleY;
+        angleZ = this->angleZ;
+    }
 }

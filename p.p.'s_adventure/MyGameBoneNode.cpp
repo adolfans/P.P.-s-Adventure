@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "MyGameBoneNode.h"
 
 #include <exception>
@@ -33,7 +33,7 @@ MyGameBoneNode::MyGameBoneNode(const char* nodeName, bool _mangdByDXAllocHrc)
 MyGameBoneNode::~MyGameBoneNode(void)
 {
 	//if( mangdByDXAllocHrc )
-	//Í³Ò»ÓÉMyGameSceneNodeÏú»Ù
+	//ç»Ÿä¸€ç”±MyGameSceneNodeé”€æ¯
 	{
 		if( Name != 0 && strlen(Name) >= 0 )
 			delete[] this->Name;
@@ -57,8 +57,8 @@ void MyGameBoneNode::ComputeCombinedMatrix( const D3DXMATRIX& parentMat )
 		MyGameBoneNode* my = static_cast<MyGameBoneNode*>(pSiblingBoneNode);
 		my->ComputeCombinedMatrix( parentMat );
 	}
-	//Èç¹û×Ó½ÚµãÊÇ¸öscene node½Úµã»òÕßÓÐ×÷Îªscene nodeµÄ×Ó½Úµã
-	//ÃÈ´óÄÌ£¡£¡
+	//å¦‚æžœå­èŠ‚ç‚¹æ˜¯ä¸ªscene nodeèŠ‚ç‚¹æˆ–è€…æœ‰ä½œä¸ºscene nodeçš„å­èŠ‚ç‚¹
+	//èŒå¤§å¥¶ï¼ï¼
 	if( this->getFirstChild() )
 	{
 		this->getFirstChild()->ComputeCombinedMatrix( this->getCombinedMatrix() );

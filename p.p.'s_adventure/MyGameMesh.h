@@ -104,7 +104,7 @@ public:
 
 	virtual void prepare();
 
-	physx::PxTriangleMesh* generatePxTriangleMesh(  );
+	physx::PxTriangleMesh* generatePxTriangleMesh();
 
 	bool	intersectTest( const D3DXVECTOR3& rayPos, const D3DXVECTOR3& rayDir, float& dist )
 	{

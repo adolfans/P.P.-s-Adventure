@@ -19,17 +19,17 @@ private:
 	D3DXMATRIX  scaleMat;		//也就是rotateMat*scaleMat*posMat
 	D3DXMATRIX  posMat;
 
+    float angleX, angleY, angleZ;
+
 	static map< string, MyGameSceneNode* > nodeMap; 
 protected:
-	MyGameSceneNode( const char* name );
+    MyGameSceneNode(const char *name );
 	virtual ~MyGameSceneNode(void);
 public:
 
-	virtual void SetLocalMatrix( D3DXMATRIX& mat ){ localMatrix = mat; }
+    virtual void SetLocalMatrix( D3DXMATRIX& mat ){ localMatrix = mat; }
 
 	virtual const D3DXMATRIX& getCombinedMatrix(){ return combinedMatrix; }
-	
-	
 	
 	virtual void ComputeCombinedMatrix( const D3DXMATRIX& parentMat );
 	
@@ -41,8 +41,11 @@ public:
 
 	virtual void setPosition( float x, float y, float z );
 	void getPosition( float &x, float &y, float &z );
+    void getScale( float &x, float &y, float &z );
+    void setScale( float x, float y, float z );
+    void getRotation( float &angleX, float &angleY, float &angleZ );
 
-	virtual void setRotateMatrix( const D3DXMATRIX& rotatemat );
+    virtual void setRotateMatrix( const D3DXMATRIX& rotatemat );
 
 	virtual void setRotationAngleY( float angle );
 

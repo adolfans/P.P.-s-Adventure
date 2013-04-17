@@ -22,15 +22,19 @@ namespace MyGameScene{
 		MyGameSceneManager* sceneMgr;
 		MyGameSceneNode* pNode;
 		MyGameMesh* pMesh;
+        bool        visible;
 		MyGameSceneEntity( MyGameMesh* _pMesh, const char* entName, MyGameSceneNode* node, MyGameSceneManager* sMgr );
 		//MyGameSceneEntity( SkinnedMesh* _pSkinnedMesh, const char* entName, MyGameSceneNode* node, MyGameSceneManager* sMgr );
 		virtual ~MyGameSceneEntity(void);
 
+
 	public:
 		void render( MyGame3DEffect* _pEffect );
 		MyGameSceneNode* getNode();
+        MyGameMesh*      getMesh();
 		void prepare();
 		bool intersectTest( const D3DXVECTOR3& rayPos, const D3DXVECTOR3& rayDir, float& dist );
+        void setVisible(bool _visible );
 		void getBoundingBox( D3DXVECTOR3& _minPoint, D3DXVECTOR3& _maxPoint )
 		{
 			this->pMesh->getBoundingBox( _minPoint, _maxPoint );

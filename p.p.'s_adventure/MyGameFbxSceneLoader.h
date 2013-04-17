@@ -4,6 +4,7 @@
 #include "MyGameSceneManager.h"
 
 #include "MyGameSceneEntity.h"
+#include "mygamescenecontainer.h"
 #include <vector>
 using std::vector;
 class MyGameFbxSceneLoader
@@ -21,6 +22,18 @@ public:
 							MyGameSceneNode* node,
 							vector<MyGameSceneEntity*>& entityList  );
 	
+    static void getNodeFromFbxNode(MyGameSceneManager *sceneMgr,
+                                   FbxNode *node,
+                                   MyGameSceneNode *parentSceneNode,
+                                   MyGameSceneContainer& container,
+                                   const string& prefix);
+
+
+    static void loadSceneFromFbx(MyGameSceneManager *sceneMgr,
+                                 const string &fileName,
+                                 const string &prefix,
+                                 MyGameSceneContainer& container);
+
 };
 
 #endif

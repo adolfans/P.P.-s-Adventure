@@ -1,8 +1,8 @@
-#pragma once
+ï»¿#pragma once
 #include <string>
 using std::string;
 #include <d3dx9.h>
-//ÊÇ·ñĞèÒªÊµÏÖÒ»¸öµü´úÆ÷£¿
+//æ˜¯å¦éœ€è¦å®ç°ä¸€ä¸ªè¿­ä»£å™¨ï¼Ÿ
 class MyGameNode
 {
 private:

@@ -125,6 +125,7 @@ copy mesh.fx ..\Debug</Command>
     <ClInclude Include="..\p.p.%27s_adventure\MyGamePhysxScene.h" />
     <ClInclude Include="..\p.p.%27s_adventure\MyGamePointSprites.h" />
     <ClInclude Include="..\p.p.%27s_adventure\MyGameSceneBillboardSet.h" />
+    <ClInclude Include="..\p.p.%27s_adventure\mygamescenecontainer.h" />
     <ClInclude Include="..\p.p.%27s_adventure\MyPlayerRole.h" />
     <ClInclude Include="..\p.p.%27s_adventure\MyRenderTargetTexture.h" />
     <ClInclude Include="..\p.p.%27s_adventure\MySceneWater.h" />
@@ -175,6 +176,7 @@ copy mesh.fx ..\Debug</Command>
     <ClCompile Include="..\p.p.%27s_adventure\MyGamePhysxScene.cpp" />
     <ClCompile Include="..\p.p.%27s_adventure\MyGamePointSprites.cpp" />
     <ClCompile Include="..\p.p.%27s_adventure\MyGameSceneBillboardSet.cpp" />
+    <ClCompile Include="..\p.p.%27s_adventure\mygamescenecontainer.cpp" />
     <ClCompile Include="..\p.p.%27s_adventure\MyPlayerRole.cpp" />
     <ClCompile Include="..\p.p.%27s_adventure\MyRenderTargetTexture.cpp" />
     <ClCompile Include="..\p.p.%27s_adventure\MySceneWater.cpp" />
