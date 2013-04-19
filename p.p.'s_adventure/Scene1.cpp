@@ -150,7 +150,7 @@ Scene1::Scene1(void):
 
 	//必须打开那啥编译选项
 	loli = dynamic_cast<SkinnedMesh*>(MyGameMeshManager::createMyGameMesh( MyGameMeshManager::SKINNED ));
-	loli->loadFromX( sceneMgr );
+	loli->loadFromX( sceneMgr, "aaaaaaa.X" );
 	loliEnt = sceneMgr->CreateSceneEntity( loli, "testLoli" );
 	sceneRoot->attachEntity( loliEnt );
 	pGenShadowMapEffect->AddEntity( loliEnt );

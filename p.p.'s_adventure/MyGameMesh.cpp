@@ -3,6 +3,7 @@
 #include "MyGameMesh.h"
 #include "MyGameSceneManager.h"
 #include "MyGame3DDevice.h"
+#include "MyResourceManager.h"
 #include <PxToolkit.h>
 #include <exception>
 using std::runtime_error;
@@ -12,6 +13,8 @@ using std::runtime_error;
 #else
 #pragma comment( lib, "fbxsdk-2013.1-md.lib" )
 #endif
+
+string textureDirectory = "textures/";
 
 MyGameMesh::MyGameMesh()
 	:pDXMesh(0), adjBuffer(0), extraTexture(0)
@@ -33,7 +36,7 @@ MyGameMesh::~MyGameMesh(void)
 	IRelease( extraTexture );
 }
 
-void MyGameMesh::loadMeshFromXFile( const char* fileName )
+void MyGameMesh::loadMeshFromXFile( const string& fileName )
 {
 	if( pDXMesh )
 		throw runtime_error( "此Entity已经加载了XFile" );
@@ -43,7 +46,9 @@ void MyGameMesh::loadMeshFromXFile( const char* fileName )
 
 	DWORD numMtrls = 0;
 
-	HR( D3DXLoadMeshFromXA( fileName,
+	string relativePath = "xfiles/" + fileName;
+
+	HR( D3DXLoadMeshFromXA( relativePath.c_str(),
 						D3DXMESH_MANAGED,
 						pDevice,
 						&adjBuffer,
@@ -64,10 +69,11 @@ void MyGameMesh::loadMeshFromXFile( const char* fileName )
 			
 			if( mtrls[i].pTextureFilename != 0 )
 			{
+				string relativePath = string("textures/") + mtrls[i].pTextureFilename;
 				IDirect3DTexture9* tex = 0;
 				HR(D3DXCreateTextureFromFileA(
 					pDevice,
-					mtrls[i].pTextureFilename,
+					relativePath.c_str(),
 					&tex ));
 
 				Textures.push_back( tex );
@@ -167,7 +173,9 @@ void MyGameMesh::createTexture( const char* fileName, unsigned int num )
 {
 	IDirect3DDevice9* pDevice = MyGame3DDevice::GetSingleton()->GetDevice();
 	IDirect3DTexture9* texture;
-	HR( D3DXCreateTextureFromFileA( pDevice, fileName, &texture) );
+	string relativeDir = string( textureDirectory ) + fileName;
+	//HR( D3DXCreateTextureFromFileA( pDevice, relativeDir.c_str(), &texture) );
+	texture = MyResourceManager::loadTexture( fileName );
 	D3DMATERIAL9 mtrl;
 	memset( &mtrl, 0, sizeof(D3DMATERIAL9) );
 	mtrl.Diffuse.r = 1.0f;
@@ -189,9 +197,9 @@ void MyGameMesh::createTexture( const char* fileName, unsigned int num )
 void MyGameMesh::createExtraTexture( const char* fileName )
 {
 	IDirect3DDevice9* pDevice = MyGame3DDevice::GetSingleton()->GetDevice();
-	
-	HR( D3DXCreateTextureFromFileA( pDevice, fileName, &this->extraTexture) );
-	
+	string relativeDir = textureDirectory + fileName;
+	//HR( D3DXCreateTextureFromFileA( pDevice, relativeDir.c_str(), &this->extraTexture) );
+	this->extraTexture = MyResourceManager::loadTexture( fileName );
 }
 struct bmpHeader{
 	unsigned int	bfSize;		//4 bytes
@@ -331,7 +339,7 @@ struct meshVertex{
 	float nx, ny, nz;
 	float u, v;
 };
-void MyGameMesh::loadMeshFromFbxFile( const char* fileName )
+void MyGameMesh::loadMeshFromFbxFile( const string& fileName )
 {
 	FbxManager* fbxMgr = 0;
 	FbxScene*	fbxScene = 0;
@@ -349,7 +357,10 @@ void MyGameMesh::loadMeshFromFbxFile( const char* fileName )
 	fbxScene = FbxScene::Create( fbxMgr, "MyScene");
 
 	FbxImporter* importer = FbxImporter::Create( fbxMgr, "" );
-	importer->Initialize( fileName, -1, fbxMgr->GetIOSettings() );
+
+	string relativePath = "fbxfiles/" + fileName;
+
+	importer->Initialize( relativePath.c_str(), -1, fbxMgr->GetIOSettings() );
 	importer->Import( fbxScene );
 	importer->Destroy();
 	fbxIOSetting->Destroy();
@@ -540,7 +551,7 @@ void MyGameMesh::loadMeshFromFbxNodeAttribute( FbxNodeAttribute* attr )
 	this->generateBoundingBox();
 }
 
-IDirect3DTexture9* MyGameMesh::createTextureFromFile( const char* fileName )
+IDirect3DTexture9* MyGameMesh::createTextureFromFile( const char* fileName )//这是读取fbx中的texture时调用的函数，不必切换路径
 {
 	IDirect3DTexture9* texture;
 	HR(D3DXCreateTextureFromFileA( this->pDevice,

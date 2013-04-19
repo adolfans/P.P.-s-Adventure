@@ -75,11 +75,8 @@
       </StackReserveSize>
     </Link>
     <PreBuildEvent>
-      <Command>fxc /T fx_2_0 /Fo newMesh.fxo newMesh.fx
-fxc /T fx_2_0 /Fo shadowmapping.fxo shadowmapping.fx
-fxc /T fx_2_0 /Fo scene.fxo scene.fx
-copy mesh.fxo ..\Debug
-copy mesh.fx ..\Debug</Command>
+      <Command>
+      </Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -128,6 +125,7 @@ copy mesh.fx ..\Debug</Command>
     <ClInclude Include="..\p.p.%27s_adventure\mygamescenecontainer.h" />
     <ClInclude Include="..\p.p.%27s_adventure\MyPlayerRole.h" />
     <ClInclude Include="..\p.p.%27s_adventure\MyRenderTargetTexture.h" />
+    <ClInclude Include="..\p.p.%27s_adventure\MyResourceManager.h" />
     <ClInclude Include="..\p.p.%27s_adventure\MySceneWater.h" />
     <ClInclude Include="..\p.p.%27s_adventure\MyShadowMap.h" />
     <ClInclude Include="..\p.p.%27s_adventure\OggPlayer.h" />
@@ -179,6 +177,7 @@ copy mesh.fx ..\Debug</Command>
     <ClCompile Include="..\p.p.%27s_adventure\mygamescenecontainer.cpp" />
     <ClCompile Include="..\p.p.%27s_adventure\MyPlayerRole.cpp" />
     <ClCompile Include="..\p.p.%27s_adventure\MyRenderTargetTexture.cpp" />
+    <ClCompile Include="..\p.p.%27s_adventure\MyResourceManager.cpp" />
     <ClCompile Include="..\p.p.%27s_adventure\MySceneWater.cpp" />
     <ClCompile Include="..\p.p.%27s_adventure\MyShadowMap.cpp" />
     <ClCompile Include="..\p.p.%27s_adventure\OggPlayer.cpp" />

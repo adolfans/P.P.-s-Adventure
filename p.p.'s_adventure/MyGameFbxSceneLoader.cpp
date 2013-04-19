@@ -3,6 +3,7 @@
 #include <sstream>
 using std::stringstream;
 
+
 MyGameFbxSceneLoader::MyGameFbxSceneLoader(void)
 {
 }
@@ -58,6 +59,7 @@ void MyGameFbxSceneLoader::loadSceneFromFbx( MyGameScene::MyGameSceneManager* sc
 
 	FbxScene* fbxScene = FbxScene::Create( fbxMgr, "test" );
 	FbxImporter* importer = FbxImporter::Create( fbxMgr, "" );
+
 	importer->Initialize( fileName.c_str(), -1, fbxMgr->GetIOSettings() );
 	importer->Import( fbxScene );
 	fbxIO->Destroy();

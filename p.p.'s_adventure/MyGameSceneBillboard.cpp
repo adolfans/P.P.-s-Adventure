@@ -1,6 +1,7 @@
 #include "StdAfx.h"
 #include "MyGameSceneBillboard.h"
 #include "MyGameSceneManager.h"
+#include "MyResourceManager.h"
 #include <sstream>
 
 namespace MyGameScene{
@@ -84,8 +85,8 @@ void MyGameSceneBillboard::CreateTextureFromFile(unsigned int texId, const char*
 {
 	IDirect3DDevice9* pDevice = MyGame3DDevice::GetSingleton()->GetDevice();
 	IDirect3DTexture9* _pTex;
-	D3DXCreateTextureFromFileA( pDevice, _fileName, &_pTex ); 
-
+	//D3DXCreateTextureFromFileA( pDevice, _fileName, &_pTex ); 
+	_pTex = MyResourceManager::loadTexture( _fileName );
 	if( texList.count( texId ) )//如果已经有了
 	{
 		this->texList[texId]->Release();

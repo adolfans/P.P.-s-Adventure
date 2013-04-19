@@ -11,9 +11,10 @@ MyGameLevelMainMenu::MyGameLevelMainMenu(void)
 	MyGame3DDevice::GetSingleton()->GetDevice();
 
 	//编译effect
-	HR( D3DXCreateEffectFromFile( pD3D9InstanceDevice, L"effect.fx", 0, 0, 0, 0, &pBloomEffect, 0 ) );
 	
-	HR( D3DXCreateEffectFromFile( pD3D9InstanceDevice, L"transform.fx", 0, 0, 0, 0, &pTransformEffect, 0 ) );
+	HR( D3DXCreateEffectFromFile( pD3D9InstanceDevice, L"effect/effect.fx", 0, 0, 0, 0, &pBloomEffect, 0 ) );
+	
+	HR( D3DXCreateEffectFromFile( pD3D9InstanceDevice, L"effect/transform.fx", 0, 0, 0, 0, &pTransformEffect, 0 ) );
 
 	//创建顶点声明
 	D3DVERTEXELEMENT9 decl[]=
@@ -58,7 +59,7 @@ MyGameLevelMainMenu::MyGameLevelMainMenu(void)
 	//HR( pD3D9InstanceDevice->CreateTexture( 800, 600, 1, D3DX_DEFAULT, D3DFMT_INDEX16, D3DPOOL_MANAGED, &pBgTexture, 0 ) );
 
 	//创建背景贴图    
-	HR( D3DXCreateTextureFromFile( pD3D9InstanceDevice, L"ys_s 2012-10-08 15-22-18-67.bmp", &pBgTexture ) ); 
+	HR( D3DXCreateTextureFromFile( pD3D9InstanceDevice, L"textures/ys_s 2012-10-08 15-22-18-67.bmp", &pBgTexture ) ); 
 
 	HR( pD3D9InstanceDevice->CreateTexture( MyGame3DDevice::GetWidth(),
 											MyGame3DDevice::GetHeight(),
@@ -256,7 +257,7 @@ MyGameLevelMainMenu::MyGameLevelMainMenu(void)
 MyGameLevelMainMenu::~MyGameLevelMainMenu(void)
 {
 	using namespace CEGUI;
-	HR( D3DXSaveTextureToFile( L"囧.png",D3DXIFF_PNG,pPass1RenderTarget, NULL ) );
+	//HR( D3DXSaveTextureToFile( L"tmp/囧.png",D3DXIFF_PNG,pPass1RenderTarget, NULL ) );
 	this->pBgTexture->Release();
 	this->pPass1RenderTarget->Release();
 	this->pPass1RenderTargetSurface->Release();

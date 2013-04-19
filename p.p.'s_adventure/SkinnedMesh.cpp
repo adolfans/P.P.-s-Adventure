@@ -163,7 +163,7 @@ D3DXFRAME* SkinnedMesh::findNodeWithMesh( D3DXFRAME	* frame )
 	return 0;
 }
  
-void SkinnedMesh::loadFromX(MyGameSceneManager* sMgr)
+void SkinnedMesh::loadFromX(MyGameSceneManager* sMgr, const string& fileName)
 {
 		IDirect3DDevice9* pDevice = MyGame3DDevice::GetSingleton()->GetDevice();
 	
@@ -171,7 +171,9 @@ void SkinnedMesh::loadFromX(MyGameSceneManager* sMgr)
 
 	this->sceneMgr = sMgr;
 
-	HR( D3DXLoadMeshHierarchyFromXW(L"aaaaaaa.X",// L"testLoliske.X", 
+	string relativeFileName = "xfiles/" + fileName;
+
+	HR( D3DXLoadMeshHierarchyFromXA( relativeFileName.c_str(),// L"testLoliske.X", 
 								D3DXMESH_MANAGED,
 								pDevice,
 								&allocMeshHierarchy,

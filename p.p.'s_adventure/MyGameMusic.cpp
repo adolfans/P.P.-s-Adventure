@@ -7,7 +7,8 @@ using std::runtime_error;
 MyGameMusic::MyGameMusic( string& fileName )
 	:defaultVolume( 0.125 )
 {
-	sample = Mix_LoadWAV( fileName.c_str() );
+	string relativefileName = "ogg/"+fileName;
+	sample = Mix_LoadWAV( relativefileName.c_str() );
 	if(!sample) {
 		printf("Mix_LoadWAV: %s\n", Mix_GetError());
     // handle error

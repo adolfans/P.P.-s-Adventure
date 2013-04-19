@@ -121,14 +121,14 @@ void MyGameHelperGraphics::initialize()
 
 
 	HR( D3DXCreateTextureFromFileA( device,
-								"x.png",
+								"helpergraphics/x.png",
 								&xTexture ) );
 
 	HR( D3DXCreateTextureFromFileA( device,
-		"y.png",&yTexture ) );
+		"helpergraphics/y.png",&yTexture ) );
 
 	HR( D3DXCreateTextureFromFileA( device,
-									"z.png",
+									"helpergraphics/z.png",
 									&zTexture ) );
 
 	transformedAxis[0].color = 0xffffffff;

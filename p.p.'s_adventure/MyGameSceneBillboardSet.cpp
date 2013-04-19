@@ -2,7 +2,7 @@
 #include "MyGameSceneBillboardSet.h"
 #include "MyGameSceneManager.h"
 #include "MyGame3DDevice.h"
-
+#include "MyResourceManager.h"
 #include "MyGameSceneNode.h"
 //const unsigned int MyGameSceneBillboardSet::verticesNumPerRect;不用定义了？
 MyGameSceneBillboardSet::billboardVertex MyGameSceneBillboardSet::vertices[MyGameSceneBillboardSet::verticesNumPerRect] = 
@@ -30,7 +30,8 @@ MyGameSceneBillboardSet::MyGameSceneBillboardSet( int num, string textureFileNam
 		&vertexBuffer,
 		0 ) );
 
-	HR( D3DXCreateTextureFromFileA( device, textureFileName.c_str(), &texture ) );
+	//HR( D3DXCreateTextureFromFileA( device, textureFileName.c_str(), &texture ) );
+	texture = MyResourceManager::loadTexture( textureFileName );
 }
 
 //-1,  1, 0

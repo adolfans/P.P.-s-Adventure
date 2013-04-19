@@ -54,7 +54,8 @@ protected:
 		IDirect3DTexture9* texture;
 		if( name )
 		{
-			D3DXCreateTextureFromFileA( pDevice, name, &texture );
+			string relativePath = string("textures/") + name;
+			D3DXCreateTextureFromFileA( pDevice, relativePath.c_str(), &texture );
 			Textures.push_back( texture );
 		}else
 		{
@@ -81,8 +82,8 @@ protected:
 
 public:
 
-	virtual void loadMeshFromXFile( const char* fileName );
-	void loadMeshFromFbxFile( const char* fileName );
+	virtual void loadMeshFromXFile( const string& fileName );
+	void loadMeshFromFbxFile( const string& fileName );
 	void loadMeshFromFbxNodeAttribute( FbxNodeAttribute* attr );
 	virtual void createPlaneXZ( float width, float height  );
 	virtual void createTexture( const char* fileName, unsigned int num = 0 );

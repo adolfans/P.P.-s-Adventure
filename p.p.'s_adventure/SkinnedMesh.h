@@ -73,7 +73,7 @@ public:
 
 	void render();
 	void render( MyGame3DEffect* _pEffect );
-	void loadFromX(MyGameSceneManager* sMgr);
+	void loadFromX(MyGameSceneManager* sMgr, const string& fileName );
 	
 
 	void  getAnimation( vector<string> &animations );

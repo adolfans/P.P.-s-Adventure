@@ -52,8 +52,9 @@ MyGame3DEffect::MyGame3DEffect( const char* fileName )
 {
 	ID3DXBuffer* errorBuffer = 0;
 	this->pD9Device = MyGame3DDevice::GetSingleton()->GetDevice();
+	string relativePath = string("effect/") + fileName;
 	HR( D3DXCreateEffectFromFileA( pD9Device, 
-									fileName, 
+									relativePath.c_str(), 
 									0, 
 									0, 
 									D3DXSHADER_DEBUG|
